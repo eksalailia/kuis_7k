@@ -168,7 +168,7 @@
   }
   .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #ffd200; }
 
-  /* OVERLAY PERINGATAN MERAH (model seperti file kamu) */
+  /* OVERLAY PERINGATAN MERAH */
   #tab-warning-overlay {
     display: none;
     position: fixed;
@@ -307,7 +307,7 @@
 
 </div>
 
-<!-- OVERLAY PERINGATAN MERAH (model seperti file kamu) -->
+<!-- OVERLAY PERINGATAN MERAH -->
 <div id="tab-warning-overlay">
   <h2>⚠️ JANGAN PINDAH TAB!</h2>
   <p>Kamu terdeteksi meninggalkan halaman kuis.</p>
@@ -327,17 +327,16 @@ const LETTERS = ["A","B","C","D"];
 const BONUS_EVERY = 5;
 const BONUS_DURATION = 10;
 const BONUS_PENALTY = 30;
-const MAKS_PELANGGARAN = 3;   // pelanggaran ke-3 = kuis berakhir
+const MAKS_PELANGGARAN = 3;
 
 /* ⚠️ GANTI DENGAN URL /exec KAMU ⚠️ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
 /* ============================================================
-   ANTI-CURANG (model seperti file kamu)
+   ANTI-CURANG
    ============================================================ */
-let kuisAktif = false;       // nama variabel disamakan dengan file kamu
+let kuisAktif = false;
 let pelanggaran = 0;
-let cheatDetected = false;
 
 const warnOverlayEl = document.getElementById("tab-warning-overlay");
 const warnCountEl = document.getElementById("warn-count");
@@ -357,7 +356,6 @@ function catatPelanggaran(pesan) {
   updateWarnHud();
   warnCountEl.innerText = pelanggaran;
 
-  // Pause timer
   clearInterval(timerInterval);
   clearInterval(bonusTimerInterval);
 
@@ -375,13 +373,11 @@ function catatPelanggaran(pesan) {
   }
 }
 
-/* Tombol "Kembali ke Kuis" di overlay merah */
 function kembaliKeKuis() {
   warnOverlayEl.classList.remove('show');
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {});
   }
-  // Lanjutkan timer
   if (kuisAktif) {
     if (!answered && !bonusActive) startTimer();
     if (bonusActive) {
@@ -595,7 +591,6 @@ async function startQuiz() {
   if (!absen) { alert("No. absen wajib diisi!"); $("inputAbsen").focus(); return; }
   if (!kelas) { alert("Kelas wajib diisi!"); $("inputKelas").focus(); return; }
 
-  // Masuk full screen
   try {
     if (document.documentElement.requestFullscreen) {
       await document.documentElement.requestFullscreen();
@@ -606,7 +601,6 @@ async function startQuiz() {
   current = 0; score = 0; correctCount = 0;
   detailJawaban = [];
   pelanggaran = 0;
-  cheatDetected = false;
   updateWarnHud();
   warnHudEl.classList.remove("danger");
 
@@ -954,7 +948,6 @@ function finishQuiz(isPelanggaran = false) {
   }
   $("resultMsg").textContent = msg;
 
-  // Sembunyikan spin wheel kalau dihentikan karena pelanggaran
   const wheelWrap = document.querySelector(".wheel-wrap");
   if (isPelanggaran) {
     wheelWrap.style.display = "none";
@@ -982,11 +975,16 @@ function kirimKeSheet(isPelanggaran) {
     pelanggaran: pelanggaran
   };
 
+  // ✅ KUNCI: kirim sebagai form-urlencoded dengan key "postData"
+  // supaya Apps Script bisa membaca e.parameter.postData
+  const formData = new URLSearchParams();
+  formData.append('postData', JSON.stringify(payload));
+
   fetch(SHEET_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formData.toString()
   })
   .then(() => {
     if (statusEl) statusEl.textContent = isPelanggaran
