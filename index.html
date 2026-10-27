@@ -168,7 +168,7 @@
   }
   .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #ffd200; }
 
-  /* ===== OVERLAY PERINGATAN (KUNING, TIDAK HENTIKAN KUIS) ===== */
+  /* OVERLAY PERINGATAN KUNING */
   #warnOverlay {
     position: fixed; inset: 0;
     background: rgba(255, 200, 0, 0.85);
@@ -212,7 +212,7 @@
   }
   #warnOverlay .btn-warn:hover { background: #ffe24d; }
 
-  /* ===== OVERLAY HENTIKAN (MERAH) ===== */
+  /* OVERLAY HENTIKAN MERAH */
   #cheatWarning {
     position: fixed; inset: 0;
     background: radial-gradient(circle, rgba(120,0,0,0.97), rgba(0,0,0,0.98));
@@ -260,7 +260,6 @@
 
 <div class="card">
 
-  <!-- START -->
   <div id="startScreen" class="screen active">
     <h1>🎮 Kuis Pengolahan Data</h1>
     <p class="sub">Satuan Ukuran Data & Rumus Excel</p>
@@ -285,7 +284,6 @@
     </div>
   </div>
 
-  <!-- KUIS -->
   <div id="quizScreen" class="screen">
     <div class="hud">
       <div class="hud-box"><div class="label">Soal</div><div class="value" id="qCounter">1/25</div></div>
@@ -298,7 +296,6 @@
     <div class="options" id="optionsBox"></div>
   </div>
 
-  <!-- MINI GAME ULAR -->
   <div id="bonusScreen" class="screen">
     <div class="bonus-title">🐍 ULAR-ULARAN!</div>
     <div class="bonus-sub">Gerakkan ular (⬆️⬇️⬅️➡️ / WASD / tombol di layar). Makan angka emas, hindari bom! 💣</div>
@@ -313,7 +310,6 @@
     </div>
   </div>
 
-  <!-- HASIL -->
   <div id="resultScreen" class="screen">
     <h1>🏁 Selesai!</h1>
     <div class="score-big" id="finalScore">0</div>
@@ -344,7 +340,6 @@
 
 </div>
 
-<!-- OVERLAY PERINGATAN KUNING (tidak hentikan kuis) -->
 <div id="warnOverlay">
   <div class="box">
     <div class="icon">⚠️</div>
@@ -358,7 +353,6 @@
   </div>
 </div>
 
-<!-- OVERLAY HENTIKAN MERAH (kuis berhenti) -->
 <div id="cheatWarning">
   <div class="box">
     <div class="icon">⛔</div>
@@ -379,7 +373,7 @@ const LETTERS = ["A","B","C","D"];
 const BONUS_EVERY = 5;
 const BONUS_DURATION = 10;
 const BONUS_PENALTY = 30;
-const MAX_VIOLATIONS = 3;   // toleransi 3x, pelanggaran ke-4 = hentikan
+const MAX_VIOLATIONS = 3;
 
 /* ⚠️ GANTI DENGAN URL /exec KAMU ⚠️ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
@@ -428,14 +422,12 @@ function updateWarnHud() {
   }
 }
 
-/* Dipanggil setiap pelanggaran */
 function handleViolation(reason) {
   if (cheatDetected) return;
 
   violations++;
   updateWarnHud();
 
-  // Pelanggaran ke-1, 2, 3 → peringatan kuning, kuis lanjut
   if (violations <= MAX_VIOLATIONS) {
     warnReasonEl.textContent = "⚠️ " + reason;
     warnCounterEl.textContent = `Pelanggaran ${violations} dari ${MAX_VIOLATIONS}`;
@@ -443,14 +435,11 @@ function handleViolation(reason) {
     warnShowing = true;
     playWarningBeep(660, 440, 0.3);
     vibrate([100, 50, 100]);
-
-    // Pause timer sebentar
     clearInterval(timerInterval);
     clearInterval(bonusTimerInterval);
     return;
   }
 
-  // Pelanggaran ke-4 → hentikan kuis
   cheatDetected = true;
   quizRunning = false;
   clearInterval(timerInterval);
@@ -467,22 +456,17 @@ function handleViolation(reason) {
   setTimeout(() => { kirimKeSheet(true); }, 500);
 }
 
-/* Tombol "Saya Mengerti" di overlay kuning → lanjutkan kuis */
 warnOkBtn.onclick = () => {
   warnOverlayEl.classList.remove("show");
   warnShowing = false;
-  // Lanjutkan timer
   if (quizRunning) {
     if (!answered && !bonusActive) startTimer();
     if (bonusActive) {
       bonusTimerInterval = setInterval(() => {
-        if (!bonusActive) return;
+        if (!bonusActive || warnShowing) return;
         bonusTimeLeft--;
         document.getElementById("bonusTimer").textContent = bonusTimeLeft;
-        if (bonusTimeLeft <= 0) endSnakeGame(() => {
-          showScreen(quizScreen);
-          renderQuestion();
-        });
+        if (bonusTimeLeft <= 0) endSnakeGame(bonusOnDone);
       }, 1000);
     }
   }
@@ -534,9 +518,7 @@ async function enterFullscreen() {
     else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
     else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
     else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-  } catch(e) {
-    console.warn("Full screen gagal:", e);
-  }
+  } catch(e) { console.warn("Full screen gagal:", e); }
 }
 
 function exitFullscreen() {
@@ -1182,3 +1164,6 @@ $("spinBtn").onclick = spinWheel;
    INISIALISASI
    ============================================================ */
 drawWheel();
+</script>
+</body>
+</html>
