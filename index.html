@@ -19,6 +19,7 @@
     border-radius: 24px; padding: 32px 28px;
     backdrop-filter: blur(16px);
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    position: relative;
   }
   h1 { font-size: 1.6rem; text-align: center; margin-bottom: 6px; }
   .sub { text-align: center; opacity: .7; font-size: .9rem; margin-bottom: 24px; }
@@ -91,6 +92,7 @@
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(106,92,255,0.45); }
   .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.bonus { background: linear-gradient(90deg, #f7971e, #ffd200); color: #1e1e2f; }
 
   .screen { display: none; }
   .screen.active { display: block; animation: fadeIn .4s ease; }
@@ -128,6 +130,75 @@
   .lb-item.top { background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.4); }
 
   .hidden { display: none !important; }
+
+  /* ===== MINI GAME: BONUS ROUND ===== */
+  #bonusScreen .bonus-title {
+    text-align: center; font-size: 1.4rem; font-weight: 800;
+    background: linear-gradient(90deg, #f7971e, #ffd200);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 6px;
+  }
+  #bonusScreen .bonus-sub { text-align: center; opacity: .8; font-size: .9rem; margin-bottom: 14px; }
+  #bonusArena {
+    position: relative; width: 100%; height: 280px;
+    background: radial-gradient(circle at 50% 50%, rgba(255,210,0,0.15), rgba(0,0,0,0.35));
+    border: 2px dashed rgba(255,210,0,0.5);
+    border-radius: 18px; overflow: hidden; cursor: crosshair;
+  }
+  .bonus-target {
+    position: absolute; width: 52px; height: 52px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.05rem; cursor: pointer;
+    background: radial-gradient(circle at 30% 30%, #fff3a0, #ffd200);
+    color: #1e1e2f; box-shadow: 0 0 18px rgba(255,210,0,0.8);
+    transition: transform .1s;
+    user-select: none;
+  }
+  .bonus-target:active { transform: scale(0.9); }
+  .bonus-target.bomb {
+    background: radial-gradient(circle at 30% 30%, #ff8a8a, #ff4757);
+    color: #fff; box-shadow: 0 0 18px rgba(255,71,87,0.8);
+  }
+  .bonus-info {
+    display: flex; justify-content: space-between; margin-top: 14px; font-size: .9rem;
+  }
+  .bonus-info span { opacity: .85; }
+  .bonus-info strong { color: #ffd200; }
+  .floating-point {
+    position: absolute; font-weight: 800; font-size: 1.2rem;
+    color: #2ed573; pointer-events: none;
+    animation: floatUp 0.8s ease-out forwards;
+  }
+  .floating-point.minus { color: #ff4757; }
+  @keyframes floatUp {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-50px) scale(1.4); }
+  }
+
+  /* ===== SPIN WHEEL ===== */
+  .wheel-wrap {
+    display: flex; flex-direction: column; align-items: center; margin-top: 10px;
+  }
+  .wheel-container {
+    position: relative; width: 220px; height: 220px; margin-bottom: 14px;
+  }
+  .wheel-pointer {
+    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 24px solid #ffd200;
+    z-index: 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  #wheelCanvas {
+    border-radius: 50%;
+    box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 4s cubic-bezier(.15,.85,.25,1);
+  }
+  .wheel-result {
+    text-align: center; font-weight: 700; font-size: 1.05rem;
+    min-height: 24px; color: #ffd200;
+  }
 </style>
 </head>
 <body>
@@ -174,6 +245,17 @@
     <div class="options" id="optionsBox"></div>
   </div>
 
+  <!-- ===== LAYAR BONUS ROUND (MINI GAME) ===== -->
+  <div id="bonusScreen" class="screen">
+    <div class="bonus-title">🎯 BONUS ROUND!</div>
+    <div class="bonus-sub">Klik angka emas sebanyak mungkin dalam <strong>5 detik</strong>. Hindari bom! 💣</div>
+    <div id="bonusArena"></div>
+    <div class="bonus-info">
+      <span>⏱ Sisa: <strong id="bonusTimer">5</strong>s</span>
+      <span>💎 Bonus: <strong id="bonusScore">0</strong> poin</span>
+    </div>
+  </div>
+
   <!-- ===== LAYAR HASIL ===== -->
   <div id="resultScreen" class="screen">
     <h1>🏁 Selesai!</h1>
@@ -189,6 +271,17 @@
     <div class="stats-grid">
       <div class="stat-item"><div class="num" id="statBenar">0</div><div class="lbl">Benar</div></div>
       <div class="stat-item"><div class="num" id="statSalah">0</div><div class="lbl">Salah</div></div>
+    </div>
+
+    <!-- SPIN WHEEL BONUS -->
+    <div class="wheel-wrap">
+      <h3 style="font-size:.85rem; text-transform:uppercase; letter-spacing:1px; opacity:.65; margin:18px 0 10px;">🎡 Putar Roda Keberuntungan (sekali)</h3>
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="220" height="220"></canvas>
+      </div>
+      <button class="btn bonus" id="spinBtn" style="margin-top:0;">🎁 Putar Roda</button>
+      <div class="wheel-result" id="wheelResult"></div>
     </div>
 
     <p id="sheetStatus" style="text-align:center; font-size:.8rem; opacity:.6; margin-top:14px;"></p>
@@ -208,6 +301,9 @@
 const TIME_PER_Q = 15;
 const POINT_BASE = 100;
 const LETTERS = ["A","B","C","D"];
+const BONUS_EVERY = 5;
+const BONUS_DURATION = 5;
+const BONUS_PENALTY = 30;
 
 /* ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU ⚠️ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
@@ -296,6 +392,28 @@ const QUESTIONS = [
     o: ["30", "33", "35", "38"], a: 1 }
 ];
 
+/* ================= FUNGSI ACAK ================= */
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildShuffledQuestions() {
+  return shuffleArray(QUESTIONS).map(item => {
+    const correctText = item.o[item.a];
+    const shuffledOptions = shuffleArray(item.o);
+    return {
+      q: item.q,
+      o: shuffledOptions,
+      a: shuffledOptions.indexOf(correctText)
+    };
+  });
+}
+
 /* ================= STATE ================= */
 let siswa = { nama: "", absen: "", kelas: "" };
 let current = 0;
@@ -304,17 +422,28 @@ let correctCount = 0;
 let timeLeft = 0;
 let timerInterval = null;
 let answered = false;
+let quizQuestions = [];
+
+let bonusActive = false;
+let bonusTimeLeft = 0;
+let bonusScore = 0;
+let bonusTimerInterval = null;
+let bonusSpawnInterval = null;
+
+let wheelSpun = false;
+let wheelRotation = 0;
 
 /* ================= ELEMEN ================= */
 const $ = id => document.getElementById(id);
 const startScreen = $("startScreen"), quizScreen = $("quizScreen"), resultScreen = $("resultScreen");
+const bonusScreen = $("bonusScreen");
 const questionText = $("questionText"), optionsBox = $("optionsBox");
 const qCounter = $("qCounter"), scoreHud = $("scoreHud"), timerEl = $("timer");
 const progressFill = $("progressFill");
 
 /* ================= FUNGSI ================= */
 function showScreen(el) {
-  [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
+  [startScreen, quizScreen, resultScreen, bonusScreen].forEach(s => s.classList.remove("active"));
   el.classList.add("active");
 }
 
@@ -329,15 +458,20 @@ function startQuiz() {
 
   siswa = { nama, absen, kelas };
   current = 0; score = 0; correctCount = 0;
+  quizQuestions = buildShuffledQuestions();
+  wheelSpun = false;
+  wheelRotation = 0;
+  $("spinBtn").disabled = false;
+  $("wheelResult").textContent = "";
   showScreen(quizScreen);
   renderQuestion();
 }
 
 function renderQuestion() {
   answered = false;
-  const item = QUESTIONS[current];
-  qCounter.textContent = `${current + 1}/${QUESTIONS.length}`;
-  progressFill.style.width = `${(current / QUESTIONS.length) * 100}%`;
+  const item = quizQuestions[current];
+  qCounter.textContent = `${current + 1}/${quizQuestions.length}`;
+  progressFill.style.width = `${(current / quizQuestions.length) * 100}%`;
   questionText.textContent = item.q;
 
   optionsBox.innerHTML = "";
@@ -373,7 +507,7 @@ function selectAnswer(index, btn) {
   answered = true;
   clearInterval(timerInterval);
 
-  const correctIndex = QUESTIONS[current].a;
+  const correctIndex = quizQuestions[current].a;
   const allBtns = optionsBox.querySelectorAll(".option");
   allBtns.forEach((b, i) => {
     b.disabled = true;
@@ -396,25 +530,134 @@ function selectAnswer(index, btn) {
 
 function nextQuestion() {
   current++;
-  if (current < QUESTIONS.length) {
+
+  if (current > 0 && current % BONUS_EVERY === 0 && current < quizQuestions.length) {
+    showScreen(bonusScreen);
+    startBonusRound(() => {
+      showScreen(quizScreen);
+      renderQuestion();
+    });
+    return;
+  }
+
+  if (current < quizQuestions.length) {
     renderQuestion();
   } else {
     finishQuiz();
   }
 }
 
+/* ================= MINI GAME: BONUS ROUND ================= */
+function startBonusRound(onDone) {
+  bonusActive = true;
+  bonusTimeLeft = BONUS_DURATION;
+  bonusScore = 0;
+  $("bonusTimer").textContent = bonusTimeLeft;
+  $("bonusScore").textContent = "0";
+
+  const arena = $("bonusArena");
+  arena.innerHTML = "";
+
+  bonusSpawnInterval = setInterval(() => {
+    if (!bonusActive) return;
+    spawnBonusTarget(arena);
+  }, 350);
+
+  bonusTimerInterval = setInterval(() => {
+    bonusTimeLeft--;
+    $("bonusTimer").textContent = bonusTimeLeft;
+    if (bonusTimeLeft <= 0) {
+      endBonusRound(onDone);
+    }
+  }, 1000);
+}
+
+function spawnBonusTarget(arena) {
+  const isBomb = Math.random() < 0.25;
+  const el = document.createElement("div");
+  el.className = "bonus-target" + (isBomb ? " bomb" : "");
+  el.textContent = isBomb ? "💣" : ["+5","+10","+15","+20"][Math.floor(Math.random()*4)];
+
+  const arenaRect = arena.getBoundingClientRect();
+  const size = 52;
+  const maxX = arenaRect.width - size;
+  const maxY = arenaRect.height - size;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+
+  let pointValue = 0;
+  if (isBomb) {
+    pointValue = -BONUS_PENALTY;
+  } else {
+    pointValue = parseInt(el.textContent.replace("+",""), 10);
+  }
+
+  el.onclick = (e) => {
+    e.stopPropagation();
+    if (!bonusActive) return;
+
+    bonusScore += pointValue;
+    $("bonusScore").textContent = bonusScore;
+
+    const float = document.createElement("div");
+    float.className = "floating-point" + (pointValue < 0 ? " minus" : "");
+    float.textContent = (pointValue > 0 ? "+" : "") + pointValue;
+    float.style.left = x + "px";
+    float.style.top = y + "px";
+    arena.appendChild(float);
+    setTimeout(() => float.remove(), 800);
+
+    el.remove();
+  };
+
+  arena.appendChild(el);
+
+  setTimeout(() => {
+    if (el.parentNode) el.remove();
+  }, 1200);
+}
+
+function endBonusRound(onDone) {
+  bonusActive = false;
+  clearInterval(bonusSpawnInterval);
+  clearInterval(bonusTimerInterval);
+
+  const finalBonus = Math.max(0, bonusScore);
+  score += finalBonus;
+  scoreHud.textContent = score;
+
+  const arena = $("bonusArena");
+  arena.innerHTML = `
+    <div style="position:absolute; inset:0; display:flex; flex-direction:column;
+                align-items:center; justify-content:center; text-align:center;">
+      <div style="font-size:2rem; font-weight:800; color:#ffd200; margin-bottom:6px;">
+        +${finalBonus} poin!
+      </div>
+      <div style="opacity:.8; font-size:.9rem;">Melanjutkan kuis...</div>
+    </div>
+  `;
+
+  setTimeout(() => {
+    arena.innerHTML = "";
+    onDone();
+  }, 1400);
+}
+
+/* ================= SELESAI KUIS ================= */
 function finishQuiz() {
   progressFill.style.width = "100%";
   showScreen(resultScreen);
   $("finalScore").textContent = score;
   $("statBenar").textContent = correctCount;
-  $("statSalah").textContent = QUESTIONS.length - correctCount;
+  $("statSalah").textContent = quizQuestions.length - correctCount;
 
   $("resNama").textContent = siswa.nama;
   $("resAbsen").textContent = siswa.absen;
   $("resKelas").textContent = siswa.kelas;
 
-  const pct = Math.round((correctCount / QUESTIONS.length) * 100);
+  const pct = Math.round((correctCount / quizQuestions.length) * 100);
   let msg = "";
   if (pct === 100) msg = "🔥 Sempurna! Kamu master pengolahan data!";
   else if (pct >= 80) msg = "🌟 Hebat! Pemahamanmu sangat baik.";
@@ -431,7 +674,7 @@ function finishQuiz() {
     kelas: siswa.kelas,
     skor: score,
     benar: correctCount,
-    salah: QUESTIONS.length - correctCount,
+    salah: quizQuestions.length - correctCount,
     persentase: pct
   });
 }
@@ -440,14 +683,13 @@ function sendToSheet(data) {
   const statusEl = $("sheetStatus");
   if (!SHEET_URL || SHEET_URL.includes("XXXXX")) {
     if (statusEl) statusEl.textContent = "⚠️ URL spreadsheet belum diatur oleh guru.";
-    console.warn("SHEET_URL belum diisi.");
     return;
   }
   if (statusEl) statusEl.textContent = "⏳ Mengirim nilai ke spreadsheet...";
   fetch(SHEET_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(data)
   }).then(() => {
     if (statusEl) statusEl.textContent = "✅ Nilai berhasil dikirim ke guru!";
@@ -497,6 +739,103 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 }
 
+/* ================= SPIN WHEEL ================= */
+const WHEEL_SEGMENTS = [
+  { label: "+50",  value: 50,  color: "#6a5cff" },
+  { label: "+100", value: 100, color: "#b06ab3" },
+  { label: "+25",  value: 25,  color: "#ff6b9d" },
+  { label: "+200", value: 200, color: "#f7971e" },
+  { label: "+75",  value: 75,  color: "#2ed573" },
+  { label: "+150", value: 150, color: "#00c6ff" },
+  { label: "+0",   value: 0,   color: "#888" },
+  { label: "+125", value: 125, color: "#ff4757" }
+];
+
+function drawWheel() {
+  const canvas = $("wheelCanvas");
+  const ctx = canvas.getContext("2d");
+  const size = canvas.width;
+  const center = size / 2;
+  const radius = center - 4;
+  const anglePer = (Math.PI * 2) / WHEEL_SEGMENTS.length;
+
+  ctx.clearRect(0, 0, size, size);
+
+  WHEEL_SEGMENTS.forEach((seg, i) => {
+    const start = i * anglePer - Math.PI / 2;
+    const end = start + anglePer;
+
+    ctx.beginPath();
+    ctx.moveTo(center, center);
+    ctx.arc(center, center, radius, start, end);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.3)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(center, center);
+    ctx.rotate(start + anglePer / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 14px 'Segoe UI', sans-serif";
+    ctx.fillText(seg.label, radius - 12, 5);
+    ctx.restore();
+  });
+
+  ctx.beginPath();
+  ctx.arc(center, center, 22, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.95)";
+  ctx.fill();
+}
+
+function spinWheel() {
+  if (wheelSpun) return;
+  wheelSpun = true;
+  $("spinBtn").disabled = true;
+  $("wheelResult").textContent = "Memutar...";
+
+  const idx = Math.floor(Math.random() * WHEEL_SEGMENTS.length);
+  const seg = WHEEL_SEGMENTS[idx];
+  const anglePer = 360 / WHEEL_SEGMENTS.length;
+
+  const targetRotation = 360 * 5 - (idx * anglePer + anglePer / 2);
+  wheelRotation += targetRotation;
+
+  const canvas = $("wheelCanvas");
+  canvas.style.transform = `rotate(${wheelRotation}deg)`;
+
+  setTimeout(() => {
+    score += seg.value;
+    $("finalScore").textContent = score;
+    $("wheelResult").textContent = seg.value > 0
+      ? `🎉 Dapat +${seg.value} poin!`
+      : `😅 Zonk! Dapat 0 poin.`;
+    scoreHud.textContent = score;
+
+    const board = getLeaderboard();
+    if (board.length > 0) {
+      board[0].score += seg.value;
+      board.sort((a, b) => b.score - a.score);
+      localStorage.setItem("kuisLeaderboard", JSON.stringify(board.slice(0, 5)));
+      renderLeaderboard("lbResult");
+    }
+
+    const pct = Math.round((correctCount / quizQuestions.length) * 100);
+    sendToSheet({
+      nama: siswa.nama,
+      absen: siswa.absen,
+      kelas: siswa.kelas,
+      skor: score,
+      benar: correctCount,
+      salah: quizQuestions.length - correctCount,
+      persentase: pct
+    });
+  }, 4200);
+}
+
 /* ================= EVENT ================= */
 $("startBtn").onclick = startQuiz;
 ["inputNama","inputAbsen","inputKelas"].forEach(id => {
@@ -507,10 +846,19 @@ $("playAgainBtn").onclick = () => {
   $("inputAbsen").value = "";
   $("inputKelas").value = "";
   renderLeaderboard("lbStart");
+  $("wheelCanvas").style.transform = "rotate(0deg)";
+  $("wheelResult").textContent = "";
+  wheelRotation = 0;
+  wheelSpun = false;
+  $("spinBtn").disabled = false;
   showScreen(startScreen);
 };
 
+$("spinBtn").onclick = spinWheel;
+
+/* ================= INISIALISASI ================= */
 renderLeaderboard("lbStart");
+drawWheel();
 </script>
 </body>
 </html>
