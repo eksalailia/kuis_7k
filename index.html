@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Kuis Pengolahan Data</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e1e2f 0%, #2d1b4e 50%, #1a1a3e 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px; color: #fff;
+  }
+  .card {
+    width: 100%; max-width: 680px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px; padding: 32px 28px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  h1 { font-size: 1.6rem; text-align: center; margin-bottom: 6px; }
+  .sub { text-align: center; opacity: .7; font-size: .9rem; margin-bottom: 24px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block; font-size: .8rem; text-transform: uppercase;
+    letter-spacing: 1px; opacity: .7; margin-bottom: 6px; font-weight: 600;
+  }
+  .form-group input {
+    width: 100%; padding: 14px 16px; border-radius: 14px;
+    border: 2px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08);
+    color: #fff; font-size: 1rem; outline: none; transition: border-color .2s;
+  }
+  .form-group input:focus { border-color: #6a5cff; }
+  .form-group input::placeholder { color: rgba(255,255,255,0.4); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+  .hud { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+  .hud-box {
+    flex: 1; text-align: center; padding: 10px 6px;
+    background: rgba(255,255,255,0.08); border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .hud-box .label { font-size: .7rem; opacity: .6; text-transform: uppercase; letter-spacing: 1px; }
+  .hud-box .value { font-size: 1.3rem; font-weight: 700; margin-top: 2px; }
+  #timer.warning { color: #ff6b6b; animation: pulse .5s infinite alternate; }
+  @keyframes pulse { from { transform: scale(1);} to { transform: scale(1.12);} }
+
+  .progress-track {
+    height: 8px; background: rgba(255,255,255,0.1);
+    border-radius: 99px; overflow: hidden; margin-bottom: 22px;
+  }
+  .progress-fill {
+    height: 100%; width: 0%; border-radius: 99px;
+    background: linear-gradient(90deg, #6a5cff, #b06ab3, #ff6b9d);
+    transition: width .4s ease;
+  }
+
+  .question { font-size: 1.1rem; line-height: 1.55; margin-bottom: 20px; font-weight: 600; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border-radius: 14px; cursor: pointer;
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,255,255,0.12);
+    transition: all .2s ease; font-size: .98rem; text-align: left;
+    color: #fff; width: 100%;
+  }
+  .option:hover:not(:disabled) { background: rgba(255,255,255,0.14); transform: translateX(4px); }
+  .option .badge {
+    width: 30px; height: 30px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 9px; font-weight: 700; font-size: .85rem;
+    background: rgba(255,255,255,0.12);
+  }
+  .option.correct { background: rgba(46,213,115,0.25); border-color: #2ed573; }
+  .option.correct .badge { background: #2ed573; color: #06240f; }
+  .option.wrong { background: rgba(255,71,87,0.25); border-color: #ff4757; }
+  .option.wrong .badge { background: #ff4757; color: #fff; }
+  .option:disabled { cursor: default; }
+
+  .btn {
+    display: block; width: 100%; margin-top: 22px;
+    padding: 15px; border: none; border-radius: 14px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    background: linear-gradient(90deg, #6a5cff, #b06ab3);
+    color: #fff; transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(106,92,255,0.45); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn .4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: none;} }
+
+  .score-big { text-align: center; font-size: 3.4rem; font-weight: 800;
+    background: linear-gradient(90deg, #6a5cff, #ff6b9d);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin: 10px 0; }
+  .result-msg { text-align: center; font-size: 1.05rem; opacity: .85; margin-bottom: 14px; }
+  .identity-box {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; font-size: .9rem;
+  }
+  .identity-box div { display: flex; justify-content: space-between; padding: 4px 0; }
+  .identity-box span:first-child { opacity: .65; }
+  .identity-box span:last-child { font-weight: 600; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+  .stat-item {
+    background: rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat-item .num { font-size: 1.5rem; font-weight: 700; }
+  .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
+
+  .leaderboard { margin-top: 18px; }
+  .leaderboard h3 { font-size: .85rem; text-transform: uppercase; letter-spacing: 1px; opacity: .65; margin-bottom: 10px; }
+  .lb-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; border-radius: 12px; margin-bottom: 6px;
+    background: rgba(255,255,255,0.06); font-size: .92rem;
+  }
+  .lb-item .rank { font-weight: 700; opacity: .6; margin-right: 10px; }
+  .lb-item .pts { font-weight: 700; color: #b06ab3; }
+  .lb-item.top { background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.4); }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ===== LAYAR START + FORM IDENTITAS ===== -->
+  <div id="startScreen" class="screen active">
+    <h1>🎮 Kuis Pengolahan Data</h1>
+    <p class="sub">Satuan Ukuran Data & Rumus Excel</p>
+
+    <div class="form-group">
+      <label for="inputNama">Nama Lengkap</label>
+      <input type="text" id="inputNama" placeholder="Contoh: Ahmad Rizki Pratama" maxlength="50" autocomplete="off">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="inputAbsen">No. Absen</label>
+        <input type="number" id="inputAbsen" placeholder="Contoh: 15" min="1" max="99" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="inputKelas">Kelas</label>
+        <input type="text" id="inputKelas" placeholder="Contoh: VII A" maxlength="20" autocomplete="off">
+      </div>
+    </div>
+
+    <button class="btn" id="startBtn">🚀 Mulai Bermain</button>
+
+    <div class="leaderboard">
+      <h3>🏆 Papan Peringkat</h3>
+      <div id="lbStart"></div>
+    </div>
+  </div>
+
+  <!-- ===== LAYAR KUIS ===== -->
+  <div id="quizScreen" class="screen">
+    <div class="hud">
+      <div class="hud-box"><div class="label">Soal</div><div class="value" id="qCounter">1/25</div></div>
+      <div class="hud-box"><div class="label">Skor</div><div class="value" id="scoreHud">0</div></div>
+      <div class="hud-box"><div class="label">Waktu</div><div class="value" id="timer">15</div></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionsBox"></div>
+  </div>
+
+  <!-- ===== LAYAR HASIL ===== -->
+  <div id="resultScreen" class="screen">
+    <h1>🏁 Selesai!</h1>
+    <div class="score-big" id="finalScore">0</div>
+    <p class="result-msg" id="resultMsg"></p>
+
+    <div class="identity-box">
+      <div><span>Nama</span><span id="resNama">-</span></div>
+      <div><span>No. Absen</span><span id="resAbsen">-</span></div>
+      <div><span>Kelas</span><span id="resKelas">-</span></div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-item"><div class="num" id="statBenar">0</div><div class="lbl">Benar</div></div>
+      <div class="stat-item"><div class="num" id="statSalah">0</div><div class="lbl">Salah</div></div>
+    </div>
+
+    <p id="sheetStatus" style="text-align:center; font-size:.8rem; opacity:.6; margin-top:14px;"></p>
+
+    <button class="btn" id="playAgainBtn">🔁 Main Lagi</button>
+
+    <div class="leaderboard">
+      <h3>🏆 Papan Peringkat</h3>
+      <div id="lbResult"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ================= KONFIGURASI ================= */
+const TIME_PER_Q = 15;
+const POINT_BASE = 100;
+const LETTERS = ["A","B","C","D"];
+
+/* ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU ⚠️ */
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
+
+/* ================= DATA SOAL ================= */
+const QUESTIONS = [
+  { q: "Urutan satuan ukuran data dari terkecil ke terbesar yang benar adalah...",
+    o: ["Byte – Kilobyte – Megabyte – Gigabyte – Terabyte",
+        "Bit – Kilobyte – Byte – Megabyte – Gigabyte",
+        "Bit – Byte – Kilobyte – Megabyte – Gigabyte",
+        "Byte – Bit – Kilobyte – Megabyte – Terabyte"], a: 2 },
+  { q: "1 Kilobyte (KB) sama dengan...",
+    o: ["1000 bit", "1024 byte", "1024 bit", "1000 megabyte"], a: 1 },
+  { q: "1 Gigabyte (GB) sama dengan...",
+    o: ["1024 KB", "1024 MB", "1024 Byte", "1024 TB"], a: 1 },
+  { q: "Satuan ukuran data yang paling kecil adalah...",
+    o: ["Byte", "Bit", "Kilobyte", "Megabyte"], a: 1 },
+  { q: "File berukuran 3 GB sama dengan...",
+    o: ["3072 MB", "3000 MB", "3072 KB", "3000 KB"], a: 0 },
+  { q: "Rumus untuk menjumlahkan seluruh data dalam suatu range adalah...",
+    o: ["=AVERAGE(A1:A10)", "=SUM(A1:A10)", "=COUNT(A1:A10)", "=MAX(A1:A10)"], a: 1 },
+  { q: "Rumus =AVERAGE(B2:B6) digunakan untuk...",
+    o: ["Menjumlahkan data B2 sampai B6",
+        "Mencari nilai rata-rata data B2 sampai B6",
+        "Mencari nilai tertinggi data B2 sampai B6",
+        "Menghitung banyaknya data B2 sampai B6"], a: 1 },
+  { q: "Perhatikan data: 60, 70, 80, 90, 100. Rumus =MIN(A1:A5) menghasilkan...",
+    o: ["100", "80", "60", "70"], a: 2 },
+  { q: "Rumus =MAX(C1:C10) berfungsi untuk...",
+    o: ["Mencari nilai terkecil dari C1 sampai C10",
+        "Mencari nilai terbesar dari C1 sampai C10",
+        "Menghitung rata-rata C1 sampai C10",
+        "Menjumlahkan C1 sampai C10"], a: 1 },
+  { q: "Fungsi COUNTIF digunakan untuk...",
+    o: ["Menjumlahkan data dengan kriteria tertentu",
+        "Menghitung banyaknya data yang memenuhi kriteria tertentu",
+        "Mencari nilai rata-rata dengan kriteria tertentu",
+        "Mencari nilai maksimum dengan kriteria tertentu"], a: 1 },
+  { q: 'Rumus =COUNTIF(D2:D10,"Lulus") digunakan untuk...',
+    o: ["Menjumlahkan nilai pada sel D2 sampai D10",
+        'Menghitung banyaknya sel D2 sampai D10 yang berisi kata "Lulus"',
+        "Mencari nilai rata-rata sel D2 sampai D10",
+        'Menghitung total nilai "Lulus"'], a: 1 },
+  { q: "Fungsi SUMIF digunakan untuk...",
+    o: ["Menghitung jumlah data dengan kriteria tertentu",
+        "Menjumlahkan data yang memenuhi kriteria tertentu",
+        "Mencari nilai tertinggi dengan kriteria tertentu",
+        "Menghitung rata-rata dengan kriteria tertentu"], a: 1 },
+  { q: 'Rumus =SUMIF(E2:E10,"Baju",F2:F10) artinya...',
+    o: ['Menghitung banyaknya "Baju" pada E2:E10',
+        'Menjumlahkan nilai F2:F10 jika pada E2:E10 berisi "Baju"',
+        'Mencari nilai rata-rata "Baju"',
+        "Menjumlahkan seluruh data E2:E10 dan F2:F10"], a: 1 },
+  { q: "Tabel: Ani=80, Budi=90, Cici=70, Dodi=90. Rumus =COUNTIF(C2:C5,90) menghasilkan...",
+    o: ["1", "2", "3", "4"], a: 1 },
+  { q: "Dari tabel soal sebelumnya, rumus =SUM(C2:C5) menghasilkan...",
+    o: ["320", "330", "340", "350"], a: 1 },
+  { q: "Dari tabel yang sama, rumus =AVERAGE(C2:C5) menghasilkan...",
+    o: ["80", "82,5", "85", "90"], a: 1 },
+  { q: "Dari tabel yang sama, =MAX(C2:C5) dan =MIN(C2:C5) secara berurutan menghasilkan...",
+    o: ["90 dan 70", "70 dan 90", "90 dan 80", "80 dan 70"], a: 0 },
+  { q: "Perhatikan data: 5, 8, 10, 3, 7. Nilai MAX dan MIN secara berurutan adalah...",
+    o: ["10 dan 3", "3 dan 10", "8 dan 5", "10 dan 5"], a: 0 },
+  { q: "Rumus =COUNT(A1:A8) berbeda dengan =COUNTIF karena...",
+    o: ["COUNT menghitung sel berisi angka, COUNTIF menghitung sel sesuai kriteria",
+        "COUNT menjumlahkan data, COUNTIF menghitung rata-rata",
+        "COUNT mencari nilai maksimum, COUNTIF mencari nilai minimum",
+        "COUNT dan COUNTIF sama saja"], a: 0 },
+  { q: 'Rumus =SUMIF(A2:A10,">70",B2:B10) akan menjumlahkan...',
+    o: ["Semua nilai B2:B10",
+        "Nilai B2:B10 yang nilai A2:A10-nya lebih dari 70",
+        "Nilai A2:A10 yang lebih dari 70",
+        "Banyaknya data yang lebih dari 70"], a: 1 },
+  { q: "Fungsi yang tepat untuk mencari nilai rata-rata nilai siswa adalah...",
+    o: ["=SUM()", "=MAX()", "=AVERAGE()", "=COUNTIF()"], a: 2 },
+  { q: "Perbedaan SUM dan SUMIF adalah...",
+    o: ["SUM menjumlahkan semua data, SUMIF menjumlahkan data berdasarkan kriteria tertentu",
+        "SUM menghitung data, SUMIF menjumlahkan data",
+        "SUM dan SUMIF sama fungsinya",
+        "SUMIF hanya untuk teks, SUM untuk angka"], a: 0 },
+  { q: 'Tabel: Buku=5, Pulpen=10, Buku=7, Pensil=3, Buku=8. =SUMIF(A2:A6,"Buku",B2:B6) menghasilkan...',
+    o: ["15", "20", "23", "33"], a: 1 },
+  { q: 'Dari tabel yang sama, =COUNTIF(A2:A6,"Buku") menghasilkan...',
+    o: ["1", "2", "3", "4"], a: 2 },
+  { q: "Dari tabel yang sama, =SUM(B2:B6) menghasilkan...",
+    o: ["30", "33", "35", "38"], a: 1 }
+];
+
+/* ================= STATE ================= */
+let siswa = { nama: "", absen: "", kelas: "" };
+let current = 0;
+let score = 0;
+let correctCount = 0;
+let timeLeft = 0;
+let timerInterval = null;
+let answered = false;
+
+/* ================= ELEMEN ================= */
+const $ = id => document.getElementById(id);
+const startScreen = $("startScreen"), quizScreen = $("quizScreen"), resultScreen = $("resultScreen");
+const questionText = $("questionText"), optionsBox = $("optionsBox");
+const qCounter = $("qCounter"), scoreHud = $("scoreHud"), timerEl = $("timer");
+const progressFill = $("progressFill");
+
+/* ================= FUNGSI ================= */
+function showScreen(el) {
+  [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
+  el.classList.add("active");
+}
+
+function startQuiz() {
+  const nama = $("inputNama").value.trim();
+  const absen = $("inputAbsen").value.trim();
+  const kelas = $("inputKelas").value.trim();
+
+  if (!nama) { alert("Nama lengkap wajib diisi!"); $("inputNama").focus(); return; }
+  if (!absen) { alert("No. absen wajib diisi!"); $("inputAbsen").focus(); return; }
+  if (!kelas) { alert("Kelas wajib diisi!"); $("inputKelas").focus(); return; }
+
+  siswa = { nama, absen, kelas };
+  current = 0; score = 0; correctCount = 0;
+  showScreen(quizScreen);
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  qCounter.textContent = `${current + 1}/${QUESTIONS.length}`;
+  progressFill.style.width = `${(current / QUESTIONS.length) * 100}%`;
+  questionText.textContent = item.q;
+
+  optionsBox.innerHTML = "";
+  item.o.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="badge">${LETTERS[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optionsBox.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = TIME_PER_Q;
+  timerEl.textContent = timeLeft;
+  timerEl.classList.remove("warning");
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft <= 5) timerEl.classList.add("warning");
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!answered) selectAnswer(-1, null);
+    }
+  }, 1000);
+}
+
+function selectAnswer(index, btn) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const correctIndex = QUESTIONS[current].a;
+  const allBtns = optionsBox.querySelectorAll(".option");
+  allBtns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correctIndex) b.classList.add("correct");
+    else if (i === index) b.classList.add("wrong");
+  });
+
+  if (index === correctIndex) {
+    correctCount++;
+    const bonus = Math.max(0, timeLeft) * 5;
+    score += POINT_BASE + bonus;
+    scoreHud.textContent = score;
+    scoreHud.style.transform = "scale(1.3)";
+    scoreHud.style.color = "#2ed573";
+    setTimeout(() => { scoreHud.style.transform = "scale(1)"; scoreHud.style.color = "#fff"; }, 350);
+  }
+
+  setTimeout(nextQuestion, 1100);
+}
+
+function nextQuestion() {
+  current++;
+  if (current < QUESTIONS.length) {
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz() {
+  progressFill.style.width = "100%";
+  showScreen(resultScreen);
+  $("finalScore").textContent = score;
+  $("statBenar").textContent = correctCount;
+  $("statSalah").textContent = QUESTIONS.length - correctCount;
+
+  $("resNama").textContent = siswa.nama;
+  $("resAbsen").textContent = siswa.absen;
+  $("resKelas").textContent = siswa.kelas;
+
+  const pct = Math.round((correctCount / QUESTIONS.length) * 100);
+  let msg = "";
+  if (pct === 100) msg = "🔥 Sempurna! Kamu master pengolahan data!";
+  else if (pct >= 80) msg = "🌟 Hebat! Pemahamanmu sangat baik.";
+  else if (pct >= 60) msg = "👍 Bagus! Sedikit lagi jadi ahli.";
+  else if (pct >= 40) msg = "💪 Lumayan. Ayo belajar lagi!";
+  else msg = "📚 Jangan menyerah, coba lagi ya!";
+  $("resultMsg").textContent = `${pct}% benar — ${msg}`;
+
+  saveLeaderboard(siswa, score, correctCount);
+
+  sendToSheet({
+    nama: siswa.nama,
+    absen: siswa.absen,
+    kelas: siswa.kelas,
+    skor: score,
+    benar: correctCount,
+    salah: QUESTIONS.length - correctCount,
+    persentase: pct
+  });
+}
+
+function sendToSheet(data) {
+  const statusEl = $("sheetStatus");
+  if (!SHEET_URL || SHEET_URL.includes("XXXXX")) {
+    if (statusEl) statusEl.textContent = "⚠️ URL spreadsheet belum diatur oleh guru.";
+    console.warn("SHEET_URL belum diisi.");
+    return;
+  }
+  if (statusEl) statusEl.textContent = "⏳ Mengirim nilai ke spreadsheet...";
+  fetch(SHEET_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then(() => {
+    if (statusEl) statusEl.textContent = "✅ Nilai berhasil dikirim ke guru!";
+  }).catch(err => {
+    if (statusEl) statusEl.textContent = "❌ Gagal mengirim nilai. Cek koneksi internet.";
+    console.error(err);
+  });
+}
+
+/* ================= LEADERBOARD LOKAL ================= */
+function getLeaderboard() {
+  try { return JSON.parse(localStorage.getItem("kuisLeaderboard")) || []; }
+  catch { return []; }
+}
+
+function saveLeaderboard(siswaData, sc, correct) {
+  const board = getLeaderboard();
+  board.push({
+    nama: siswaData.nama,
+    kelas: siswaData.kelas,
+    score: sc,
+    correct,
+    date: Date.now()
+  });
+  board.sort((a, b) => b.score - a.score);
+  const top = board.slice(0, 5);
+  localStorage.setItem("kuisLeaderboard", JSON.stringify(top));
+  renderLeaderboard("lbResult");
+}
+
+function renderLeaderboard(elId) {
+  const el = $(elId);
+  const board = getLeaderboard();
+  if (board.length === 0) {
+    el.innerHTML = `<div class="lb-item"><span style="opacity:.5">Belum ada skor tersimpan.</span></div>`;
+    return;
+  }
+  el.innerHTML = board.map((b, i) =>
+    `<div class="lb-item ${i === 0 ? "top" : ""}">
+      <span><span class="rank">#${i + 1}</span>${escapeHtml(b.nama)} <span style="opacity:.5;font-size:.8rem">(${escapeHtml(b.kelas)} · ${b.correct}/25)</span></span>
+      <span class="pts">${b.score} pts</span>
+    </div>`
+  ).join("");
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+/* ================= EVENT ================= */
+$("startBtn").onclick = startQuiz;
+["inputNama","inputAbsen","inputKelas"].forEach(id => {
+  $(id).addEventListener("keydown", e => { if (e.key === "Enter") startQuiz(); });
+});
+$("playAgainBtn").onclick = () => {
+  $("inputNama").value = "";
+  $("inputAbsen").value = "";
+  $("inputKelas").value = "";
+  renderLeaderboard("lbStart");
+  showScreen(startScreen);
+};
+
+renderLeaderboard("lbStart");
+</script>
+</body>
+</html>
