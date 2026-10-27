@@ -11,6 +11,7 @@
     background: linear-gradient(135deg, #1e1e2f 0%, #2d1b4e 50%, #1a1a3e 100%);
     display: flex; align-items: center; justify-content: center;
     padding: 16px; color: #fff;
+    user-select: none; -webkit-user-select: none;
   }
   .card {
     width: 100%; max-width: 680px;
@@ -118,20 +119,7 @@
   .stat-item .num { font-size: 1.5rem; font-weight: 700; }
   .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
 
-  .leaderboard { margin-top: 18px; }
-  .leaderboard h3 { font-size: .85rem; text-transform: uppercase; letter-spacing: 1px; opacity: .65; margin-bottom: 10px; }
-  .lb-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 14px; border-radius: 12px; margin-bottom: 6px;
-    background: rgba(255,255,255,0.06); font-size: .92rem;
-  }
-  .lb-item .rank { font-weight: 700; opacity: .6; margin-right: 10px; }
-  .lb-item .pts { font-weight: 700; color: #b06ab3; }
-  .lb-item.top { background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.4); }
-
-  .hidden { display: none !important; }
-
-  /* ===== MINI GAME: BONUS ROUND ===== */
+  /* ===== MINI GAME: ULAR-ULARAN ===== */
   #bonusScreen .bonus-title {
     text-align: center; font-size: 1.4rem; font-weight: 800;
     background: linear-gradient(90deg, #f7971e, #ffd200);
@@ -139,41 +127,28 @@
     margin-bottom: 6px;
   }
   #bonusScreen .bonus-sub { text-align: center; opacity: .8; font-size: .9rem; margin-bottom: 14px; }
-  #bonusArena {
-    position: relative; width: 100%; height: 280px;
-    background: radial-gradient(circle at 50% 50%, rgba(255,210,0,0.15), rgba(0,0,0,0.35));
-    border: 2px dashed rgba(255,210,0,0.5);
-    border-radius: 18px; overflow: hidden; cursor: crosshair;
-  }
-  .bonus-target {
-    position: absolute; width: 52px; height: 52px;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 1.05rem; cursor: pointer;
-    background: radial-gradient(circle at 30% 30%, #fff3a0, #ffd200);
-    color: #1e1e2f; box-shadow: 0 0 18px rgba(255,210,0,0.8);
-    transition: transform .1s;
-    user-select: none;
-  }
-  .bonus-target:active { transform: scale(0.9); }
-  .bonus-target.bomb {
-    background: radial-gradient(circle at 30% 30%, #ff8a8a, #ff4757);
-    color: #fff; box-shadow: 0 0 18px rgba(255,71,87,0.8);
+  #snakeArena {
+    display: block; margin: 0 auto;
+    background: #0f172a; border: 3px solid rgba(255,210,0,0.5);
+    border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.25);
+    touch-action: none; max-width: 100%; height: auto;
   }
   .bonus-info {
     display: flex; justify-content: space-between; margin-top: 14px; font-size: .9rem;
   }
   .bonus-info span { opacity: .85; }
   .bonus-info strong { color: #ffd200; }
-  .floating-point {
-    position: absolute; font-weight: 800; font-size: 1.2rem;
-    color: #2ed573; pointer-events: none;
-    animation: floatUp 0.8s ease-out forwards;
+  .dpad {
+    display: none; grid-template-columns: repeat(3, 60px); gap: 6px;
+    margin: 14px auto 0; justify-content: center;
   }
-  .floating-point.minus { color: #ff4757; }
-  @keyframes floatUp {
-    from { opacity: 1; transform: translateY(0) scale(1); }
-    to { opacity: 0; transform: translateY(-50px) scale(1.4); }
+  .dpad button {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px; height: 60px; font-size: 1.4rem; color: #fff;
+    cursor: pointer; user-select: none;
   }
+  .dpad button:active { background: rgba(255,210,0,0.4); }
+  @media (max-width: 600px) { .dpad { display: grid; } }
 
   /* ===== SPIN WHEEL ===== */
   .wheel-wrap {
@@ -199,21 +174,33 @@
     text-align: center; font-weight: 700; font-size: 1.05rem;
     min-height: 24px; color: #ffd200;
   }
+
+  /* Warning anti-curang */
+  #cheatWarning {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    display: none; align-items: center; justify-content: center;
+    z-index: 9999; text-align: center; padding: 24px;
+  }
+  #cheatWarning.show { display: flex; }
+  #cheatWarning .box {
+    background: #2d1b4e; border: 2px solid #ff4757; border-radius: 20px;
+    padding: 32px; max-width: 420px;
+  }
+  #cheatWarning h2 { color: #ff4757; margin-bottom: 14px; }
+  #cheatWarning p { opacity: .85; line-height: 1.5; }
 </style>
 </head>
 <body>
 <div class="card">
 
-  <!-- ===== LAYAR START + FORM IDENTITAS ===== -->
+  <!-- ===== LAYAR START ===== -->
   <div id="startScreen" class="screen active">
     <h1>🎮 Kuis Pengolahan Data</h1>
     <p class="sub">Satuan Ukuran Data & Rumus Excel</p>
-
     <div class="form-group">
       <label for="inputNama">Nama Lengkap</label>
       <input type="text" id="inputNama" placeholder="Contoh: Ahmad Rizki Pratama" maxlength="50" autocomplete="off">
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label for="inputAbsen">No. Absen</label>
@@ -224,13 +211,10 @@
         <input type="text" id="inputKelas" placeholder="Contoh: VII A" maxlength="20" autocomplete="off">
       </div>
     </div>
-
     <button class="btn" id="startBtn">🚀 Mulai Bermain</button>
-
-    <div class="leaderboard">
-      <h3>🏆 Papan Peringkat</h3>
-      <div id="lbStart"></div>
-    </div>
+    <p style="text-align:center; font-size:.75rem; opacity:.5; margin-top:16px;">
+      ⚠️ Kuis ini dilindungi anti-curang. Jangan buka DevTools atau pindah tab saat bermain.
+    </p>
   </div>
 
   <!-- ===== LAYAR KUIS ===== -->
@@ -245,14 +229,18 @@
     <div class="options" id="optionsBox"></div>
   </div>
 
-  <!-- ===== LAYAR BONUS ROUND (MINI GAME) ===== -->
+  <!-- ===== LAYAR MINI GAME: ULAR-ULARAN ===== -->
   <div id="bonusScreen" class="screen">
-    <div class="bonus-title">🎯 BONUS ROUND!</div>
-    <div class="bonus-sub">Klik angka emas sebanyak mungkin dalam <strong>5 detik</strong>. Hindari bom! 💣</div>
-    <div id="bonusArena"></div>
+    <div class="bonus-title">🐍 ULAR-ULARAN!</div>
+    <div class="bonus-sub">Gerakkan ular (⬆️⬇️⬅️➡️ / WASD / tombol di layar). Makan angka emas, hindari bom! 💣</div>
+    <canvas id="snakeArena" width="600" height="320"></canvas>
     <div class="bonus-info">
-      <span>⏱ Sisa: <strong id="bonusTimer">5</strong>s</span>
+      <span>⏱ Sisa: <strong id="bonusTimer">10</strong>s</span>
       <span>💎 Bonus: <strong id="bonusScore">0</strong> poin</span>
+    </div>
+    <div class="dpad">
+      <div></div><button data-dir="up">⬆️</button><div></div>
+      <button data-dir="left">⬅️</button><button data-dir="down">⬇️</button><button data-dir="right">➡️</button>
     </div>
   </div>
 
@@ -261,19 +249,16 @@
     <h1>🏁 Selesai!</h1>
     <div class="score-big" id="finalScore">0</div>
     <p class="result-msg" id="resultMsg"></p>
-
     <div class="identity-box">
       <div><span>Nama</span><span id="resNama">-</span></div>
       <div><span>No. Absen</span><span id="resAbsen">-</span></div>
       <div><span>Kelas</span><span id="resKelas">-</span></div>
     </div>
-
     <div class="stats-grid">
       <div class="stat-item"><div class="num" id="statBenar">0</div><div class="lbl">Benar</div></div>
       <div class="stat-item"><div class="num" id="statSalah">0</div><div class="lbl">Salah</div></div>
     </div>
 
-    <!-- SPIN WHEEL BONUS -->
     <div class="wheel-wrap">
       <h3 style="font-size:.85rem; text-transform:uppercase; letter-spacing:1px; opacity:.65; margin:18px 0 10px;">🎡 Putar Roda Keberuntungan (sekali)</h3>
       <div class="wheel-container">
@@ -285,30 +270,83 @@
     </div>
 
     <p id="sheetStatus" style="text-align:center; font-size:.8rem; opacity:.6; margin-top:14px;"></p>
-
     <button class="btn" id="playAgainBtn">🔁 Main Lagi</button>
-
-    <div class="leaderboard">
-      <h3>🏆 Papan Peringkat</h3>
-      <div id="lbResult"></div>
-    </div>
   </div>
 
 </div>
 
+<!-- Warning overlay -->
+<div id="cheatWarning">
+  <div class="box">
+    <h2>⛔ Terdeteksi Curang!</h2>
+    <p>Kamu terdeteksi membuka DevTools atau pindah tab. Kuis dihentikan dan skor tidak dikirim.</p>
+    <p style="margin-top:14px; opacity:.6; font-size:.85rem;">Tutup tab ini lalu mulai ulang dengan jujur.</p>
+  </div>
+</div>
+
 <script>
-/* ================= KONFIGURASI ================= */
+/* ============================================================
+   KONFIGURASI
+   ============================================================ */
 const TIME_PER_Q = 15;
 const POINT_BASE = 100;
 const LETTERS = ["A","B","C","D"];
 const BONUS_EVERY = 5;
-const BONUS_DURATION = 5;
+const BONUS_DURATION = 10;
 const BONUS_PENALTY = 30;
 
-/* ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU ⚠️ */
+/* ⚠️ GANTI DENGAN URL /exec KAMU ⚠️ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
-/* ================= DATA SOAL ================= */
+/* ============================================================
+   ANTI-CURANG
+   ============================================================ */
+let quizRunning = false;
+let cheatDetected = false;
+
+function triggerCheatWarning() {
+  if (cheatDetected) return;
+  cheatDetected = true;
+  quizRunning = false;
+  clearInterval(timerInterval);
+  clearInterval(bonusTimerInterval);
+  document.getElementById("cheatWarning").classList.add("show");
+}
+
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+  const k = e.key.toLowerCase();
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(k)) ||
+    (e.ctrlKey && k === "u") ||
+    (e.metaKey && e.altKey && ["i","j","c"].includes(k))
+  ) {
+    e.preventDefault();
+    if (quizRunning) triggerCheatWarning();
+  }
+  if (quizRunning && (e.ctrlKey && ["c","v","a"].includes(k))) {
+    e.preventDefault();
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (quizRunning && document.hidden) triggerCheatWarning();
+});
+window.addEventListener("blur", () => {
+  if (quizRunning) triggerCheatWarning();
+});
+setInterval(() => {
+  if (!quizRunning) return;
+  const wDiff = window.outerWidth - window.innerWidth;
+  const hDiff = window.outerHeight - window.innerHeight;
+  if (wDiff > 200 || hDiff > 200) triggerCheatWarning();
+}, 1500);
+
+/* ============================================================
+   BANK SOAL (plain text)
+   ============================================================ */
 const QUESTIONS = [
   { q: "Urutan satuan ukuran data dari terkecil ke terbesar yang benar adalah...",
     o: ["Byte – Kilobyte – Megabyte – Gigabyte – Terabyte",
@@ -392,29 +430,9 @@ const QUESTIONS = [
     o: ["30", "33", "35", "38"], a: 1 }
 ];
 
-/* ================= FUNGSI ACAK ================= */
-function shuffleArray(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function buildShuffledQuestions() {
-  return shuffleArray(QUESTIONS).map(item => {
-    const correctText = item.o[item.a];
-    const shuffledOptions = shuffleArray(item.o);
-    return {
-      q: item.q,
-      o: shuffledOptions,
-      a: shuffledOptions.indexOf(correctText)
-    };
-  });
-}
-
-/* ================= STATE ================= */
+/* ============================================================
+   STATE
+   ============================================================ */
 let siswa = { nama: "", absen: "", kelas: "" };
 let current = 0;
 let score = 0;
@@ -428,12 +446,13 @@ let bonusActive = false;
 let bonusTimeLeft = 0;
 let bonusScore = 0;
 let bonusTimerInterval = null;
-let bonusSpawnInterval = null;
 
 let wheelSpun = false;
 let wheelRotation = 0;
 
-/* ================= ELEMEN ================= */
+/* ============================================================
+   ELEMEN
+   ============================================================ */
 const $ = id => document.getElementById(id);
 const startScreen = $("startScreen"), quizScreen = $("quizScreen"), resultScreen = $("resultScreen");
 const bonusScreen = $("bonusScreen");
@@ -441,7 +460,33 @@ const questionText = $("questionText"), optionsBox = $("optionsBox");
 const qCounter = $("qCounter"), scoreHud = $("scoreHud"), timerEl = $("timer");
 const progressFill = $("progressFill");
 
-/* ================= FUNGSI ================= */
+/* ============================================================
+   SHUFFLE
+   ============================================================ */
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildShuffledQuestions(baseQuestions) {
+  return shuffleArray(baseQuestions).map(item => {
+    const correctText = item.o[item.a];
+    const shuffledOptions = shuffleArray(item.o);
+    return {
+      q: item.q,
+      o: shuffledOptions,
+      a: shuffledOptions.indexOf(correctText)
+    };
+  });
+}
+
+/* ============================================================
+   ALUR KUIS
+   ============================================================ */
 function showScreen(el) {
   [startScreen, quizScreen, resultScreen, bonusScreen].forEach(s => s.classList.remove("active"));
   el.classList.add("active");
@@ -458,11 +503,13 @@ function startQuiz() {
 
   siswa = { nama, absen, kelas };
   current = 0; score = 0; correctCount = 0;
-  quizQuestions = buildShuffledQuestions();
+  quizQuestions = buildShuffledQuestions(QUESTIONS);
   wheelSpun = false;
   wheelRotation = 0;
   $("spinBtn").disabled = false;
   $("wheelResult").textContent = "";
+  cheatDetected = false;
+  quizRunning = true;
   showScreen(quizScreen);
   renderQuestion();
 }
@@ -492,6 +539,7 @@ function startTimer() {
   timerEl.textContent = timeLeft;
   timerEl.classList.remove("warning");
   timerInterval = setInterval(() => {
+    if (!quizRunning) { clearInterval(timerInterval); return; }
     timeLeft--;
     timerEl.textContent = timeLeft;
     if (timeLeft <= 5) timerEl.classList.add("warning");
@@ -503,7 +551,7 @@ function startTimer() {
 }
 
 function selectAnswer(index, btn) {
-  if (answered) return;
+  if (answered || !quizRunning) return;
   answered = true;
   clearInterval(timerInterval);
 
@@ -529,11 +577,12 @@ function selectAnswer(index, btn) {
 }
 
 function nextQuestion() {
+  if (!quizRunning) return;
   current++;
 
   if (current > 0 && current % BONUS_EVERY === 0 && current < quizQuestions.length) {
     showScreen(bonusScreen);
-    startBonusRound(() => {
+    startSnakeGame(() => {
       showScreen(quizScreen);
       renderQuestion();
     });
@@ -547,106 +596,217 @@ function nextQuestion() {
   }
 }
 
-/* ================= MINI GAME: BONUS ROUND ================= */
-function startBonusRound(onDone) {
+/* ============================================================
+   MINI GAME: ULAR-ULARAN
+   ============================================================ */
+let snakeState = null;
+let snakeRAF = null;
+
+function startSnakeGame(onDone) {
   bonusActive = true;
   bonusTimeLeft = BONUS_DURATION;
   bonusScore = 0;
   $("bonusTimer").textContent = bonusTimeLeft;
   $("bonusScore").textContent = "0";
 
-  const arena = $("bonusArena");
-  arena.innerHTML = "";
+  const canvas = $("snakeArena");
+  const ctx = canvas.getContext("2d");
+  const CELL = 20;
+  const COLS = Math.floor(canvas.width / CELL);
+  const ROWS = Math.floor(canvas.height / CELL);
 
-  bonusSpawnInterval = setInterval(() => {
+  snakeState = {
+    snake: [{x: 5, y: 5}],
+    dir: {x: 1, y: 0},
+    nextDir: {x: 1, y: 0},
+    food: {x: 10, y: 5, value: 10},
+    bombs: [],
+    cell: CELL, cols: COLS, rows: ROWS,
+    lastMove: 0,
+    moveInterval: 140
+  };
+
+  function randomFood() {
+    return {
+      x: Math.floor(Math.random() * COLS),
+      y: Math.floor(Math.random() * ROWS),
+      value: [5,10,15,20][Math.floor(Math.random()*4)]
+    };
+  }
+
+  for (let i = 0; i < 3; i++) spawnBomb();
+
+  function spawnBomb() {
+    let bx, by, ok = false, tries = 0;
+    while (!ok && tries < 50) {
+      bx = Math.floor(Math.random() * COLS);
+      by = Math.floor(Math.random() * ROWS);
+      ok = !snakeState.snake.some(s => s.x === bx && s.y === by) &&
+           !(snakeState.food.x === bx && snakeState.food.y === by);
+      tries++;
+    }
+    if (ok) snakeState.bombs.push({x: bx, y: by});
+  }
+
+  function setDir(dx, dy) {
+    if (!snakeState) return;
+    if (snakeState.dir.x === -dx && snakeState.dir.y === -dy) return;
+    snakeState.nextDir = {x: dx, y: dy};
+  }
+
+  function keyHandler(e) {
     if (!bonusActive) return;
-    spawnBonusTarget(arena);
-  }, 350);
+    const k = e.key.toLowerCase();
+    if (k === "arrowup" || k === "w") { e.preventDefault(); setDir(0,-1); }
+    else if (k === "arrowdown" || k === "s") { e.preventDefault(); setDir(0,1); }
+    else if (k === "arrowleft" || k === "a") { e.preventDefault(); setDir(-1,0); }
+    else if (k === "arrowright" || k === "d") { e.preventDefault(); setDir(1,0); }
+  }
+  window.addEventListener("keydown", keyHandler);
+  snakeState._keyHandler = keyHandler;
+
+  const dpad = document.querySelectorAll(".dpad button");
+  function dpadHandler(e) {
+    const dir = e.currentTarget.dataset.dir;
+    if (dir === "up") setDir(0,-1);
+    else if (dir === "down") setDir(0,1);
+    else if (dir === "left") setDir(-1,0);
+    else if (dir === "right") setDir(1,0);
+  }
+  dpad.forEach(b => b.addEventListener("click", dpadHandler));
+
+  function loop(ts) {
+    if (!bonusActive) return;
+    if (ts - snakeState.lastMove > snakeState.moveInterval) {
+      snakeState.lastMove = ts;
+      moveSnake();
+    }
+    drawSnake(ctx);
+    snakeRAF = requestAnimationFrame(loop);
+  }
+
+  function moveSnake() {
+    snakeState.dir = snakeState.nextDir;
+    const head = {
+      x: snakeState.snake[0].x + snakeState.dir.x,
+      y: snakeState.snake[0].y + snakeState.dir.y
+    };
+    head.x = (head.x + snakeState.cols) % snakeState.cols;
+    head.y = (head.y + snakeState.rows) % snakeState.rows;
+
+    if (snakeState.snake.some(s => s.x === head.x && s.y === head.y)) {
+      bonusScore -= 20;
+      $("bonusScore").textContent = bonusScore;
+      snakeState.snake = [{x: 5, y: 5}];
+      snakeState.dir = {x: 1, y: 0};
+      snakeState.nextDir = {x: 1, y: 0};
+      return;
+    }
+
+    snakeState.snake.unshift(head);
+
+    if (head.x === snakeState.food.x && head.y === snakeState.food.y) {
+      bonusScore += snakeState.food.value;
+      $("bonusScore").textContent = bonusScore;
+      snakeState.food = randomFood();
+    } else {
+      snakeState.snake.pop();
+    }
+
+    const hitBombIdx = snakeState.bombs.findIndex(b => b.x === head.x && b.y === head.y);
+    if (hitBombIdx >= 0) {
+      bonusScore -= BONUS_PENALTY;
+      $("bonusScore").textContent = bonusScore;
+      snakeState.bombs.splice(hitBombIdx, 1);
+      snakeState.snake = snakeState.snake.slice(0, Math.max(1, snakeState.snake.length - 2));
+      spawnBomb();
+    }
+  }
+
+  function drawSnake(ctx) {
+    const {cell, cols, rows} = snakeState;
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.04)";
+    for (let i = 0; i <= cols; i++) {
+      ctx.beginPath(); ctx.moveTo(i*cell, 0); ctx.lineTo(i*cell, canvas.height); ctx.stroke();
+    }
+    for (let j = 0; j <= rows; j++) {
+      ctx.beginPath(); ctx.moveTo(0, j*cell); ctx.lineTo(canvas.width, j*cell); ctx.stroke();
+    }
+
+    ctx.fillStyle = "#ffd200";
+    ctx.shadowColor = "#ffd200"; ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(snakeState.food.x*cell + cell/2, snakeState.food.y*cell + cell/2, cell/2 - 2, 0, Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#1e1e2f"; ctx.font = "bold 10px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(snakeState.food.value, snakeState.food.x*cell + cell/2, snakeState.food.y*cell + cell/2 + 3);
+
+    snakeState.bombs.forEach(b => {
+      ctx.fillStyle = "#ff4757";
+      ctx.shadowColor = "#ff4757"; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(b.x*cell + cell/2, b.y*cell + cell/2, cell/2 - 2, 0, Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "#fff"; ctx.font = "10px sans-serif";
+      ctx.fillText("💣", b.x*cell + cell/2, b.y*cell + cell/2 + 3);
+    });
+
+    snakeState.snake.forEach((s, i) => {
+      ctx.fillStyle = i === 0 ? "#2ed573" : `rgba(46,213,115,${0.8 - i*0.04})`;
+      ctx.fillRect(s.x*cell + 1, s.y*cell + 1, cell - 2, cell - 2);
+    });
+  }
+
+  snakeRAF = requestAnimationFrame(loop);
 
   bonusTimerInterval = setInterval(() => {
+    if (!bonusActive) return;
     bonusTimeLeft--;
     $("bonusTimer").textContent = bonusTimeLeft;
-    if (bonusTimeLeft <= 0) {
-      endBonusRound(onDone);
-    }
+    if (bonusTimeLeft <= 0) endSnakeGame(onDone);
   }, 1000);
 }
 
-function spawnBonusTarget(arena) {
-  const isBomb = Math.random() < 0.25;
-  const el = document.createElement("div");
-  el.className = "bonus-target" + (isBomb ? " bomb" : "");
-  el.textContent = isBomb ? "💣" : ["+5","+10","+15","+20"][Math.floor(Math.random()*4)];
-
-  const arenaRect = arena.getBoundingClientRect();
-  const size = 52;
-  const maxX = arenaRect.width - size;
-  const maxY = arenaRect.height - size;
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-  el.style.left = x + "px";
-  el.style.top = y + "px";
-
-  let pointValue = 0;
-  if (isBomb) {
-    pointValue = -BONUS_PENALTY;
-  } else {
-    pointValue = parseInt(el.textContent.replace("+",""), 10);
-  }
-
-  el.onclick = (e) => {
-    e.stopPropagation();
-    if (!bonusActive) return;
-
-    bonusScore += pointValue;
-    $("bonusScore").textContent = bonusScore;
-
-    const float = document.createElement("div");
-    float.className = "floating-point" + (pointValue < 0 ? " minus" : "");
-    float.textContent = (pointValue > 0 ? "+" : "") + pointValue;
-    float.style.left = x + "px";
-    float.style.top = y + "px";
-    arena.appendChild(float);
-    setTimeout(() => float.remove(), 800);
-
-    el.remove();
-  };
-
-  arena.appendChild(el);
-
-  setTimeout(() => {
-    if (el.parentNode) el.remove();
-  }, 1200);
-}
-
-function endBonusRound(onDone) {
+function endSnakeGame(onDone) {
   bonusActive = false;
-  clearInterval(bonusSpawnInterval);
   clearInterval(bonusTimerInterval);
+  if (snakeRAF) cancelAnimationFrame(snakeRAF);
+
+  if (snakeState && snakeState._keyHandler) {
+    window.removeEventListener("keydown", snakeState._keyHandler);
+  }
 
   const finalBonus = Math.max(0, bonusScore);
   score += finalBonus;
   scoreHud.textContent = score;
 
-  const arena = $("bonusArena");
-  arena.innerHTML = `
-    <div style="position:absolute; inset:0; display:flex; flex-direction:column;
-                align-items:center; justify-content:center; text-align:center;">
-      <div style="font-size:2rem; font-weight:800; color:#ffd200; margin-bottom:6px;">
-        +${finalBonus} poin!
-      </div>
-      <div style="opacity:.8; font-size:.9rem;">Melanjutkan kuis...</div>
-    </div>
-  `;
+  const canvas = $("snakeArena");
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#ffd200";
+  ctx.font = "bold 28px 'Segoe UI', sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`+${finalBonus} poin!`, canvas.width/2, canvas.height/2 - 10);
+  ctx.font = "14px 'Segoe UI', sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.7)";
+  ctx.fillText("Melanjutkan kuis...", canvas.width/2, canvas.height/2 + 20);
 
   setTimeout(() => {
-    arena.innerHTML = "";
+    if (!quizRunning) return;
     onDone();
   }, 1400);
 }
 
-/* ================= SELESAI KUIS ================= */
+/* ============================================================
+   SELESAI KUIS + KIRIM KE SHEETS
+   ============================================================ */
 function finishQuiz() {
+  quizRunning = false;
   progressFill.style.width = "100%";
   showScreen(resultScreen);
   $("finalScore").textContent = score;
@@ -665,8 +825,6 @@ function finishQuiz() {
   else if (pct >= 40) msg = "💪 Lumayan. Ayo belajar lagi!";
   else msg = "📚 Jangan menyerah, coba lagi ya!";
   $("resultMsg").textContent = `${pct}% benar — ${msg}`;
-
-  saveLeaderboard(siswa, score, correctCount);
 
   sendToSheet({
     nama: siswa.nama,
@@ -699,47 +857,9 @@ function sendToSheet(data) {
   });
 }
 
-/* ================= LEADERBOARD LOKAL ================= */
-function getLeaderboard() {
-  try { return JSON.parse(localStorage.getItem("kuisLeaderboard")) || []; }
-  catch { return []; }
-}
-
-function saveLeaderboard(siswaData, sc, correct) {
-  const board = getLeaderboard();
-  board.push({
-    nama: siswaData.nama,
-    kelas: siswaData.kelas,
-    score: sc,
-    correct,
-    date: Date.now()
-  });
-  board.sort((a, b) => b.score - a.score);
-  const top = board.slice(0, 5);
-  localStorage.setItem("kuisLeaderboard", JSON.stringify(top));
-  renderLeaderboard("lbResult");
-}
-
-function renderLeaderboard(elId) {
-  const el = $(elId);
-  const board = getLeaderboard();
-  if (board.length === 0) {
-    el.innerHTML = `<div class="lb-item"><span style="opacity:.5">Belum ada skor tersimpan.</span></div>`;
-    return;
-  }
-  el.innerHTML = board.map((b, i) =>
-    `<div class="lb-item ${i === 0 ? "top" : ""}">
-      <span><span class="rank">#${i + 1}</span>${escapeHtml(b.nama)} <span style="opacity:.5;font-size:.8rem">(${escapeHtml(b.kelas)} · ${b.correct}/25)</span></span>
-      <span class="pts">${b.score} pts</span>
-    </div>`
-  ).join("");
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-}
-
-/* ================= SPIN WHEEL ================= */
+/* ============================================================
+   SPIN WHEEL
+   ============================================================ */
 const WHEEL_SEGMENTS = [
   { label: "+50",  value: 50,  color: "#6a5cff" },
   { label: "+100", value: 100, color: "#b06ab3" },
@@ -764,16 +884,12 @@ function drawWheel() {
   WHEEL_SEGMENTS.forEach((seg, i) => {
     const start = i * anglePer - Math.PI / 2;
     const end = start + anglePer;
-
     ctx.beginPath();
     ctx.moveTo(center, center);
     ctx.arc(center, center, radius, start, end);
     ctx.closePath();
-    ctx.fillStyle = seg.color;
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.3)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    ctx.fillStyle = seg.color; ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.lineWidth = 2; ctx.stroke();
 
     ctx.save();
     ctx.translate(center, center);
@@ -800,12 +916,9 @@ function spinWheel() {
   const idx = Math.floor(Math.random() * WHEEL_SEGMENTS.length);
   const seg = WHEEL_SEGMENTS[idx];
   const anglePer = 360 / WHEEL_SEGMENTS.length;
-
   const targetRotation = 360 * 5 - (idx * anglePer + anglePer / 2);
   wheelRotation += targetRotation;
-
-  const canvas = $("wheelCanvas");
-  canvas.style.transform = `rotate(${wheelRotation}deg)`;
+  $("wheelCanvas").style.transform = `rotate(${wheelRotation}deg)`;
 
   setTimeout(() => {
     score += seg.value;
@@ -813,15 +926,6 @@ function spinWheel() {
     $("wheelResult").textContent = seg.value > 0
       ? `🎉 Dapat +${seg.value} poin!`
       : `😅 Zonk! Dapat 0 poin.`;
-    scoreHud.textContent = score;
-
-    const board = getLeaderboard();
-    if (board.length > 0) {
-      board[0].score += seg.value;
-      board.sort((a, b) => b.score - a.score);
-      localStorage.setItem("kuisLeaderboard", JSON.stringify(board.slice(0, 5)));
-      renderLeaderboard("lbResult");
-    }
 
     const pct = Math.round((correctCount / quizQuestions.length) * 100);
     sendToSheet({
@@ -836,7 +940,9 @@ function spinWheel() {
   }, 4200);
 }
 
-/* ================= EVENT ================= */
+/* ============================================================
+   EVENT
+   ============================================================ */
 $("startBtn").onclick = startQuiz;
 ["inputNama","inputAbsen","inputKelas"].forEach(id => {
   $(id).addEventListener("keydown", e => { if (e.key === "Enter") startQuiz(); });
@@ -845,7 +951,6 @@ $("playAgainBtn").onclick = () => {
   $("inputNama").value = "";
   $("inputAbsen").value = "";
   $("inputKelas").value = "";
-  renderLeaderboard("lbStart");
   $("wheelCanvas").style.transform = "rotate(0deg)";
   $("wheelResult").textContent = "";
   wheelRotation = 0;
@@ -853,11 +958,11 @@ $("playAgainBtn").onclick = () => {
   $("spinBtn").disabled = false;
   showScreen(startScreen);
 };
-
 $("spinBtn").onclick = spinWheel;
 
-/* ================= INISIALISASI ================= */
-renderLeaderboard("lbStart");
+/* ============================================================
+   INISIALISASI
+   ============================================================ */
 drawWheel();
 </script>
 </body>
