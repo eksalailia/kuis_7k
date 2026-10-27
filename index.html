@@ -337,6 +337,7 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrK
    ============================================================ */
 let kuisAktif = false;
 let pelanggaran = 0;
+let sudahKirim = false; // Gembok agar data tidak terkirim dobel
 
 const warnOverlayEl = document.getElementById("tab-warning-overlay");
 const warnCountEl = document.getElementById("warn-count");
@@ -601,6 +602,7 @@ async function startQuiz() {
   current = 0; score = 0; correctCount = 0;
   detailJawaban = [];
   pelanggaran = 0;
+  sudahKirim = false; 
   updateWarnHud();
   warnHudEl.classList.remove("danger");
 
@@ -955,6 +957,8 @@ function finishQuiz(isPelanggaran = false) {
     wheelWrap.style.display = "flex";
   }
 
+  // Kirim nilai pertama kali (Skor sebelum roda)
+  sudahKirim = false; 
   kirimKeSheet(isPelanggaran);
 }
 
@@ -964,7 +968,6 @@ function kirimKeSheet(isPelanggaran) {
     if (statusEl) statusEl.textContent = "⚠️ URL spreadsheet belum diatur oleh guru.";
     return;
   }
-  if (statusEl) statusEl.textContent = "⏳ Mengirim nilai ke spreadsheet...";
 
   const payload = {
     nama: siswa.nama,
@@ -975,10 +978,14 @@ function kirimKeSheet(isPelanggaran) {
     pelanggaran: pelanggaran
   };
 
-  // ✅ KUNCI: kirim sebagai form-urlencoded dengan key "postData"
-  // supaya Apps Script bisa membaca e.parameter.postData
   const formData = new URLSearchParams();
   formData.append('postData', JSON.stringify(payload));
+
+  if (statusEl) {
+    statusEl.textContent = sudahKirim 
+      ? "⏳ Memperbarui nilai (bonus roda)..." 
+      : "⏳ Mengirim nilai ke spreadsheet...";
+  }
 
   fetch(SHEET_URL, {
     method: "POST",
@@ -987,9 +994,10 @@ function kirimKeSheet(isPelanggaran) {
     body: formData.toString()
   })
   .then(() => {
-    if (statusEl) statusEl.textContent = isPelanggaran
-      ? "⚠️ Nilai terkirim DENGAN catatan pelanggaran."
-      : "✅ Nilai terkirim! Cek spreadsheet.";
+    if (statusEl) statusEl.textContent = sudahKirim
+      ? "✅ Nilai bonus berhasil diperbarui!"
+      : "✅ Nilai berhasil dikirim!";
+    sudahKirim = true;
   })
   .catch(err => {
     if (statusEl) statusEl.textContent = "❌ Gagal mengirim. Cek koneksi.";
@@ -1067,6 +1075,7 @@ function spinWheel() {
       ? `🎉 Dapat +${seg.value} poin!`
       : `😅 Zonk! Dapat 0 poin.`;
 
+    // Kirim ulang data (akan ditimpa di Sheet, bukan dobel)
     kirimKeSheet(false);
   }, 4200);
 }
