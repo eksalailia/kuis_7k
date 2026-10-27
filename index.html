@@ -212,38 +212,6 @@
   }
   #warnOverlay .btn-warn:hover { background: #ffe24d; }
 
-  /* OVERLAY HENTIKAN MERAH */
-  #cheatWarning {
-    position: fixed; inset: 0;
-    background: radial-gradient(circle, rgba(120,0,0,0.97), rgba(0,0,0,0.98));
-    display: none; align-items: center; justify-content: center;
-    z-index: 99999; text-align: center; padding: 24px;
-    animation: warningFlash .6s ease infinite alternate;
-  }
-  #cheatWarning.show { display: flex; }
-  @keyframes warningFlash {
-    from { background: radial-gradient(circle, rgba(120,0,0,0.97), rgba(0,0,0,0.98)); }
-    to   { background: radial-gradient(circle, rgba(180,0,0,0.97), rgba(20,0,0,0.98)); }
-  }
-  #cheatWarning .box {
-    background: #1a0a0a; border: 3px solid #ff4757; border-radius: 20px;
-    padding: 36px 32px; max-width: 480px;
-    box-shadow: 0 0 60px rgba(255,71,87,0.8);
-    animation: shake .4s ease;
-  }
-  #cheatWarning .icon { font-size: 4rem; margin-bottom: 10px; animation: pulse 0.6s infinite alternate; }
-  #cheatWarning h2 {
-    color: #ff4757; margin-bottom: 14px; font-size: 1.6rem;
-    text-transform: uppercase; letter-spacing: 2px;
-  }
-  #cheatWarning .reason {
-    background: rgba(255,71,87,0.15); border-left: 4px solid #ff4757;
-    padding: 12px 16px; border-radius: 8px;
-    margin: 16px 0; font-size: .95rem; color: #ffcccc; text-align: left;
-  }
-  #cheatWarning p { opacity: .85; line-height: 1.5; margin-bottom: 8px; }
-  #cheatWarning .small { font-size: .8rem; opacity: .5; margin-top: 16px; }
-
   #fsInfo {
     position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 99px;
@@ -260,6 +228,7 @@
 
 <div class="card">
 
+  <!-- START -->
   <div id="startScreen" class="screen active">
     <h1>🎮 Kuis Pengolahan Data</h1>
     <p class="sub">Satuan Ukuran Data & Rumus Excel</p>
@@ -280,10 +249,11 @@
     <button class="btn" id="startBtn">🚀 Mulai Bermain (Full Screen)</button>
     <div style="margin-top:16px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
       <strong style="color:#ff4757;">⚠️ PERINGATAN:</strong><br>
-      Saat mulai, layar masuk mode <strong>full screen</strong>. Kamu diberi toleransi <strong>3x pelanggaran</strong> (keluar full screen, pindah tab, atau buka DevTools). Pelanggaran ke-<strong>4</strong> akan <strong>menghentikan kuis</strong> dan tercatat di spreadsheet.
+      Saat mulai, layar masuk mode <strong>full screen</strong>. Jika kamu keluar tab / keluar full screen / buka DevTools, kamu dapat <strong>peringatan</strong> dan otomatis dikembalikan ke full screen. Toleransi <strong>3x</strong>. Pelanggaran ke-<strong>4</strong> akan <strong>langsung menghentikan kuis</strong> dan menampilkan nilai.
     </div>
   </div>
 
+  <!-- KUIS -->
   <div id="quizScreen" class="screen">
     <div class="hud">
       <div class="hud-box"><div class="label">Soal</div><div class="value" id="qCounter">1/25</div></div>
@@ -296,6 +266,7 @@
     <div class="options" id="optionsBox"></div>
   </div>
 
+  <!-- MINI GAME ULAR -->
   <div id="bonusScreen" class="screen">
     <div class="bonus-title">🐍 ULAR-ULARAN!</div>
     <div class="bonus-sub">Gerakkan ular (⬆️⬇️⬅️➡️ / WASD / tombol di layar). Makan angka emas, hindari bom! 💣</div>
@@ -310,6 +281,7 @@
     </div>
   </div>
 
+  <!-- HASIL -->
   <div id="resultScreen" class="screen">
     <h1>🏁 Selesai!</h1>
     <div class="score-big" id="finalScore">0</div>
@@ -340,6 +312,7 @@
 
 </div>
 
+<!-- OVERLAY PERINGATAN KUNING -->
 <div id="warnOverlay">
   <div class="box">
     <div class="icon">⚠️</div>
@@ -347,19 +320,10 @@
     <div class="reason" id="warnReason">Alasan peringatan.</div>
     <div class="counter" id="warnCounter">Pelanggaran 1 dari 3</div>
     <p style="font-size:.85rem; opacity:.8; margin-top:8px;">
-      Pelanggaran ke-4 akan <strong>menghentikan kuis</strong>.
+      Klik tombol di bawah untuk kembali ke <strong>full screen</strong> dan melanjutkan kuis.<br>
+      Pelanggaran ke-4 akan <strong>langsung menghentikan kuis</strong>.
     </p>
-    <button class="btn-warn" id="warnOkBtn">Saya Mengerti</button>
-  </div>
-</div>
-
-<div id="cheatWarning">
-  <div class="box">
-    <div class="icon">⛔</div>
-    <h2>Kuis Dihentikan!</h2>
-    <div class="reason" id="cheatReason">Alasan pelanggaran.</div>
-    <p>Kamu telah melanggar <strong>4 kali</strong>. Skor dikirim ke guru dengan catatan pelanggaran.</p>
-    <p class="small">Tutup tab ini, lalu hubungi guru untuk memulai ulang.</p>
+    <button class="btn-warn" id="warnOkBtn">🔒 Kembali Full Screen & Lanjutkan</button>
   </div>
 </div>
 
@@ -373,7 +337,7 @@ const LETTERS = ["A","B","C","D"];
 const BONUS_EVERY = 5;
 const BONUS_DURATION = 10;
 const BONUS_PENALTY = 30;
-const MAX_VIOLATIONS = 3;
+const MAX_VIOLATIONS = 3;   // toleransi 3x, pelanggaran ke-4 = hentikan
 
 /* ⚠️ GANTI DENGAN URL /exec KAMU ⚠️ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
@@ -390,8 +354,6 @@ const warnOverlayEl = document.getElementById("warnOverlay");
 const warnReasonEl = document.getElementById("warnReason");
 const warnCounterEl = document.getElementById("warnCounter");
 const warnOkBtn = document.getElementById("warnOkBtn");
-const cheatWarningEl = document.getElementById("cheatWarning");
-const cheatReasonEl = document.getElementById("cheatReason");
 const fsInfoEl = document.getElementById("fsInfo");
 const warnCountEl = document.getElementById("warnCount");
 const warnHudEl = document.getElementById("warnHud");
@@ -422,12 +384,34 @@ function updateWarnHud() {
   }
 }
 
+/* Masuk full screen lagi (dipanggil dari klik user) */
+async function forceFullscreen() {
+  const el = document.documentElement;
+  try {
+    if (el.requestFullscreen) await el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
+    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+  } catch(e) {
+    console.warn("Full screen gagal:", e);
+  }
+}
+
+function exitFullscreen() {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+  } catch(e) {}
+}
+
+/* Dipanggil setiap pelanggaran */
 function handleViolation(reason) {
   if (cheatDetected) return;
 
   violations++;
   updateWarnHud();
 
+  // Pelanggaran 1, 2, 3 → peringatan kuning, kuis lanjut
   if (violations <= MAX_VIOLATIONS) {
     warnReasonEl.textContent = "⚠️ " + reason;
     warnCounterEl.textContent = `Pelanggaran ${violations} dari ${MAX_VIOLATIONS}`;
@@ -440,6 +424,7 @@ function handleViolation(reason) {
     return;
   }
 
+  // Pelanggaran ke-4 → langsung hentikan & tampilkan nilai
   cheatDetected = true;
   quizRunning = false;
   clearInterval(timerInterval);
@@ -447,18 +432,22 @@ function handleViolation(reason) {
   if (typeof snakeRAF !== "undefined" && snakeRAF) cancelAnimationFrame(snakeRAF);
 
   warnOverlayEl.classList.remove("show");
-  cheatReasonEl.textContent = "⚠️ " + reason;
-  cheatWarningEl.classList.add("show");
-
   playWarningBeep(880, 220, 0.5);
   vibrate([200, 100, 200, 100, 400]);
 
-  setTimeout(() => { kirimKeSheet(true); }, 500);
+  // Langsung tampilkan layar hasil dengan catatan pelanggaran
+  showResultScreen(true, reason);
 }
 
-warnOkBtn.onclick = () => {
+/* Tombol "Kembali Full Screen & Lanjutkan" */
+warnOkBtn.onclick = async () => {
   warnOverlayEl.classList.remove("show");
   warnShowing = false;
+
+  // Paksa masuk full screen lagi
+  await forceFullscreen();
+
+  // Lanjutkan kuis
   if (quizRunning) {
     if (!answered && !bonusActive) startTimer();
     if (bonusActive) {
@@ -490,7 +479,9 @@ document.addEventListener("keydown", e => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (quizRunning && !warnShowing && document.hidden) handleViolation("Kamu berpindah tab atau meminimalkan jendela.");
+  if (quizRunning && !warnShowing && document.hidden) {
+    handleViolation("Kamu berpindah tab atau meminimalkan jendela.");
+  }
 });
 
 window.addEventListener("blur", () => {
@@ -498,10 +489,14 @@ window.addEventListener("blur", () => {
 });
 
 document.addEventListener("fullscreenchange", () => {
-  if (quizRunning && !warnShowing && !document.fullscreenElement) handleViolation("Kamu keluar dari mode full screen.");
+  if (quizRunning && !warnShowing && !document.fullscreenElement) {
+    handleViolation("Kamu keluar dari mode full screen.");
+  }
 });
 document.addEventListener("webkitfullscreenchange", () => {
-  if (quizRunning && !warnShowing && !document.webkitFullscreenElement) handleViolation("Kamu keluar dari mode full screen.");
+  if (quizRunning && !warnShowing && !document.webkitFullscreenElement) {
+    handleViolation("Kamu keluar dari mode full screen.");
+  }
 });
 
 setInterval(() => {
@@ -511,22 +506,7 @@ setInterval(() => {
   if (wDiff > 200 || hDiff > 200) handleViolation("Terdeteksi DevTools terbuka.");
 }, 1500);
 
-async function enterFullscreen() {
-  const el = document.documentElement;
-  try {
-    if (el.requestFullscreen) await el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-    else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
-    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-  } catch(e) { console.warn("Full screen gagal:", e); }
-}
-
-function exitFullscreen() {
-  try {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
-  } catch(e) {}
-}
+async function enterFullscreen() { await forceFullscreen(); }
 
 /* ============================================================
    BANK SOAL
@@ -791,7 +771,7 @@ function nextQuestion() {
   if (current < quizQuestions.length) {
     renderQuestion();
   } else {
-    finishQuiz();
+    showResultScreen(false);
   }
 }
 
@@ -1002,9 +982,9 @@ function endSnakeGame(onDone) {
 }
 
 /* ============================================================
-   SELESAI + KIRIM KE SHEETS
+   TAMPILKAN LAYAR HASIL (dipakai normal & saat pelanggaran ke-4)
    ============================================================ */
-function finishQuiz() {
+function showResultScreen(isViolation, reason) {
   quizRunning = false;
   fsInfoEl.classList.remove("show");
   progressFill.style.width = "100%";
@@ -1019,17 +999,36 @@ function finishQuiz() {
 
   const pct = Math.round((correctCount / quizQuestions.length) * 100);
   let msg = "";
-  if (pct === 100) msg = "🔥 Sempurna! Kamu master pengolahan data!";
-  else if (pct >= 80) msg = "🌟 Hebat! Pemahamanmu sangat baik.";
-  else if (pct >= 60) msg = "👍 Bagus! Sedikit lagi jadi ahli.";
-  else if (pct >= 40) msg = "💪 Lumayan. Ayo belajar lagi!";
-  else msg = "📚 Jangan menyerah, coba lagi ya!";
-  $("resultMsg").textContent = `${pct}% benar — ${msg}`;
+  if (isViolation) {
+    msg = `⛔ Kuis dihentikan karena pelanggaran ke-${violations}. ` +
+          `Alasan terakhir: ${reason || "-"}. Nilai tetap dikirim ke guru.`;
+  } else {
+    if (pct === 100) msg = "🔥 Sempurna! Kamu master pengolahan data!";
+    else if (pct >= 80) msg = "🌟 Hebat! Pemahamanmu sangat baik.";
+    else if (pct >= 60) msg = "👍 Bagus! Sedikit lagi jadi ahli.";
+    else if (pct >= 40) msg = "💪 Lumayan. Ayo belajar lagi!";
+    else msg = "📚 Jangan menyerah, coba lagi ya!";
+    msg = `${pct}% benar — ${msg}`;
+  }
+  $("resultMsg").textContent = msg;
+
+  // Sembunyikan spin wheel kalau dihentikan karena pelanggaran
+  const wheelWrap = document.querySelector(".wheel-wrap");
+  if (isViolation) {
+    wheelWrap.style.display = "none";
+  } else {
+    wheelWrap.style.display = "flex";
+  }
 
   exitFullscreen();
-  kirimKeSheet(false);
+
+  // Kirim ke sheet
+  setTimeout(() => { kirimKeSheet(isViolation); }, 300);
 }
 
+/* ============================================================
+   KIRIM KE SHEETS
+   ============================================================ */
 function kirimKeSheet(isViolation) {
   const statusEl = $("sheetStatus");
   if (!SHEET_URL || SHEET_URL.includes("XXXXX")) {
@@ -1154,8 +1153,8 @@ $("playAgainBtn").onclick = () => {
   wheelRotation = 0;
   wheelSpun = false;
   $("spinBtn").disabled = false;
-  cheatWarningEl.classList.remove("show");
   warnOverlayEl.classList.remove("show");
+  document.querySelector(".wheel-wrap").style.display = "flex";
   showScreen(startScreen);
 };
 $("spinBtn").onclick = spinWheel;
