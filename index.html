@@ -6,15 +6,15 @@
 <title>🎮 Kuis Pengolahan Data</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
   body {
-    min-height: 100vh;
     background: linear-gradient(135deg, #1e1e2f 0%, #2d1b4e 50%, #1a1a3e 100%);
     display: flex; align-items: center; justify-content: center;
     padding: 16px; color: #fff;
     user-select: none; -webkit-user-select: none;
   }
   .card {
-    width: 100%; max-width: 680px;
+    width: 100%; max-width: 680px; max-height: 96vh; overflow-y: auto;
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 24px; padding: 32px 28px;
@@ -119,7 +119,7 @@
   .stat-item .num { font-size: 1.5rem; font-weight: 700; }
   .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
 
-  /* ===== MINI GAME: ULAR-ULARAN ===== */
+  /* MINI GAME */
   #bonusScreen .bonus-title {
     text-align: center; font-size: 1.4rem; font-weight: 800;
     background: linear-gradient(90deg, #f7971e, #ffd200);
@@ -133,9 +133,7 @@
     border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.25);
     touch-action: none; max-width: 100%; height: auto;
   }
-  .bonus-info {
-    display: flex; justify-content: space-between; margin-top: 14px; font-size: .9rem;
-  }
+  .bonus-info { display: flex; justify-content: space-between; margin-top: 14px; font-size: .9rem; }
   .bonus-info span { opacity: .85; }
   .bonus-info strong { color: #ffd200; }
   .dpad {
@@ -150,13 +148,9 @@
   .dpad button:active { background: rgba(255,210,0,0.4); }
   @media (max-width: 600px) { .dpad { display: grid; } }
 
-  /* ===== SPIN WHEEL ===== */
-  .wheel-wrap {
-    display: flex; flex-direction: column; align-items: center; margin-top: 10px;
-  }
-  .wheel-container {
-    position: relative; width: 220px; height: 220px; margin-bottom: 14px;
-  }
+  /* SPIN WHEEL */
+  .wheel-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
+  .wheel-container { position: relative; width: 220px; height: 220px; margin-bottom: 14px; }
   .wheel-pointer {
     position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
     width: 0; height: 0;
@@ -170,30 +164,62 @@
     box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 10px 30px rgba(0,0,0,0.5);
     transition: transform 4s cubic-bezier(.15,.85,.25,1);
   }
-  .wheel-result {
-    text-align: center; font-weight: 700; font-size: 1.05rem;
-    min-height: 24px; color: #ffd200;
-  }
+  .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #ffd200; }
 
-  /* Warning anti-curang */
+  /* OVERLAY PERINGATAN ANTI-CURANG */
   #cheatWarning {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    position: fixed; inset: 0;
+    background: radial-gradient(circle, rgba(120,0,0,0.97), rgba(0,0,0,0.98));
     display: none; align-items: center; justify-content: center;
-    z-index: 9999; text-align: center; padding: 24px;
+    z-index: 99999; text-align: center; padding: 24px;
+    animation: warningFlash .6s ease infinite alternate;
   }
   #cheatWarning.show { display: flex; }
-  #cheatWarning .box {
-    background: #2d1b4e; border: 2px solid #ff4757; border-radius: 20px;
-    padding: 32px; max-width: 420px;
+  @keyframes warningFlash {
+    from { background: radial-gradient(circle, rgba(120,0,0,0.97), rgba(0,0,0,0.98)); }
+    to   { background: radial-gradient(circle, rgba(180,0,0,0.97), rgba(20,0,0,0.98)); }
   }
-  #cheatWarning h2 { color: #ff4757; margin-bottom: 14px; }
-  #cheatWarning p { opacity: .85; line-height: 1.5; }
+  #cheatWarning .box {
+    background: #1a0a0a; border: 3px solid #ff4757; border-radius: 20px;
+    padding: 36px 32px; max-width: 480px;
+    box-shadow: 0 0 60px rgba(255,71,87,0.8);
+    animation: shake .4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  #cheatWarning .icon { font-size: 4rem; margin-bottom: 10px; animation: pulse 0.6s infinite alternate; }
+  #cheatWarning h2 {
+    color: #ff4757; margin-bottom: 14px; font-size: 1.6rem;
+    text-transform: uppercase; letter-spacing: 2px;
+  }
+  #cheatWarning .reason {
+    background: rgba(255,71,87,0.15); border-left: 4px solid #ff4757;
+    padding: 12px 16px; border-radius: 8px;
+    margin: 16px 0; font-size: .95rem; color: #ffcccc; text-align: left;
+  }
+  #cheatWarning p { opacity: .85; line-height: 1.5; margin-bottom: 8px; }
+  #cheatWarning .small { font-size: .8rem; opacity: .5; margin-top: 16px; }
+
+  #fsInfo {
+    position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 99px;
+    font-size: .75rem; opacity: .8; z-index: 100;
+    display: none; align-items: center; gap: 6px;
+  }
+  #fsInfo.show { display: flex; }
+  #fsInfo .dot { width: 8px; height: 8px; border-radius: 50%; background: #2ed573; animation: pulse 1s infinite alternate; }
 </style>
 </head>
 <body>
+
+<div id="fsInfo"><span class="dot"></span> Mode Ujian Aktif</div>
+
 <div class="card">
 
-  <!-- ===== LAYAR START ===== -->
+  <!-- START -->
   <div id="startScreen" class="screen active">
     <h1>🎮 Kuis Pengolahan Data</h1>
     <p class="sub">Satuan Ukuran Data & Rumus Excel</p>
@@ -211,13 +237,14 @@
         <input type="text" id="inputKelas" placeholder="Contoh: VII A" maxlength="20" autocomplete="off">
       </div>
     </div>
-    <button class="btn" id="startBtn">🚀 Mulai Bermain</button>
-    <p style="text-align:center; font-size:.75rem; opacity:.5; margin-top:16px;">
-      ⚠️ Kuis ini dilindungi anti-curang. Jangan buka DevTools atau pindah tab saat bermain.
-    </p>
+    <button class="btn" id="startBtn">🚀 Mulai Bermain (Full Screen)</button>
+    <div style="margin-top:16px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
+      <strong style="color:#ff4757;">⚠️ PERINGATAN:</strong><br>
+      Saat mulai, layar akan masuk mode <strong>full screen</strong>. Jika kamu keluar dari full screen, pindah tab, atau membuka DevTools, kuis akan <strong>otomatis dihentikan</strong> dan tercatat sebagai pelanggaran.
+    </div>
   </div>
 
-  <!-- ===== LAYAR KUIS ===== -->
+  <!-- KUIS -->
   <div id="quizScreen" class="screen">
     <div class="hud">
       <div class="hud-box"><div class="label">Soal</div><div class="value" id="qCounter">1/25</div></div>
@@ -229,7 +256,7 @@
     <div class="options" id="optionsBox"></div>
   </div>
 
-  <!-- ===== LAYAR MINI GAME: ULAR-ULARAN ===== -->
+  <!-- MINI GAME ULAR -->
   <div id="bonusScreen" class="screen">
     <div class="bonus-title">🐍 ULAR-ULARAN!</div>
     <div class="bonus-sub">Gerakkan ular (⬆️⬇️⬅️➡️ / WASD / tombol di layar). Makan angka emas, hindari bom! 💣</div>
@@ -244,7 +271,7 @@
     </div>
   </div>
 
-  <!-- ===== LAYAR HASIL ===== -->
+  <!-- HASIL -->
   <div id="resultScreen" class="screen">
     <h1>🏁 Selesai!</h1>
     <div class="score-big" id="finalScore">0</div>
@@ -275,12 +302,14 @@
 
 </div>
 
-<!-- Warning overlay -->
+<!-- OVERLAY PERINGATAN -->
 <div id="cheatWarning">
   <div class="box">
-    <h2>⛔ Terdeteksi Curang!</h2>
-    <p>Kamu terdeteksi membuka DevTools atau pindah tab. Kuis dihentikan dan skor tidak dikirim.</p>
-    <p style="margin-top:14px; opacity:.6; font-size:.85rem;">Tutup tab ini lalu mulai ulang dengan jujur.</p>
+    <div class="icon">⛔</div>
+    <h2>Kuis Dihentikan!</h2>
+    <div class="reason" id="cheatReason">Alasan pelanggaran akan ditampilkan di sini.</div>
+    <p>Skor kamu tetap dikirim ke guru dengan <strong>catatan pelanggaran</strong>.</p>
+    <p class="small">Tutup tab ini, lalu hubungi guru untuk memulai ulang.</p>
   </div>
 </div>
 
@@ -299,18 +328,51 @@ const BONUS_PENALTY = 30;
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
 /* ============================================================
-   ANTI-CURANG
+   ANTI-CURANG + FULL SCREEN
    ============================================================ */
 let quizRunning = false;
 let cheatDetected = false;
+let violations = 0;
 
-function triggerCheatWarning() {
+const cheatWarningEl = document.getElementById("cheatWarning");
+const cheatReasonEl = document.getElementById("cheatReason");
+const fsInfoEl = document.getElementById("fsInfo");
+
+function playWarningBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.6);
+  } catch(e) {}
+}
+
+function vibrate() {
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
+}
+
+function triggerCheat(reason) {
   if (cheatDetected) return;
   cheatDetected = true;
+  violations++;
   quizRunning = false;
   clearInterval(timerInterval);
   clearInterval(bonusTimerInterval);
-  document.getElementById("cheatWarning").classList.add("show");
+  if (typeof snakeRAF !== "undefined" && snakeRAF) cancelAnimationFrame(snakeRAF);
+
+  cheatReasonEl.textContent = "⚠️ " + reason;
+  cheatWarningEl.classList.add("show");
+
+  playWarningBeep();
+  vibrate();
+
+  setTimeout(() => { kirimKeSheet(true); }, 500);
 }
 
 document.addEventListener("contextmenu", e => e.preventDefault());
@@ -324,28 +386,56 @@ document.addEventListener("keydown", e => {
     (e.metaKey && e.altKey && ["i","j","c"].includes(k))
   ) {
     e.preventDefault();
-    if (quizRunning) triggerCheatWarning();
+    if (quizRunning) triggerCheat("Kamu mencoba membuka DevTools / view source.");
   }
-  if (quizRunning && (e.ctrlKey && ["c","v","a"].includes(k))) {
-    e.preventDefault();
-  }
+  if (quizRunning && (e.ctrlKey && ["c","v","a"].includes(k))) e.preventDefault();
+  if (quizRunning && e.key === "Escape") e.preventDefault();
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (quizRunning && document.hidden) triggerCheatWarning();
+  if (quizRunning && document.hidden) triggerCheat("Kamu berpindah tab atau meminimalkan jendela.");
 });
+
 window.addEventListener("blur", () => {
-  if (quizRunning) triggerCheatWarning();
+  if (quizRunning) triggerCheat("Jendela kuis kehilangan fokus.");
 });
+
+document.addEventListener("fullscreenchange", () => {
+  if (quizRunning && !document.fullscreenElement) triggerCheat("Kamu keluar dari mode full screen.");
+});
+document.addEventListener("webkitfullscreenchange", () => {
+  if (quizRunning && !document.webkitFullscreenElement) triggerCheat("Kamu keluar dari mode full screen.");
+});
+
 setInterval(() => {
   if (!quizRunning) return;
   const wDiff = window.outerWidth - window.innerWidth;
   const hDiff = window.outerHeight - window.innerHeight;
-  if (wDiff > 200 || hDiff > 200) triggerCheatWarning();
+  if (wDiff > 200 || hDiff > 200) triggerCheat("Terdeteksi DevTools terbuka (ukuran jendela berubah).");
 }, 1500);
 
+async function enterFullscreen() {
+  const el = document.documentElement;
+  try {
+    if (el.requestFullscreen) await el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
+    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+  } catch(e) {
+    console.warn("Full screen gagal:", e);
+    alert("Browser memblokir full screen. Kuis tetap berjalan, tapi proteksi full screen tidak aktif.");
+  }
+}
+
+function exitFullscreen() {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+  } catch(e) {}
+}
+
 /* ============================================================
-   BANK SOAL (plain text)
+   BANK SOAL
    ============================================================ */
 const QUESTIONS = [
   { q: "Urutan satuan ukuran data dari terkecil ke terbesar yang benar adalah...",
@@ -441,6 +531,7 @@ let timeLeft = 0;
 let timerInterval = null;
 let answered = false;
 let quizQuestions = [];
+let detailJawaban = [];
 
 let bonusActive = false;
 let bonusTimeLeft = 0;
@@ -492,7 +583,7 @@ function showScreen(el) {
   el.classList.add("active");
 }
 
-function startQuiz() {
+async function startQuiz() {
   const nama = $("inputNama").value.trim();
   const absen = $("inputAbsen").value.trim();
   const kelas = $("inputKelas").value.trim();
@@ -501,8 +592,12 @@ function startQuiz() {
   if (!absen) { alert("No. absen wajib diisi!"); $("inputAbsen").focus(); return; }
   if (!kelas) { alert("Kelas wajib diisi!"); $("inputKelas").focus(); return; }
 
+  await enterFullscreen();
+
   siswa = { nama, absen, kelas };
   current = 0; score = 0; correctCount = 0;
+  detailJawaban = [];
+  violations = 0;
   quizQuestions = buildShuffledQuestions(QUESTIONS);
   wheelSpun = false;
   wheelRotation = 0;
@@ -510,6 +605,8 @@ function startQuiz() {
   $("wheelResult").textContent = "";
   cheatDetected = false;
   quizRunning = true;
+
+  fsInfoEl.classList.add("show");
   showScreen(quizScreen);
   renderQuestion();
 }
@@ -562,6 +659,9 @@ function selectAnswer(index, btn) {
     if (i === correctIndex) b.classList.add("correct");
     else if (i === index) b.classList.add("wrong");
   });
+
+  const status = (index === correctIndex) ? "BENAR" : "SALAH";
+  detailJawaban.push({ no: current + 1, status });
 
   if (index === correctIndex) {
     correctCount++;
@@ -622,8 +722,7 @@ function startSnakeGame(onDone) {
     food: {x: 10, y: 5, value: 10},
     bombs: [],
     cell: CELL, cols: COLS, rows: ROWS,
-    lastMove: 0,
-    moveInterval: 140
+    lastMove: 0, moveInterval: 140
   };
 
   function randomFood() {
@@ -803,10 +902,11 @@ function endSnakeGame(onDone) {
 }
 
 /* ============================================================
-   SELESAI KUIS + KIRIM KE SHEETS
+   SELESAI + KIRIM KE SHEETS
    ============================================================ */
 function finishQuiz() {
   quizRunning = false;
+  fsInfoEl.classList.remove("show");
   progressFill.style.width = "100%";
   showScreen(resultScreen);
   $("finalScore").textContent = score;
@@ -826,33 +926,40 @@ function finishQuiz() {
   else msg = "📚 Jangan menyerah, coba lagi ya!";
   $("resultMsg").textContent = `${pct}% benar — ${msg}`;
 
-  sendToSheet({
-    nama: siswa.nama,
-    absen: siswa.absen,
-    kelas: siswa.kelas,
-    skor: score,
-    benar: correctCount,
-    salah: quizQuestions.length - correctCount,
-    persentase: pct
-  });
+  exitFullscreen();
+  kirimKeSheet(false);
 }
 
-function sendToSheet(data) {
+function kirimKeSheet(isViolation) {
   const statusEl = $("sheetStatus");
   if (!SHEET_URL || SHEET_URL.includes("XXXXX")) {
     if (statusEl) statusEl.textContent = "⚠️ URL spreadsheet belum diatur oleh guru.";
     return;
   }
   if (statusEl) statusEl.textContent = "⏳ Mengirim nilai ke spreadsheet...";
+
+  const payload = {
+    nama: siswa.nama,
+    absen: siswa.absen,
+    kelas: siswa.kelas,
+    nilai: score,
+    detail: detailJawaban,
+    pelanggaran: violations
+  };
+
   fetch(SHEET_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(data)
-  }).then(() => {
-    if (statusEl) statusEl.textContent = "✅ Nilai berhasil dikirim ke guru!";
-  }).catch(err => {
-    if (statusEl) statusEl.textContent = "❌ Gagal mengirim nilai. Cek koneksi internet.";
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    if (statusEl) statusEl.textContent = isViolation
+      ? "⚠️ Nilai terkirim DENGAN catatan pelanggaran."
+      : "✅ Nilai terkirim! Cek spreadsheet.";
+  })
+  .catch(err => {
+    if (statusEl) statusEl.textContent = "❌ Gagal mengirim. Cek koneksi.";
     console.error(err);
   });
 }
@@ -927,16 +1034,7 @@ function spinWheel() {
       ? `🎉 Dapat +${seg.value} poin!`
       : `😅 Zonk! Dapat 0 poin.`;
 
-    const pct = Math.round((correctCount / quizQuestions.length) * 100);
-    sendToSheet({
-      nama: siswa.nama,
-      absen: siswa.absen,
-      kelas: siswa.kelas,
-      skor: score,
-      benar: correctCount,
-      salah: quizQuestions.length - correctCount,
-      persentase: pct
-    });
+    kirimKeSheet(false);
   }, 4200);
 }
 
@@ -956,6 +1054,7 @@ $("playAgainBtn").onclick = () => {
   wheelRotation = 0;
   wheelSpun = false;
   $("spinBtn").disabled = false;
+  cheatWarningEl.classList.remove("show");
   showScreen(startScreen);
 };
 $("spinBtn").onclick = spinWheel;
