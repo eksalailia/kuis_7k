@@ -15,7 +15,6 @@
     position: relative;
   }
 
-  /* Awan dekorasi */
   .cloud {
     position: fixed; background: #fff; border-radius: 50px;
     opacity: .85; pointer-events: none; z-index: 0;
@@ -31,7 +30,6 @@
   .cloud.c3 { width: 70px; height: 26px; top: 4%; left: 55%; animation: drift 26s linear infinite; }
   @keyframes drift { from { transform: translateX(0); } to { transform: translateX(40px); } }
 
-  /* Tanah */
   .ground { position: fixed; bottom: 0; left: 0; right: 0; height: 40px;
     background: repeating-linear-gradient(90deg, #6b4423 0 32px, #7a4f2a 32px 64px);
     border-top: 6px solid #4a8f2b; z-index: 0; }
@@ -74,31 +72,30 @@
   #warnHud.danger .value { color: #ff4757; animation: pulse .5s alternate infinite; }
   @keyframes pulse { from { transform: scale(1);} to { transform: scale(1.12);} }
 
-  /* Progress koin */
-  .coin-progress {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    margin-bottom: 14px; flex-wrap: wrap;
+  /* Progress soal */
+  .q-progress {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    margin-bottom: 12px; flex-wrap: wrap;
   }
-  .coin-dot {
-    width: 26px; height: 26px; border-radius: 50%;
+  .q-dot {
+    width: 24px; height: 24px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: .75rem; font-weight: 800;
+    font-size: .7rem; font-weight: 800;
     background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.4);
     transition: all .3s;
   }
-  .coin-dot.active {
+  .q-dot.done {
+    background: radial-gradient(circle at 30% 30%, #b6ffb6, #2ed573 60%, #0d7a3a);
+    border-color: #0d7a3a; color: #fff;
+  }
+  .q-dot.current {
     background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
     border-color: #ffd200; color: #3a2400;
     box-shadow: 0 0 12px rgba(255,210,0,0.7);
     transform: scale(1.1);
   }
-  .coin-dot.done {
-    background: radial-gradient(circle at 30% 30%, #b6ffb6, #2ed573 60%, #0d7a3a);
-    border-color: #0d7a3a; color: #fff;
-  }
 
-  /* 🍄 GAME SCREEN */
   #gameScreen { position: relative; }
   #marioArena {
     display: block; width: 100%; max-width: 100%; height: auto;
@@ -113,6 +110,7 @@
     border-radius: 10px; border: 1px solid rgba(255,210,0,0.3);
   }
   .game-hint b { color: #ffd200; }
+  .game-hint .special-hint { color: #ff6b9d; font-weight: 700; }
   .mario-ctrl {
     display: flex; justify-content: center; margin-top: 12px;
   }
@@ -130,7 +128,7 @@
     box-shadow: 0 3px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
   }
 
-  /* 🍄 QUESTION OVERLAY di atas game */
+  /* QUESTION OVERLAY */
   #questionOverlay {
     display: none;
     position: absolute; inset: 0;
@@ -170,11 +168,11 @@
   .q-coin {
     position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
     width: 38px; height: 38px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
-    border: 3px solid #8a5a00;
+    background: radial-gradient(circle at 30% 30%, #ffb3d9, #ff6b9d 60%, #c4307a);
+    border: 3px solid #8a1a4e;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; font-weight: 800; color: #8a5a00;
-    box-shadow: 0 3px 0 #8a5a00, 0 0 14px rgba(255,210,0,0.7);
+    font-size: 1.4rem; font-weight: 800; color: #fff;
+    box-shadow: 0 3px 0 #8a1a4e, 0 0 14px rgba(255,107,157,0.8);
     animation: coinBounce 1.4s ease-in-out infinite;
     z-index: 3;
   }
@@ -272,7 +270,6 @@
   .stat-item .num { font-size: 1.5rem; font-weight: 700; color: #ffd200; }
   .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
 
-  /* SPIN WHEEL */
   .wheel-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
   .wheel-container { position: relative; width: 200px; height: 200px; margin-bottom: 14px; }
   .wheel-pointer {
@@ -291,7 +288,6 @@
   }
   .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #ffd200; }
 
-  /* OVERLAY PERINGATAN MERAH */
   #tab-warning-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(220, 38, 38, 0.97); z-index: 9999; color: white;
@@ -331,6 +327,8 @@
   #feedbackBanner.show { display: block; }
   #feedbackBanner.correct { background: linear-gradient(180deg, #7bf0a3, #2ed573); color: #06301a; }
   #feedbackBanner.wrong { background: linear-gradient(180deg, #ff8a8a, #ff4757); color: #fff; }
+  #feedbackBanner.coin-msg { background: linear-gradient(180deg, #ffe97a, #ffb800); color: #3a2400; font-size: 1.2rem; }
+  #feedbackBanner.special-msg { background: linear-gradient(180deg, #ffb3d9, #ff6b9d); color: #fff; font-size: 1.1rem; }
 </style>
 </head>
 <body>
@@ -363,9 +361,12 @@
       </div>
     </div>
     <button class="btn" id="startBtn">🚀 Mulai Bermain (Full Screen)</button>
-    <div style="margin-top:16px; padding:12px 14px; background:rgba(255,210,0,0.1); border-left:3px solid #ffd200; border-radius:8px; font-size:.78rem; line-height:1.5;">
+    <div style="margin-top:16px; padding:12px 14px; background:rgba(255,210,0,0.1); border-left:3px solid #ffd200; border-radius:8px; font-size:.8rem; line-height:1.55;">
       <strong style="color:#ffd200;">🎮 CARA BERMAIN:</strong><br>
-      Gerakkan Mario dengan tombol <b>LOMPAT</b> (atau SPASI / ⬆️ / W). Setiap kali Mario <b>mengambil koin 🪙</b>, akan muncul <b>pertanyaan</b> yang harus kamu jawab. Ada <b>25 pertanyaan</b> total. Jawab dengan tepat untuk skor maksimal!
+      Gerakkan Mario dengan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk melompat dan mengambil koin.<br><br>
+      🪙 <b>Koin emas biasa</b> = +10 poin, tanpa pertanyaan.<br>
+      💗 <b>Koin pink berkedip</b> = memunculkan <b>pertanyaan</b>!<br><br>
+      Ada <b>10 pertanyaan</b> yang tersebar di antara koin-koin. Jawab dengan tepat untuk skor maksimal! Kumpulkan koin sebanyak mungkin dalam <b>2 menit</b>.
     </div>
     <div style="margin-top:10px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
       <strong style="color:#ff4757;">⚠️ PERINGATAN:</strong><br>
@@ -376,33 +377,31 @@
   <!-- GAME + KUIS -->
   <div id="gameScreen" class="screen">
     <div class="hud">
-      <div class="hud-box"><div class="label">Koin</div><div class="value" id="coinHud">0/25</div></div>
+      <div class="hud-box"><div class="label">Soal</div><div class="value" id="qHud">0/10</div></div>
       <div class="hud-box"><div class="label">Skor</div><div class="value" id="scoreHud">0</div></div>
+      <div class="hud-box"><div class="label">Waktu</div><div class="value" id="timeHud">2:00</div></div>
       <div class="hud-box" id="warnHud"><div class="label">Pelanggaran</div><div class="value" id="warnCount">0/3</div></div>
     </div>
 
-    <!-- Progress koin -->
-    <div class="coin-progress" id="coinProgress"></div>
+    <div class="q-progress" id="qProgress"></div>
 
     <div style="position: relative;">
       <canvas id="marioArena" width="640" height="300"></canvas>
 
-      <!-- Overlay pertanyaan -->
       <div id="questionOverlay">
         <div class="question-box">
           <div class="q-coin">?</div>
-          <div class="q-label" id="qLabel">❓ Pertanyaan 1</div>
+          <div class="q-label" id="qLabel">💗 Pertanyaan Bonus 1</div>
           <div class="question" id="questionText"></div>
         </div>
         <div class="options" id="optionsBox"></div>
       </div>
 
-      <!-- Feedback banner -->
       <div id="feedbackBanner"></div>
     </div>
 
     <div class="game-hint" id="gameHint">
-      Tekan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk melompat & mengambil koin 🪙
+      Ambil koin <b>🪙 emas</b> untuk poin, tapi waspada koin <span class="special-hint">💗 pink berkedip</span> — itu memunculkan pertanyaan!
     </div>
     <div class="mario-ctrl">
       <button id="jumpBtn">🦘 LOMPAT!</button>
@@ -441,7 +440,6 @@
 
 </div>
 
-<!-- OVERLAY PERINGATAN MERAH -->
 <div id="tab-warning-overlay">
   <h2>⚠️ JANGAN PINDAH TAB!</h2>
   <p>Kamu terdeteksi meninggalkan halaman kuis.</p>
@@ -455,11 +453,16 @@
 /* ============================================================
    KONFIGURASI
    ============================================================ */
-const POINT_BASE = 100;
-const POINT_SPEED_BONUS = 5;
-const TIME_PER_Q = 20;
+const POINT_COIN = 10;                 // poin koin biasa
+const POINT_QUESTION = 100;            // poin dasar jawaban benar
+const POINT_SPEED_BONUS = 5;           // bonus per detik sisa
+const TIME_PER_Q = 20;                 // detik untuk menjawab
+const TOTAL_QUESTIONS = 10;            // jumlah pertanyaan yang muncul (acak dari bank)
+const GAME_DURATION = 120;             // durasi game 2 menit
 const LETTERS = ["A","B","C","D"];
 const MAKS_PELANGGARAN = 3;
+const SPECIAL_COIN_CHANCE = 0.35;      // 35% koin yang di-spawn adalah koin spesial
+const MAX_COINS_ON_SCREEN = 3;         // batas koin di layar biar tetap seru
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
@@ -487,8 +490,9 @@ function catatPelanggaran(pesan) {
   pelanggaran++;
   updateWarnHud();
   warnCountEl.innerText = pelanggaran;
-
-  pauseGame();
+  gamePaused = true;
+  clearInterval(gameTimerInterval);
+  clearInterval(timerInterval);
 
   if (pelanggaran >= MAKS_PELANGGARAN) {
     warnMsgEl.innerHTML = "<b>Batas pelanggaran tercapai!</b> Kuis akan otomatis diakhiri.";
@@ -509,31 +513,33 @@ function kembaliKeKuis() {
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {});
   }
-  resumeGame();
+  gamePaused = false;
+  if (kuisAktif && !waitingAnswer) {
+    startGameTimer();
+  }
+  if (kuisAktif && waitingAnswer) {
+    startQuestionTimer();
+  }
 }
 
 document.addEventListener("visibilitychange", function () {
   if (!kuisAktif) return;
   if (document.hidden) catatPelanggaran("Kamu berpindah tab atau meminimalkan jendela.");
 });
-
 window.addEventListener("blur", function () {
   if (kuisAktif && !warnOverlayEl.classList.contains('show')) {
     catatPelanggaran("Jendela kuis kehilangan fokus.");
   }
 });
-
 document.addEventListener("fullscreenchange", function () {
   if (kuisAktif && !document.fullscreenElement) catatPelanggaran("Jangan keluar dari mode fullscreen!");
 });
 document.addEventListener("webkitfullscreenchange", function () {
   if (kuisAktif && !document.webkitFullscreenElement) catatPelanggaran("Jangan keluar dari mode fullscreen!");
 });
-
 document.addEventListener('contextmenu', function (e) {
   if (kuisAktif) e.preventDefault();
 });
-
 document.addEventListener('keydown', function (e) {
   if (!kuisAktif) return;
   const k = e.key.toLowerCase();
@@ -637,19 +643,21 @@ let siswa = { nama: "", absen: "", kelas: "" };
 let score = 0;
 let correctCount = 0;
 let answeredCount = 0;
-let quizQuestions = [];
+let quizQuestions = [];       // soal yang akan muncul (10 acak dari bank)
 let detailJawaban = [];
-let coinIndex = 0;          // koin ke berapa yang sudah diambil (= soal ke berapa)
 let currentQuestionIdx = -1;
+let coinsCollected = 0;
 
-// Timer soal
-let timerInterval = null;
+// Timer
+let timerInterval = null;      // timer jawab soal
 let timeLeft = 0;
+let gameTimerInterval = null;  // timer durasi game
+let gameTimeLeft = 0;
 
-// Game state
+// Game
 let gameRunning = false;
 let gamePaused = false;
-let waitingAnswer = false;  // true saat pertanyaan muncul & game berhenti
+let waitingAnswer = false;
 let marioState = null;
 let marioRAF = null;
 
@@ -664,8 +672,8 @@ const $ = id => document.getElementById(id);
 const startScreen = $("startScreen"), gameScreen = $("gameScreen"), resultScreen = $("resultScreen");
 const questionOverlay = $("questionOverlay");
 const questionText = $("questionText"), optionsBox = $("optionsBox");
-const coinHud = $("coinHud"), scoreHud = $("scoreHud");
-const coinProgress = $("coinProgress");
+const qHud = $("qHud"), scoreHud = $("scoreHud"), timeHud = $("timeHud");
+const qProgress = $("qProgress");
 const feedbackBanner = $("feedbackBanner");
 
 /* ============================================================
@@ -697,17 +705,23 @@ function showScreen(el) {
   el.classList.add("active");
 }
 
-function renderCoinProgress() {
-  coinProgress.innerHTML = "";
-  for (let i = 0; i < quizQuestions.length; i++) {
+function renderQProgress() {
+  qProgress.innerHTML = "";
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
     const d = document.createElement("div");
-    d.className = "coin-dot";
-    if (i < coinIndex) d.classList.add("done");
-    else if (i === coinIndex) d.classList.add("active");
-    d.textContent = i < coinIndex ? "✓" : (i + 1);
-    coinProgress.appendChild(d);
+    d.className = "q-dot";
+    if (i < answeredCount) d.classList.add("done");
+    else if (i === answeredCount) d.classList.add("current");
+    d.textContent = i < answeredCount ? "✓" : (i + 1);
+    qProgress.appendChild(d);
   }
-  coinHud.textContent = `${coinIndex}/${quizQuestions.length}`;
+  qHud.textContent = `${answeredCount}/${TOTAL_QUESTIONS}`;
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 /* ============================================================
@@ -726,11 +740,11 @@ async function startQuiz() {
     if (document.documentElement.requestFullscreen) {
       await document.documentElement.requestFullscreen();
     }
-  } catch(e) { console.warn("Fullscreen gagal:", e); }
+  } catch(e) {}
 
   siswa = { nama, absen, kelas };
   score = 0; correctCount = 0; answeredCount = 0;
-  coinIndex = 0;
+  coinsCollected = 0;
   detailJawaban = [];
   pelanggaran = 0;
   sudahKirim = false;
@@ -738,14 +752,17 @@ async function startQuiz() {
   wheelRotation = 0;
   currentQuestionIdx = -1;
   waitingAnswer = false;
+  gameTimeLeft = GAME_DURATION;
 
   updateWarnHud();
   warnHudEl.classList.remove("danger");
 
-  quizQuestions = buildShuffledQuestions(QUESTIONS);
+  // Ambil 10 soal acak dari bank
+  quizQuestions = buildShuffledQuestions(QUESTIONS).slice(0, TOTAL_QUESTIONS);
 
   scoreHud.textContent = "0";
-  renderCoinProgress();
+  timeHud.textContent = formatTime(gameTimeLeft);
+  renderQProgress();
 
   $("spinBtn").disabled = false;
   $("wheelResult").textContent = "";
@@ -755,6 +772,24 @@ async function startQuiz() {
   showScreen(gameScreen);
 
   startMarioGame();
+  startGameTimer();
+}
+
+function startGameTimer() {
+  clearInterval(gameTimerInterval);
+  gameTimerInterval = setInterval(() => {
+    if (!kuisAktif || gamePaused || waitingAnswer) return;
+    gameTimeLeft--;
+    timeHud.textContent = formatTime(gameTimeLeft);
+    if (gameTimeLeft <= 10) timeHud.style.color = "#ff4757";
+    if (gameTimeLeft <= 0) {
+      clearInterval(gameTimerInterval);
+      // Waktu habis → akhiri game
+      if (answeredCount < TOTAL_QUESTIONS) {
+        finishQuiz(false, true);
+      }
+    }
+  }, 1000);
 }
 
 /* ============================================================
@@ -776,17 +811,29 @@ function startMarioGame() {
     groundY: GROUND_Y,
     gravity: 0.9,
     jumpPower: -14.5,
-    speed: 3.5,
+    speed: 3.2,
     distance: 0,
     coins: [],
     goombas: [],
-    spawnCooldown: 40,
-    lastCoinSpawn: 0,
+    spawnCooldown: 30,
     flashHit: 0
   };
 
-  // Spawn koin pertama agak jauh biar ada waktu adaptasi
-  marioState.coins.push({ x: 380, y: GROUND_Y - 75, got: false, phase: 0 });
+  // Spawn koin awal campuran
+  spawnInitialCoins();
+
+  function spawnInitialCoins() {
+    for (let i = 0; i < 3; i++) {
+      const special = (i === 1); // koin tengah selalu special biar cepat dapat pertanyaan
+      marioState.coins.push({
+        x: 320 + i * 130,
+        y: GROUND_Y - (55 + Math.random() * 60),
+        got: false,
+        phase: Math.random() * Math.PI * 2,
+        special: special
+      });
+    }
+  }
 
   function jump() {
     if (!gameRunning || gamePaused || waitingAnswer) return;
@@ -796,7 +843,6 @@ function startMarioGame() {
     }
   }
 
-  // Listeners
   const jumpBtn = $("jumpBtn");
   const jumpHandler = (e) => { e.preventDefault(); jump(); };
   jumpBtn.addEventListener("pointerdown", jumpHandler);
@@ -815,11 +861,24 @@ function startMarioGame() {
   marioState._keyHandler = keyHandler;
 
   function spawnCoin() {
+    if (marioState.coins.length >= MAX_COINS_ON_SCREEN) return;
+    // Tentukan apakah koin ini special
+    let special = false;
+    // Pastikan tetap ada cukup koin special untuk memenuhi TOTAL_QUESTIONS
+    const remainingQuestions = TOTAL_QUESTIONS - answeredCount;
+    const activeSpecialCoins = marioState.coins.filter(c => c.special && !c.got).length;
+    const remainingCoinsToBeMade = (GAME_DURATION - gameTimeLeft) * 0.3; // perkiraan
+
+    if (remainingQuestions > activeSpecialCoins && Math.random() < SPECIAL_COIN_CHANCE) {
+      special = true;
+    }
+
     marioState.coins.push({
       x: W + 40,
       y: GROUND_Y - (55 + Math.random() * 70),
       got: false,
-      phase: Math.random() * Math.PI * 2
+      phase: Math.random() * Math.PI * 2,
+      special: special
     });
   }
 
@@ -848,7 +907,6 @@ function startMarioGame() {
       marioState.vy = 0;
       marioState.jumping = false;
     }
-
     if (marioState.flashHit > 0) marioState.flashHit--;
 
     // Update koin
@@ -859,7 +917,7 @@ function startMarioGame() {
     });
     marioState.coins = marioState.coins.filter(c => c.x > -40 && !c.got);
 
-    // Update goomba
+    // Goomba
     marioState.goombas.forEach(g => g.x -= worldSpeed);
     marioState.goombas = marioState.goombas.filter(g => g.x > -40);
 
@@ -867,8 +925,8 @@ function startMarioGame() {
     marioState.spawnCooldown--;
     if (marioState.spawnCooldown <= 0) {
       spawnCoin();
-      if (Math.random() < 0.35) spawnGoomba();
-      marioState.spawnCooldown = 55 + Math.floor(Math.random() * 45);
+      if (Math.random() < 0.3) spawnGoomba();
+      marioState.spawnCooldown = 50 + Math.floor(Math.random() * 40);
     }
 
     // Tabrakan koin
@@ -884,7 +942,7 @@ function startMarioGame() {
       if (marioRight > c.x - r && marioLeft < c.x + r &&
           marioBottom > c.y - r && marioTop < c.y + r) {
         c.got = true;
-        onCoinCollected();
+        onCoinCollected(c);
         return;
       }
     }
@@ -894,12 +952,10 @@ function startMarioGame() {
       if (g.x < marioRight && g.x + g.w > marioLeft &&
           g.y - g.h < marioBottom && g.y > marioTop) {
         if (marioState.vy > 0 && marioBottom - marioState.vy <= g.y - g.h + 8) {
-          // Injak
           g.x = -100;
           marioState.vy = -10;
           marioState.flashHit = 6;
         } else {
-          // Kena samping: mundur sedikit
           marioState.x = Math.max(50, marioState.x - 30);
           g.x = -100;
           marioState.flashHit = 12;
@@ -912,22 +968,18 @@ function startMarioGame() {
   function draw() {
     ctx.clearRect(0, 0, W, H);
 
-    // Langit
     const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
     skyGrad.addColorStop(0, "#5c94fc");
     skyGrad.addColorStop(0.7, "#87ceeb");
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // Awan
     drawCloud(ctx, (120 + marioState.distance * 0.3) % (W + 100) - 100, 45, 28);
     drawCloud(ctx, (400 + marioState.distance * 0.2) % (W + 100) - 100, 70, 22);
 
-    // Bukit
     drawHill(ctx, (230 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 130, 55);
     drawHill(ctx, (500 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 95, 42);
 
-    // Tanah
     ctx.fillStyle = "#6b4423";
     ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
     ctx.fillStyle = "#8b5a2b";
@@ -942,18 +994,17 @@ function startMarioGame() {
       ctx.stroke();
     }
 
-    // Koin
+    // Koin (emas biasa & pink special)
     marioState.coins.forEach(c => {
       if (c.got) return;
-      drawCoin(ctx, c.x, c.y, c.phase);
+      if (c.special) drawSpecialCoin(ctx, c.x, c.y, c.phase);
+      else drawCoin(ctx, c.x, c.y, c.phase);
     });
 
-    // Goomba
     marioState.goombas.forEach(g => {
       drawGoomba(ctx, g.x, g.y, g.w, g.h);
     });
 
-    // Mario (berkedip merah saat kena)
     const blink = marioState.flashHit > 0 && Math.floor(marioState.flashHit / 2) % 2 === 0;
     if (!blink) {
       drawMario(ctx, marioState.x, marioState.y - marioState.h, marioState.w, marioState.h, marioState.jumping);
@@ -986,7 +1037,6 @@ function startMarioGame() {
     ctx.save();
     ctx.translate(x, y + bob);
     ctx.scale(0.55 + scaleX * 0.45, 1);
-    // Glow
     ctx.shadowColor = "#ffd200";
     ctx.shadowBlur = 14;
     ctx.fillStyle = "#ffd200";
@@ -994,18 +1044,59 @@ function startMarioGame() {
     ctx.arc(0, 0, 11, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
-    // Inner
     ctx.fillStyle = "#ffec8b";
     ctx.beginPath();
     ctx.arc(0, 0, 7, 0, Math.PI * 2);
     ctx.fill();
-    // Symbol
     ctx.fillStyle = "#8a5a00";
     ctx.font = "bold 12px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("$", 0, 1);
     ctx.restore();
+  }
+
+  function drawSpecialCoin(ctx, x, y, phase) {
+    const bob = Math.sin(phase) * 4;
+    const scaleX = Math.abs(Math.cos(phase * 1.5));
+    const pulse = 0.8 + Math.sin(phase * 3) * 0.2; // efek berkedip
+    ctx.save();
+    ctx.translate(x, y + bob);
+    ctx.scale(0.55 + scaleX * 0.45, 1);
+
+    // Glow luar berkedip
+    ctx.shadowColor = "#ff6b9d";
+    ctx.shadowBlur = 20 * pulse;
+
+    // Lingkaran luar pink
+    ctx.fillStyle = "#ff6b9d";
+    ctx.beginPath();
+    ctx.arc(0, 0, 13, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Lingkaran dalam lebih terang
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#ffb3d9";
+    ctx.beginPath();
+    ctx.arc(0, 0, 9, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Simbol ?
+    ctx.fillStyle = "#8a1a4e";
+    ctx.font = "bold 14px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("?", 0, 1);
+    ctx.restore();
+
+    // Sparkle kecil di sekitar (efek bintang)
+    if (pulse > 0.9) {
+      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      ctx.beginPath();
+      ctx.arc(x - 15, y + bob - 8, 2, 0, Math.PI * 2);
+      ctx.arc(x + 14, y + bob + 6, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   function drawGoomba(ctx, x, y, w, h) {
@@ -1017,7 +1108,6 @@ function startMarioGame() {
     ctx.beginPath();
     ctx.ellipse(x + w / 2, y - h * 0.2, w / 2, h * 0.4, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Mata
     ctx.fillStyle = "#fff";
     ctx.beginPath();
     ctx.arc(x + w * 0.32, y - h * 0.65, 5, 0, Math.PI * 2);
@@ -1028,7 +1118,6 @@ function startMarioGame() {
     ctx.arc(x + w * 0.34, y - h * 0.65, 2.2, 0, Math.PI * 2);
     ctx.arc(x + w * 0.70, y - h * 0.65, 2.2, 0, Math.PI * 2);
     ctx.fill();
-    // Alis
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -1037,7 +1126,6 @@ function startMarioGame() {
     ctx.moveTo(x + w * 0.78, y - h * 0.8);
     ctx.lineTo(x + w * 0.58, y - h * 0.73);
     ctx.stroke();
-    // Kaki
     ctx.fillStyle = "#3a1f0a";
     ctx.beginPath();
     ctx.ellipse(x + w * 0.3, y + 2, 6, 4, 0, 0, Math.PI * 2);
@@ -1046,37 +1134,26 @@ function startMarioGame() {
   }
 
   function drawMario(ctx, x, y, w, h, jumping) {
-    // Topi merah
     ctx.fillStyle = "#e52521";
     ctx.beginPath();
     ctx.ellipse(x + w / 2, y + h * 0.18, w * 0.6, h * 0.25, 0, Math.PI, 0);
     ctx.fill();
     ctx.fillRect(x + w * 0.2, y + h * 0.18, w * 0.6, h * 0.12);
-
-    // Wajah
     ctx.fillStyle = "#fcd7a0";
     ctx.beginPath();
     ctx.arc(x + w / 2, y + h * 0.42, w * 0.42, 0, Math.PI * 2);
     ctx.fill();
-
-    // Mata
     ctx.fillStyle = "#000";
     ctx.beginPath();
     ctx.arc(x + w * 0.42, y + h * 0.4, 2, 0, Math.PI * 2);
     ctx.arc(x + w * 0.6, y + h * 0.4, 2, 0, Math.PI * 2);
     ctx.fill();
-
-    // Kumis
     ctx.fillStyle = "#3a1f0a";
     ctx.beginPath();
     ctx.ellipse(x + w * 0.5, y + h * 0.52, w * 0.22, h * 0.05, 0, 0, Math.PI * 2);
     ctx.fill();
-
-    // Badan
     ctx.fillStyle = "#2a5cff";
     ctx.fillRect(x + w * 0.22, y + h * 0.6, w * 0.56, h * 0.28);
-
-    // Tangan
     ctx.fillStyle = "#e52521";
     ctx.fillRect(x + w * 0.08, y + h * 0.6, w * 0.18, h * 0.18);
     ctx.fillRect(x + w * 0.74, y + h * 0.6, w * 0.18, h * 0.18);
@@ -1085,19 +1162,14 @@ function startMarioGame() {
     ctx.arc(x + w * 0.12, y + h * 0.80, 3.5, 0, Math.PI * 2);
     ctx.arc(x + w * 0.88, y + h * 0.80, 3.5, 0, Math.PI * 2);
     ctx.fill();
-
-    // Tombol overall
     ctx.fillStyle = "#ffd200";
     ctx.beginPath();
     ctx.arc(x + w * 0.4, y + h * 0.7, 2, 0, Math.PI * 2);
     ctx.arc(x + w * 0.6, y + h * 0.7, 2, 0, Math.PI * 2);
     ctx.fill();
-
-    // Sepatu
     ctx.fillStyle = "#5a2e0c";
     ctx.fillRect(x + w * 0.2, y + h * 0.88, w * 0.24, h * 0.14);
     ctx.fillRect(x + w * 0.56, y + h * 0.88, w * 0.24, h * 0.14);
-
     if (jumping) {
       ctx.strokeStyle = "rgba(255,255,255,0.5)";
       ctx.lineWidth = 2;
@@ -1113,14 +1185,6 @@ function startMarioGame() {
   marioRAF = requestAnimationFrame(loop);
 }
 
-function pauseGame() {
-  gamePaused = true;
-}
-
-function resumeGame() {
-  gamePaused = false;
-}
-
 function stopMarioGame() {
   gameRunning = false;
   if (marioRAF) cancelAnimationFrame(marioRAF);
@@ -1134,18 +1198,50 @@ function stopMarioGame() {
 }
 
 /* ============================================================
-   KOIN DIAMBIL → MUNCULKAN PERTANYAAN
+   KOIN DIAMBIL
    ============================================================ */
-function onCoinCollected() {
-  if (coinIndex >= quizQuestions.length) return;
+function onCoinCollected(coin) {
+  coinsCollected++;
+
+  if (!coin.special) {
+    // Koin biasa → langsung poin, tidak ada pertanyaan
+    score += POINT_COIN;
+    scoreHud.textContent = score;
+    // Toast kecil
+    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 700);
+    return;
+  }
+
+  // Koin spesial → pertanyaan
+  if (answeredCount >= TOTAL_QUESTIONS) {
+    // Semua soal sudah dijawab, koin special dianggap koin biasa
+    score += POINT_COIN;
+    scoreHud.textContent = score;
+    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 700);
+    return;
+  }
+
   waitingAnswer = true;
-  currentQuestionIdx = coinIndex;
-  showQuestion(coinIndex);
+  clearInterval(gameTimerInterval);
+  currentQuestionIdx = answeredCount;
+  showToast(`💗 Soal bonus!`, "special-msg", 800, () => {
+    showQuestion(answeredCount);
+  });
+}
+
+function showToast(text, cls, duration = 800, callback) {
+  feedbackBanner.className = `show ${cls}`;
+  feedbackBanner.innerHTML = text;
+  setTimeout(() => {
+    feedbackBanner.className = "";
+    feedbackBanner.innerHTML = "";
+    if (callback) callback();
+  }, duration);
 }
 
 function showQuestion(idx) {
   const q = quizQuestions[idx];
-  $("qLabel").textContent = `❓ Pertanyaan ${idx + 1} dari ${quizQuestions.length}`;
+  $("qLabel").textContent = `💗 Pertanyaan Bonus ${idx + 1} dari ${TOTAL_QUESTIONS}`;
   questionText.textContent = q.q;
 
   optionsBox.innerHTML = "";
@@ -1158,8 +1254,10 @@ function showQuestion(idx) {
   });
 
   questionOverlay.classList.add("show");
+  startQuestionTimer();
+}
 
-  // Timer
+function startQuestionTimer() {
   clearInterval(timerInterval);
   timeLeft = TIME_PER_Q;
   $("gameHint").innerHTML = `⏱ Sisa waktu menjawab: <b>${timeLeft}</b> detik`;
@@ -1191,10 +1289,10 @@ function selectAnswer(index, btn) {
   if (isCorrect) {
     correctCount++;
     const bonus = Math.max(0, timeLeft) * POINT_SPEED_BONUS;
-    score += POINT_BASE + bonus;
+    score += POINT_QUESTION + bonus;
     scoreHud.textContent = score;
     feedbackBanner.className = "show correct";
-    feedbackBanner.innerHTML = `✅ BENAR!<br><span style="font-size:.9rem">+${POINT_BASE + bonus} poin</span>`;
+    feedbackBanner.innerHTML = `✅ BENAR!<br><span style="font-size:.9rem">+${POINT_QUESTION + bonus} poin</span>`;
   } else {
     feedbackBanner.className = "show wrong";
     feedbackBanner.innerHTML = `❌ SALAH!<br><span style="font-size:.9rem">Jawaban benar: <b>${LETTERS[correctIdx]}</b></span>`;
@@ -1205,7 +1303,6 @@ function selectAnswer(index, btn) {
     status: isCorrect ? "BENAR" : "SALAH"
   });
 
-  // Dismiss setelah 1.4 detik
   setTimeout(() => {
     feedbackBanner.className = "";
     feedbackBanner.innerHTML = "";
@@ -1217,26 +1314,28 @@ function closeQuestion() {
   questionOverlay.classList.remove("show");
   waitingAnswer = false;
   currentQuestionIdx = -1;
-  coinIndex++;
-  renderCoinProgress();
+  renderQProgress();
 
-  // Reset hint
-  $("gameHint").innerHTML = `Tekan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk melompat & mengambil koin 🪙`;
+  $("gameHint").innerHTML = `Ambil koin <b>🪙 emas</b> untuk poin, tapi waspada koin <span class="special-hint">💗 pink berkedip</span> — itu memunculkan pertanyaan!`;
 
-  if (coinIndex >= quizQuestions.length) {
-    // Semua soal sudah dijawab
+  if (answeredCount >= TOTAL_QUESTIONS) {
+    // Semua soal selesai → langsung akhiri
     finishQuiz();
+    return;
   }
-  // Game lanjut otomatis
+
+  // Lanjut game timer
+  startGameTimer();
 }
 
 /* ============================================================
    FINISH
    ============================================================ */
-function finishQuiz(isPelanggaran = false) {
+function finishQuiz(isPelanggaran = false, isTimeOut = false) {
   kuisAktif = false;
   waitingAnswer = false;
   clearInterval(timerInterval);
+  clearInterval(gameTimerInterval);
   questionOverlay.classList.remove("show");
   stopMarioGame();
 
@@ -1248,33 +1347,32 @@ function finishQuiz(isPelanggaran = false) {
   showScreen(resultScreen);
   $("finalScore").textContent = score;
   $("statBenar").textContent = correctCount;
-  $("statSalah").textContent = quizQuestions.length - correctCount;
+  $("statSalah").textContent = TOTAL_QUESTIONS - correctCount;
 
   $("resNama").textContent = siswa.nama;
   $("resAbsen").textContent = siswa.absen;
   $("resKelas").textContent = siswa.kelas;
   $("resPelanggaran").textContent = pelanggaran;
 
-  const pct = Math.round((correctCount / quizQuestions.length) * 100);
+  const pct = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
   let msg = "";
   if (isPelanggaran) {
     msg = `⛔ Kuis dihentikan karena pelanggaran ke-${pelanggaran}. Nilai tetap dikirim ke guru.`;
+  } else if (isTimeOut) {
+    msg = `⏰ Waktu habis! Kamu berhasil menjawab ${answeredCount}/${TOTAL_QUESTIONS} soal dan mengumpulkan ${coinsCollected} koin.`;
   } else {
     if (pct === 100) msg = "🔥 Sempurna! Kamu master pengolahan data!";
     else if (pct >= 80) msg = "🌟 Hebat! Pemahamanmu sangat baik.";
     else if (pct >= 60) msg = "👍 Bagus! Sedikit lagi jadi ahli.";
     else if (pct >= 40) msg = "💪 Lumayan. Ayo belajar lagi!";
     else msg = "📚 Jangan menyerah, coba lagi ya!";
-    msg = `${pct}% benar — ${msg}`;
+    msg = `${pct}% benar dari ${answeredCount} soal — ${msg}`;
   }
   $("resultMsg").textContent = msg;
 
   const wheelWrap = document.querySelector(".wheel-wrap");
-  if (isPelanggaran) {
-    wheelWrap.style.display = "none";
-  } else {
-    wheelWrap.style.display = "flex";
-  }
+  if (isPelanggaran) wheelWrap.style.display = "none";
+  else wheelWrap.style.display = "flex";
 
   sudahKirim = false;
   kirimKeSheet(isPelanggaran);
@@ -1293,7 +1391,10 @@ function kirimKeSheet(isPelanggaran) {
     kelas: siswa.kelas,
     nilai: score,
     detail: detailJawaban,
-    pelanggaran: pelanggaran
+    pelanggaran: pelanggaran,
+    koin_dikumpulkan: coinsCollected,
+    soal_dijawab: answeredCount,
+    total_soal: TOTAL_QUESTIONS
   };
 
   const formData = new URLSearchParams();
@@ -1409,6 +1510,7 @@ $("playAgainBtn").onclick = () => {
   $("inputKelas").value = "";
   $("wheelCanvas").style.transform = "rotate(0deg)";
   $("wheelResult").textContent = "";
+  timeHud.style.color = "#ffd200";
   wheelRotation = 0;
   wheelSpun = false;
   $("spinBtn").disabled = false;
