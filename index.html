@@ -109,14 +109,12 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-4px); }
   }
-  /* paku/koin di sudut */
   .question-box::before, .question-box::after {
     content: '✦'; position: absolute; color: #ffd200; font-size: 1.1rem;
     top: 6px; text-shadow: 0 0 6px #ffd200;
   }
   .question-box::before { left: 8px; }
   .question-box::after { right: 8px; }
-  /* ikon "?" besar di atas */
   .q-coin {
     position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
     width: 44px; height: 44px; border-radius: 50%;
@@ -228,7 +226,7 @@
   .stat-item .num { font-size: 1.5rem; font-weight: 700; color: #ffd200; }
   .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
 
-  /* MINI GAME */
+  /* MINI GAME MARIO */
   #bonusScreen .bonus-title {
     text-align: center; font-size: 1.4rem; font-weight: 800;
     background: linear-gradient(90deg, #f7971e, #ffd200);
@@ -236,26 +234,32 @@
     margin-bottom: 6px;
   }
   #bonusScreen .bonus-sub { text-align: center; opacity: .8; font-size: .9rem; margin-bottom: 14px; }
-  #snakeArena {
+  #marioArena {
     display: block; margin: 0 auto;
-    background: #0f172a; border: 3px solid rgba(255,210,0,0.5);
-    border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.25);
+    background: linear-gradient(180deg, #5c94fc 0%, #5c94fc 70%, #8b5a2b 70%, #6b4423 100%);
+    border: 4px solid #ffd200;
+    border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.35);
     touch-action: none; max-width: 100%; height: auto;
   }
   .bonus-info { display: flex; justify-content: space-between; margin-top: 14px; font-size: .9rem; }
   .bonus-info span { opacity: .85; }
   .bonus-info strong { color: #ffd200; }
-  .dpad {
-    display: none; grid-template-columns: repeat(3, 60px); gap: 6px;
-    margin: 14px auto 0; justify-content: center;
+  .mario-ctrl {
+    display: flex; justify-content: center; gap: 12px; margin-top: 14px;
   }
-  .dpad button {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 12px; height: 60px; font-size: 1.4rem; color: #fff;
+  .mario-ctrl button {
+    background: linear-gradient(180deg, #ffe97a 0%, #ffb800 60%, #b8860b 100%);
+    border: 3px solid #8a5a00; border-radius: 14px;
+    padding: 14px 26px; font-size: 1rem; font-weight: 800; color: #3a2400;
     cursor: pointer; user-select: none;
+    box-shadow: 0 5px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.5);
+    transition: transform .1s, box-shadow .1s;
   }
-  .dpad button:active { background: rgba(255,210,0,0.4); }
-  @media (max-width: 600px) { .dpad { display: grid; } }
+  .mario-ctrl button:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
+  }
+  @media (max-width: 600px) { .mario-ctrl { display: flex; } }
 
   /* SPIN WHEEL */
   .wheel-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
@@ -352,7 +356,6 @@
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 
-    <!-- 🍄 MARIO-STYLE QUESTION BOX -->
     <div class="question-box">
       <div class="q-coin">?</div>
       <div class="q-label">❓ Pertanyaan</div>
@@ -362,18 +365,18 @@
     <div class="options" id="optionsBox"></div>
   </div>
 
-  <!-- MINI GAME ULAR -->
+  <!-- MINI GAME MARIO -->
   <div id="bonusScreen" class="screen">
-    <div class="bonus-title">🐍 ULAR-ULARAN!</div>
-    <div class="bonus-sub">Gerakkan ular (⬆️⬇️⬅️➡️ / WASD / tombol di layar). Makan angka emas, hindari bom! 💣</div>
-    <canvas id="snakeArena" width="600" height="320"></canvas>
+    <div class="bonus-title">🍄 MARIO BONUS!</div>
+    <div class="bonus-sub">Tekan <b>SPASI</b> / tombol LOMPAT untuk menghindari Goomba 🐹 dan ambil koin 🪙!</div>
+    <canvas id="marioArena" width="600" height="300"></canvas>
     <div class="bonus-info">
-      <span>⏱ Sisa: <strong id="bonusTimer">10</strong>s</span>
+      <span>⏱ Sisa: <strong id="bonusTimer">15</strong>s</span>
+      <span>🪙 Koin: <strong id="bonusCoins">0</strong></span>
       <span>💎 Bonus: <strong id="bonusScore">0</strong> poin</span>
     </div>
-    <div class="dpad">
-      <div></div><button data-dir="up">⬆️</button><div></div>
-      <button data-dir="left">⬅️</button><button data-dir="down">⬇️</button><button data-dir="right">➡️</button>
+    <div class="mario-ctrl">
+      <button id="jumpBtn">🦘 LOMPAT!</button>
     </div>
   </div>
 
@@ -427,8 +430,7 @@ const TIME_PER_Q = 15;
 const POINT_BASE = 100;
 const LETTERS = ["A","B","C","D"];
 const BONUS_EVERY = 5;
-const BONUS_DURATION = 10;
-const BONUS_PENALTY = 30;
+const BONUS_DURATION = 15;
 const MAKS_PELANGGARAN = 3;
 
 /* ⚠️ GANTI DENGAN URL /exec KAMU ⚠️ */
@@ -488,7 +490,7 @@ function kembaliKeKuis() {
         if (!bonusActive) return;
         bonusTimeLeft--;
         document.getElementById("bonusTimer").textContent = bonusTimeLeft;
-        if (bonusTimeLeft <= 0) endSnakeGame(bonusOnDone);
+        if (bonusTimeLeft <= 0) endMarioGame(bonusOnDone);
       }, 1000);
     }
   }
@@ -637,6 +639,7 @@ let detailJawaban = [];
 let bonusActive = false;
 let bonusTimeLeft = 0;
 let bonusScore = 0;
+let bonusCoins = 0;
 let bonusTimerInterval = null;
 let bonusOnDone = null;
 
@@ -727,7 +730,6 @@ function renderQuestion() {
   progressFill.style.width = `${(current / quizQuestions.length) * 100}%`;
   questionText.textContent = item.q;
 
-  // Update label pertanyaan
   const qLabel = document.querySelector(".q-label");
   if (qLabel) qLabel.textContent = `❓ Pertanyaan ${current + 1}`;
 
@@ -796,7 +798,7 @@ function nextQuestion() {
 
   if (current > 0 && current % BONUS_EVERY === 0 && current < quizQuestions.length) {
     showScreen(bonusScreen);
-    startSnakeGame(() => {
+    startMarioGame(() => {
       showScreen(quizScreen);
       renderQuestion();
     });
@@ -811,210 +813,420 @@ function nextQuestion() {
 }
 
 /* ============================================================
-   MINI GAME: ULAR-ULARAN
+   MINI GAME: MARIO BONUS
    ============================================================ */
-let snakeState = null;
-let snakeRAF = null;
+let marioState = null;
+let marioRAF = null;
 
-function startSnakeGame(onDone) {
+function startMarioGame(onDone) {
   bonusActive = true;
   bonusOnDone = onDone;
   bonusTimeLeft = BONUS_DURATION;
   bonusScore = 0;
+  bonusCoins = 0;
   $("bonusTimer").textContent = bonusTimeLeft;
+  $("bonusCoins").textContent = "0";
   $("bonusScore").textContent = "0";
 
-  const canvas = $("snakeArena");
+  const canvas = $("marioArena");
   const ctx = canvas.getContext("2d");
-  const CELL = 20;
-  const COLS = Math.floor(canvas.width / CELL);
-  const ROWS = Math.floor(canvas.height / CELL);
+  const W = canvas.width, H = canvas.height;
+  const GROUND_Y = H - 50;
 
-  snakeState = {
-    snake: [{x: 5, y: 5}],
-    dir: {x: 1, y: 0},
-    nextDir: {x: 1, y: 0},
-    food: {x: 10, y: 5, value: 10},
-    bombs: [],
-    cell: CELL, cols: COLS, rows: ROWS,
-    lastMove: 0, moveInterval: 140
+  marioState = {
+    x: 80, y: GROUND_Y, w: 28, h: 34,
+    vy: 0, jumping: false,
+    groundY: GROUND_Y,
+    gravity: 0.9,
+    jumpPower: -14,
+    speed: 4,
+    distance: 0,  // pixel yang sudah ditempuh
+    coins: [],    // koin di jalur
+    goombas: [],  // musuh
+    spawnCooldown: 0,
+    lastCoinSpawn: 0,
+    lastGoombaSpawn: 0,
+    hits: 0
   };
 
-  function randomFood() {
-    return {
-      x: Math.floor(Math.random() * COLS),
-      y: Math.floor(Math.random() * ROWS),
-      value: [5,10,15,20][Math.floor(Math.random()*4)]
-    };
-  }
-
-  for (let i = 0; i < 3; i++) spawnBomb();
-
-  function spawnBomb() {
-    let bx, by, ok = false, tries = 0;
-    while (!ok && tries < 50) {
-      bx = Math.floor(Math.random() * COLS);
-      by = Math.floor(Math.random() * ROWS);
-      ok = !snakeState.snake.some(s => s.x === bx && s.y === by) &&
-           !(snakeState.food.x === bx && snakeState.food.y === by);
-      tries++;
+  function jump() {
+    if (!bonusActive) return;
+    if (!marioState.jumping) {
+      marioState.vy = marioState.jumpPower;
+      marioState.jumping = true;
     }
-    if (ok) snakeState.bombs.push({x: bx, y: by});
   }
 
-  function setDir(dx, dy) {
-    if (!snakeState) return;
-    if (snakeState.dir.x === -dx && snakeState.dir.y === -dy) return;
-    snakeState.nextDir = {x: dx, y: dy};
-  }
+  // Tombol & keyboard
+  const jumpBtn = $("jumpBtn");
+  const jumpHandler = (e) => { e.preventDefault(); jump(); };
+  jumpBtn.addEventListener("pointerdown", jumpHandler);
 
   function keyHandler(e) {
     if (!bonusActive || warnOverlayEl.classList.contains('show')) return;
-    const k = e.key.toLowerCase();
-    if (k === "arrowup" || k === "w") { e.preventDefault(); setDir(0,-1); }
-    else if (k === "arrowdown" || k === "s") { e.preventDefault(); setDir(0,1); }
-    else if (k === "arrowleft" || k === "a") { e.preventDefault(); setDir(-1,0); }
-    else if (k === "arrowright" || k === "d") { e.preventDefault(); setDir(1,0); }
+    if (e.code === "Space" || e.key === "ArrowUp" || e.key.toLowerCase() === "w") {
+      e.preventDefault();
+      jump();
+    }
   }
   window.addEventListener("keydown", keyHandler);
-  snakeState._keyHandler = keyHandler;
+  marioState._keyHandler = keyHandler;
+  marioState._jumpBtnHandler = jumpHandler;
 
-  const dpad = document.querySelectorAll(".dpad button");
-  function dpadHandler(e) {
-    const dir = e.currentTarget.dataset.dir;
-    if (dir === "up") setDir(0,-1);
-    else if (dir === "down") setDir(0,1);
-    else if (dir === "left") setDir(-1,0);
-    else if (dir === "right") setDir(1,0);
+  // Spawn awal
+  for (let i = 0; i < 3; i++) {
+    marioState.coins.push({ x: 300 + i * 140, y: GROUND_Y - 80, got: false, phase: Math.random() * Math.PI * 2 });
   }
-  dpad.forEach(b => b.addEventListener("click", dpadHandler));
+  marioState.goombas.push({ x: 500, y: GROUND_Y + 4, w: 26, h: 24 });
+
+  function spawnCoin() {
+    marioState.coins.push({ x: W + 40, y: GROUND_Y - (60 + Math.random() * 60), got: false, phase: Math.random() * Math.PI * 2 });
+  }
+  function spawnGoomba() {
+    marioState.goombas.push({ x: W + 40, y: GROUND_Y + 4, w: 26, h: 24 });
+  }
 
   function loop(ts) {
     if (!bonusActive) return;
-    if (!warnOverlayEl.classList.contains('show') && ts - snakeState.lastMove > snakeState.moveInterval) {
-      snakeState.lastMove = ts;
-      moveSnake();
-    }
-    drawSnake(ctx);
-    snakeRAF = requestAnimationFrame(loop);
-  }
-
-  function moveSnake() {
-    snakeState.dir = snakeState.nextDir;
-    const head = {
-      x: snakeState.snake[0].x + snakeState.dir.x,
-      y: snakeState.snake[0].y + snakeState.dir.y
-    };
-    head.x = (head.x + snakeState.cols) % snakeState.cols;
-    head.y = (head.y + snakeState.rows) % snakeState.rows;
-
-    if (snakeState.snake.some(s => s.x === head.x && s.y === head.y)) {
-      bonusScore -= 20;
-      $("bonusScore").textContent = bonusScore;
-      snakeState.snake = [{x: 5, y: 5}];
-      snakeState.dir = {x: 1, y: 0};
-      snakeState.nextDir = {x: 1, y: 0};
+    if (warnOverlayEl.classList.contains('show')) {
+      marioRAF = requestAnimationFrame(loop);
       return;
     }
-
-    snakeState.snake.unshift(head);
-
-    if (head.x === snakeState.food.x && head.y === snakeState.food.y) {
-      bonusScore += snakeState.food.value;
-      $("bonusScore").textContent = bonusScore;
-      snakeState.food = randomFood();
-    } else {
-      snakeState.snake.pop();
-    }
-
-    const hitBombIdx = snakeState.bombs.findIndex(b => b.x === head.x && b.y === head.y);
-    if (hitBombIdx >= 0) {
-      bonusScore -= BONUS_PENALTY;
-      $("bonusScore").textContent = bonusScore;
-      snakeState.bombs.splice(hitBombIdx, 1);
-      snakeState.snake = snakeState.snake.slice(0, Math.max(1, snakeState.snake.length - 2));
-      spawnBomb();
-    }
+    update();
+    draw();
+    marioRAF = requestAnimationFrame(loop);
   }
 
-  function drawSnake(ctx) {
-    const {cell, cols, rows} = snakeState;
-    ctx.fillStyle = "#0f172a";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  function update() {
+    // Gerakkan dunia (Mario sebenarnya diam, dunia yang bergerak)
+    const worldSpeed = marioState.speed;
+    marioState.distance += worldSpeed;
 
-    ctx.strokeStyle = "rgba(255,255,255,0.04)";
-    for (let i = 0; i <= cols; i++) {
-      ctx.beginPath(); ctx.moveTo(i*cell, 0); ctx.lineTo(i*cell, canvas.height); ctx.stroke();
+    // Fisika lompat
+    marioState.vy += marioState.gravity;
+    marioState.y += marioState.vy;
+    if (marioState.y >= marioState.groundY) {
+      marioState.y = marioState.groundY;
+      marioState.vy = 0;
+      marioState.jumping = false;
     }
-    for (let j = 0; j <= rows; j++) {
-      ctx.beginPath(); ctx.moveTo(0, j*cell); ctx.lineTo(canvas.width, j*cell); ctx.stroke();
+
+    // Update koin
+    marioState.coins.forEach(c => {
+      if (c.got) return;
+      c.x -= worldSpeed;
+      c.phase += 0.1;
+    });
+    // Hapus koin di luar layar
+    marioState.coins = marioState.coins.filter(c => c.x > -40 && !c.got);
+
+    // Update goomba
+    marioState.goombas.forEach(g => {
+      g.x -= worldSpeed;
+    });
+    marioState.goombas = marioState.goombas.filter(g => g.x > -40);
+
+    // Spawn
+    marioState.spawnCooldown -= 1;
+    if (marioState.spawnCooldown <= 0) {
+      spawnCoin();
+      if (Math.random() < 0.4) spawnGoomba();
+      marioState.spawnCooldown = 50 + Math.floor(Math.random() * 40);
     }
 
-    ctx.fillStyle = "#ffd200";
-    ctx.shadowColor = "#ffd200"; ctx.shadowBlur = 12;
-    ctx.beginPath();
-    ctx.arc(snakeState.food.x*cell + cell/2, snakeState.food.y*cell + cell/2, cell/2 - 2, 0, Math.PI*2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#1e1e2f"; ctx.font = "bold 10px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText(snakeState.food.value, snakeState.food.x*cell + cell/2, snakeState.food.y*cell + cell/2 + 3);
+    // Deteksi tabrakan dengan koin (kotak Mario vs lingkaran koin)
+    const marioLeft = marioState.x;
+    const marioRight = marioState.x + marioState.w;
+    const marioTop = marioState.y - marioState.h;
+    const marioBottom = marioState.y;
 
-    snakeState.bombs.forEach(b => {
-      ctx.fillStyle = "#ff4757";
-      ctx.shadowColor = "#ff4757"; ctx.shadowBlur = 10;
+    marioState.coins.forEach(c => {
+      if (c.got) return;
+      const cx = c.x, cy = c.y;
+      const r = 10;
+      // cek irisan AABB vs circle sederhana: gunakan kotak 20x20 di sekitar koin
+      if (marioRight > cx - r && marioLeft < cx + r &&
+          marioBottom > cy - r && marioTop < cy + r) {
+        c.got = true;
+        bonusCoins++;
+        bonusScore += 10;
+        $("bonusCoins").textContent = bonusCoins;
+        $("bonusScore").textContent = bonusScore;
+      }
+    });
+
+    // Deteksi tabrakan dengan goomba
+    marioState.goombas.forEach(g => {
+      if (g.x < marioRight && g.x + g.w > marioLeft &&
+          g.y - g.h < marioBottom && g.y > marioTop) {
+        // Cek apakah Mario menginjak goomba dari atas (vy > 0 dan turun)
+        if (marioState.vy > 0 && marioBottom - marioState.vy <= g.y - g.h + 6) {
+          // Injak goomba
+          g.x = -100; // hilangkan
+          bonusScore += 15;
+          $("bonusScore").textContent = bonusScore;
+          marioState.vy = -10; // memantul
+        } else {
+          // Kena goomba: kurangi skor
+          marioState.hits++;
+          bonusScore = Math.max(0, bonusScore - 20);
+          $("bonusScore").textContent = bonusScore;
+          g.x = -100;
+          // efek berkedip - reset posisi visual (Mario sudah di tanah)
+        }
+      }
+    });
+    marioState.goombas = marioState.goombas.filter(g => g.x > -40);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Langit
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
+    skyGrad.addColorStop(0, "#5c94fc");
+    skyGrad.addColorStop(0.7, "#87ceeb");
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Awan di dalam canvas
+    drawCloud(ctx, (100 + marioState.distance * 0.3) % (W + 100) - 100, 40, 30);
+    drawCloud(ctx, (350 + marioState.distance * 0.2) % (W + 100) - 100, 70, 25);
+
+    // Bukit
+    drawHill(ctx, (200 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 140, 60);
+    drawHill(ctx, (450 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 100, 45);
+
+    // Tanah
+    ctx.fillStyle = "#6b4423";
+    ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
+    ctx.fillStyle = "#8b5a2b";
+    ctx.fillRect(0, GROUND_Y, W, 6);
+    // Bata tanah
+    ctx.strokeStyle = "rgba(0,0,0,0.2)";
+    ctx.lineWidth = 1;
+    const offsetX = (marioState.distance * 0.5) % 32;
+    for (let x = -32 + offsetX; x < W; x += 32) {
       ctx.beginPath();
-      ctx.arc(b.x*cell + cell/2, b.y*cell + cell/2, cell/2 - 2, 0, Math.PI*2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "#fff"; ctx.font = "10px sans-serif";
-      ctx.fillText("💣", b.x*cell + cell/2, b.y*cell + cell/2 + 3);
+      ctx.moveTo(x, GROUND_Y + 8);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+
+    // Koin
+    marioState.coins.forEach(c => {
+      if (c.got) return;
+      drawCoin(ctx, c.x, c.y, c.phase);
     });
 
-    snakeState.snake.forEach((s, i) => {
-      ctx.fillStyle = i === 0 ? "#2ed573" : `rgba(46,213,115,${0.8 - i*0.04})`;
-      ctx.fillRect(s.x*cell + 1, s.y*cell + 1, cell - 2, cell - 2);
+    // Goomba
+    marioState.goombas.forEach(g => {
+      drawGoomba(ctx, g.x, g.y, g.w, g.h);
     });
+
+    // Mario
+    drawMario(ctx, marioState.x, marioState.y - marioState.h, marioState.w, marioState.h, marioState.jumping);
   }
 
-  snakeRAF = requestAnimationFrame(loop);
+  function drawCloud(ctx, x, y, size) {
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.beginPath();
+    ctx.arc(x, y, size * 0.6, 0, Math.PI * 2);
+    ctx.arc(x + size * 0.5, y - size * 0.2, size * 0.7, 0, Math.PI * 2);
+    ctx.arc(x + size * 1.0, y, size * 0.55, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawHill(ctx, x, groundY, w, h) {
+    ctx.fillStyle = "#4a8f2b";
+    ctx.beginPath();
+    ctx.ellipse(x, groundY, w, h, 0, Math.PI, 0);
+    ctx.fill();
+    ctx.fillStyle = "#3a7020";
+    ctx.beginPath();
+    ctx.ellipse(x - w * 0.3, groundY - 4, w * 0.4, h * 0.6, 0, Math.PI, 0);
+    ctx.fill();
+  }
+
+  function drawCoin(ctx, x, y, phase) {
+    const bob = Math.sin(phase) * 4;
+    const scaleX = Math.abs(Math.cos(phase * 1.5));
+    ctx.save();
+    ctx.translate(x, y + bob);
+    ctx.scale(0.6 + scaleX * 0.4, 1);
+    // koin luar
+    ctx.fillStyle = "#ffd200";
+    ctx.beginPath();
+    ctx.arc(0, 0, 10, 0, Math.PI * 2);
+    ctx.fill();
+    // koin dalam
+    ctx.fillStyle = "#ffec8b";
+    ctx.beginPath();
+    ctx.arc(0, 0, 6, 0, Math.PI * 2);
+    ctx.fill();
+    // simbol
+    ctx.fillStyle = "#8a5a00";
+    ctx.font = "bold 10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("$", 0, 1);
+    ctx.restore();
+  }
+
+  function drawGoomba(ctx, x, y, w, h) {
+    // kepala coklat
+    ctx.fillStyle = "#8b4513";
+    ctx.beginPath();
+    ctx.arc(x + w / 2, y - h * 0.6, w / 2, Math.PI, 0);
+    ctx.fill();
+    // badan bawah
+    ctx.fillStyle = "#a0522d";
+    ctx.beginPath();
+    ctx.ellipse(x + w / 2, y - h * 0.2, w / 2, h * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // mata
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(x + w * 0.32, y - h * 0.65, 5, 0, Math.PI * 2);
+    ctx.arc(x + w * 0.68, y - h * 0.65, 5, 0, Math.PI * 2);
+    ctx.fill();
+    // pupil
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(x + w * 0.34, y - h * 0.65, 2.2, 0, Math.PI * 2);
+    ctx.arc(x + w * 0.70, y - h * 0.65, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+    // alis
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x + w * 0.22, y - h * 0.8);
+    ctx.lineTo(x + w * 0.42, y - h * 0.73);
+    ctx.moveTo(x + w * 0.78, y - h * 0.8);
+    ctx.lineTo(x + w * 0.58, y - h * 0.73);
+    ctx.stroke();
+    // kaki
+    ctx.fillStyle = "#3a1f0a";
+    ctx.beginPath();
+    ctx.ellipse(x + w * 0.3, y + 2, 6, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + w * 0.7, y + 2, 6, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawMario(ctx, x, y, w, h, jumping) {
+    // Topi merah
+    ctx.fillStyle = "#e52521";
+    ctx.beginPath();
+    ctx.ellipse(x + w / 2, y + h * 0.18, w * 0.6, h * 0.25, 0, Math.PI, 0);
+    ctx.fill();
+    ctx.fillRect(x + w * 0.2, y + h * 0.18, w * 0.6, h * 0.12);
+
+    // Wajah
+    ctx.fillStyle = "#fcd7a0";
+    ctx.beginPath();
+    ctx.arc(x + w / 2, y + h * 0.42, w * 0.42, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(x + w * 0.42, y + h * 0.4, 2, 0, Math.PI * 2);
+    ctx.arc(x + w * 0.6, y + h * 0.4, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kumis
+    ctx.fillStyle = "#3a1f0a";
+    ctx.beginPath();
+    ctx.ellipse(x + w * 0.5, y + h * 0.52, w * 0.22, h * 0.05, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Badan overall biru
+    ctx.fillStyle = "#2a5cff";
+    ctx.fillRect(x + w * 0.22, y + h * 0.6, w * 0.56, h * 0.28);
+
+    // Tangan
+    ctx.fillStyle = "#e52521";
+    ctx.fillRect(x + w * 0.08, y + h * 0.6, w * 0.18, h * 0.18);
+    ctx.fillRect(x + w * 0.74, y + h * 0.6, w * 0.18, h * 0.18);
+    // Sarung tangan putih
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(x + w * 0.12, y + h * 0.80, 3.5, 0, Math.PI * 2);
+    ctx.arc(x + w * 0.88, y + h * 0.80, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Tombol overall
+    ctx.fillStyle = "#ffd200";
+    ctx.beginPath();
+    ctx.arc(x + w * 0.4, y + h * 0.7, 2, 0, Math.PI * 2);
+    ctx.arc(x + w * 0.6, y + h * 0.7, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kaki (sepatu coklat)
+    ctx.fillStyle = "#5a2e0c";
+    ctx.fillRect(x + w * 0.2, y + h * 0.88, w * 0.24, h * 0.14);
+    ctx.fillRect(x + w * 0.56, y + h * 0.88, w * 0.24, h * 0.14);
+
+    // Efek lompat - tambahkan garis gerak
+    if (jumping) {
+      ctx.strokeStyle = "rgba(255,255,255,0.5)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x + w * 0.2, y + h);
+      ctx.lineTo(x + w * 0.2, y + h + 10);
+      ctx.moveTo(x + w * 0.8, y + h);
+      ctx.lineTo(x + w * 0.8, y + h + 10);
+      ctx.stroke();
+    }
+  }
+
+  marioRAF = requestAnimationFrame(loop);
 
   bonusTimerInterval = setInterval(() => {
     if (!bonusActive) return;
     if (warnOverlayEl.classList.contains('show')) return;
     bonusTimeLeft--;
     $("bonusTimer").textContent = bonusTimeLeft;
-    if (bonusTimeLeft <= 0) endSnakeGame(onDone);
+    if (bonusTimeLeft <= 0) endMarioGame(onDone);
   }, 1000);
 }
 
-function endSnakeGame(onDone) {
+function endMarioGame(onDone) {
   bonusActive = false;
   clearInterval(bonusTimerInterval);
-  if (snakeRAF) cancelAnimationFrame(snakeRAF);
+  if (marioRAF) cancelAnimationFrame(marioRAF);
 
-  if (snakeState && snakeState._keyHandler) {
-    window.removeEventListener("keydown", snakeState._keyHandler);
+  if (marioState && marioState._keyHandler) {
+    window.removeEventListener("keydown", marioState._keyHandler);
+  }
+  if (marioState && marioState._jumpBtnHandler) {
+    const jb = $("jumpBtn");
+    if (jb) jb.removeEventListener("pointerdown", marioState._jumpBtnHandler);
   }
 
   const finalBonus = Math.max(0, bonusScore);
   score += finalBonus;
   scoreHud.textContent = score;
 
-  const canvas = $("snakeArena");
+  const canvas = $("marioArena");
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#ffd200";
-  ctx.font = "bold 28px 'Segoe UI', sans-serif";
+  ctx.font = "bold 32px 'Segoe UI', sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText(`+${finalBonus} poin!`, canvas.width/2, canvas.height/2 - 10);
+  ctx.fillText(`🪙 ${bonusCoins} koin!`, canvas.width / 2, canvas.height / 2 - 20);
+  ctx.font = "bold 22px 'Segoe UI', sans-serif";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`+${finalBonus} poin bonus`, canvas.width / 2, canvas.height / 2 + 15);
   ctx.font = "14px 'Segoe UI', sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.7)";
-  ctx.fillText("Melanjutkan kuis...", canvas.width/2, canvas.height/2 + 20);
+  ctx.fillStyle = "rgba(255,255,255,0.75)";
+  ctx.fillText("Melanjutkan kuis...", canvas.width / 2, canvas.height / 2 + 45);
 
   setTimeout(() => {
     if (!kuisAktif) return;
     onDone();
-  }, 1400);
+  }, 1800);
 }
 
 /* ============================================================
@@ -1024,7 +1236,7 @@ function finishQuiz(isPelanggaran = false) {
   kuisAktif = false;
   clearInterval(timerInterval);
   clearInterval(bonusTimerInterval);
-  if (snakeRAF) cancelAnimationFrame(snakeRAF);
+  if (marioRAF) cancelAnimationFrame(marioRAF);
 
   if (document.fullscreenElement) {
     document.exitFullscreen().catch(() => {});
