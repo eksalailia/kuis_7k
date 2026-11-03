@@ -110,7 +110,6 @@
     border-radius: 10px; border: 1px solid rgba(255,210,0,0.3);
   }
   .game-hint b { color: #ffd200; }
-  .game-hint .special-hint { color: #ff6b9d; font-weight: 700; }
   .game-hint .goomba-hint { color: #ff8c00; font-weight: 700; }
   .mario-ctrl {
     display: flex; justify-content: center; margin-top: 12px;
@@ -179,11 +178,11 @@
   .q-coin {
     position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
     width: 38px; height: 38px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffb3d9, #ff6b9d 60%, #c4307a);
-    border: 3px solid #8a1a4e;
+    background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
+    border: 3px solid #8a5a00;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; font-weight: 800; color: #fff;
-    box-shadow: 0 3px 0 #8a1a4e, 0 0 14px rgba(255,107,157,0.8);
+    font-size: 1.4rem; font-weight: 800; color: #8a5a00;
+    box-shadow: 0 3px 0 #8a5a00, 0 0 14px rgba(255,210,0,0.7);
     animation: coinBounce 1.4s ease-in-out infinite;
     z-index: 3;
   }
@@ -345,7 +344,7 @@
   #feedbackBanner.correct { background: linear-gradient(180deg, #7bf0a3, #2ed573); color: #06301a; }
   #feedbackBanner.wrong { background: linear-gradient(180deg, #ff8a8a, #ff4757); color: #fff; }
   #feedbackBanner.coin-msg { background: linear-gradient(180deg, #ffe97a, #ffb800); color: #3a2400; font-size: 1.2rem; }
-  #feedbackBanner.special-msg { background: linear-gradient(180deg, #ffb3d9, #ff6b9d); color: #fff; font-size: 1.1rem; }
+  #feedbackBanner.special-msg { background: linear-gradient(180deg, #ffe97a, #ff8c00); color: #3a2400; font-size: 1.1rem; }
   #feedbackBanner.goomba-msg { background: linear-gradient(180deg, #ffb380, #ff8c00); color: #3a2400; font-size: 1.1rem; }
 </style>
 </head>
@@ -382,10 +381,9 @@
     <div style="margin-top:16px; padding:12px 14px; background:rgba(255,210,0,0.1); border-left:3px solid #ffd200; border-radius:8px; font-size:.8rem; line-height:1.55;">
       <strong style="color:#ffd200;">🎮 CARA BERMAIN:</strong><br>
       Lompat dengan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk mengambil koin & menginjak Goomba.<br><br>
-      🪙 <b>Koin emas biasa</b> = +10 poin, tanpa pertanyaan.<br>
-      💗 <b>Koin pink berkedip</b> = memunculkan <b>pertanyaan</b>!<br>
-      👾 <b>Injak Goomba dari atas</b> = +15 poin DAN memunculkan <b>pertanyaan kejutan</b>!<br><br>
-      Ada <b>25 pertanyaan</b> total. Waktu total <b>25 menit</b>. Nilai akhir 1–100.
+      🪙 <b>Ambil koin</b> = +10 poin. Kadang-kadang koin memunculkan <b>pertanyaan kejutan</b>!<br>
+      👾 <b>Injak Goomba dari atas</b> = +15 poin. Kadang-kadang memunculkan <b>pertanyaan kejutan</b>!<br><br>
+      Ada <b>25 pertanyaan</b> yang harus dijawab. Waktu total <b>25 menit</b>. Nilai akhir 1–100.
     </div>
     <div style="margin-top:10px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
       <strong style="color:#ff4757;">⚠️ PERINGATAN:</strong><br>
@@ -410,7 +408,7 @@
       <div id="questionOverlay">
         <div class="question-box" id="questionBox">
           <div class="q-coin" id="qCoin">?</div>
-          <div class="q-label" id="qLabel">💗 Soal 1</div>
+          <div class="q-label" id="qLabel">❓ Soal 1</div>
           <div class="question" id="questionText"></div>
         </div>
         <div class="options" id="optionsBox"></div>
@@ -420,7 +418,7 @@
     </div>
 
     <div class="game-hint" id="gameHint">
-      Ambil koin <b>🪙 emas</b> untuk poin, koin <span class="special-hint">💗 pink</span> atau <span class="goomba-hint">👾 injak Goomba</span> memunculkan pertanyaan!
+      Ambil <b>🪙 koin</b> atau injak <span class="goomba-hint">👾 Goomba</span> untuk poin — kadang memunculkan pertanyaan kejutan!
     </div>
     <div class="mario-ctrl">
       <button id="jumpBtn">🦘 LOMPAT!</button>
@@ -480,14 +478,17 @@ const POINT_COIN = 10;
 const POINT_GOOMBA = 15;
 const POINT_QUESTION = 100;
 const POINT_SPEED_BONUS = 5;
-const TIME_PER_Q = 20;               // detik untuk menjawab tiap soal
-const TOTAL_TIME = 25 * 60;          // 25 menit total kuis
+const TIME_PER_Q = 20;
+const TOTAL_TIME = 25 * 60;
 const TOTAL_QUESTIONS = 25;
 const LETTERS = ["A","B","C","D"];
 const MAKS_PELANGGARAN = 3;
-const MAX_LIVES = 3;
-const SPECIAL_COIN_CHANCE = 0.35;
 const MAX_COINS_ON_SCREEN = 3;
+
+// Peluang pertanyaan muncul dari koin / goomba
+const COIN_QUESTION_CHANCE = 0.22;      // 22% koin memunculkan pertanyaan
+const GOOMBA_QUESTION_CHANCE = 0.25;    // 25% injak goomba memunculkan pertanyaan
+const FORCE_QUESTION_THRESHOLD = 12;    // jika soal terjawab + sisa < threshold, paksa pertanyaan
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
@@ -667,13 +668,14 @@ let answeredCount = 0;
 let quizQuestions = [];
 let detailJawaban = [];
 let currentQuestionIdx = -1;
-let currentQuestionType = "coin";     // "coin" | "goomba"
+let currentQuestionType = "coin";
 let coinsCollected = 0;
+let goombasStomped = 0;
 
 // Timer
-let timerInterval = null;             // timer per soal
+let timerInterval = null;
 let timeLeft = 0;
-let totalTimerInterval = null;        // timer total 25 menit
+let totalTimerInterval = null;
 let totalTimeLeft = TOTAL_TIME;
 
 // Game
@@ -751,6 +753,14 @@ function hitungNilai() {
   return Math.max(1, Math.min(100, nilai));
 }
 
+// Apakah pertanyaan harus dipaksa muncul? (supaya 25 soal tetap terpenuhi)
+function shouldForceQuestion() {
+  const remaining = TOTAL_QUESTIONS - answeredCount;
+  // Jika sisa soal masih banyak tapi waktu sudah mendekati habis → paksa
+  if (totalTimeLeft < remaining * 30) return true;
+  return false;
+}
+
 /* ============================================================
    START
    ============================================================ */
@@ -771,7 +781,7 @@ async function startQuiz() {
 
   siswa = { nama, absen, kelas };
   score = 0; correctCount = 0; answeredCount = 0;
-  coinsCollected = 0;
+  coinsCollected = 0; goombasStomped = 0;
   detailJawaban = [];
   pelanggaran = 0;
   sudahKirim = false;
@@ -841,27 +851,19 @@ function startMarioGame() {
     coins: [],
     goombas: [],
     spawnCooldown: 30,
-    flashHit: 0,
-    eliteCoinsSpawned: 0
+    flashHit: 0
   };
 
-  spawnInitialCoins();
-
-  function spawnInitialCoins() {
-    for (let i = 0; i < 3; i++) {
-      const special = (i === 1);
-      if (special) marioState.eliteCoinsSpawned++;
-      marioState.coins.push({
-        x: 320 + i * 130,
-        y: GROUND_Y - (55 + Math.random() * 60),
-        got: false,
-        phase: Math.random() * Math.PI * 2,
-        special: special
-      });
-    }
-    // Awal juga spawn 1 goomba di tengah biar bisa langsung kejar
-    marioState.goombas.push({ x: 500, y: GROUND_Y + 4, w: 26, h: 24 });
+  // Spawn koin & goomba awal
+  for (let i = 0; i < 3; i++) {
+    marioState.coins.push({
+      x: 320 + i * 130,
+      y: GROUND_Y - (55 + Math.random() * 60),
+      got: false,
+      phase: Math.random() * Math.PI * 2
+    });
   }
+  marioState.goombas.push({ x: 500, y: GROUND_Y + 4, w: 26, h: 24 });
 
   function jump() {
     if (!gameRunning || gamePaused || waitingAnswer) return;
@@ -890,23 +892,11 @@ function startMarioGame() {
 
   function spawnCoin() {
     if (marioState.coins.length >= MAX_COINS_ON_SCREEN) return;
-
-    let special = false;
-    const activeSpecialCoins = marioState.coins.filter(c => c.special && !c.got).length;
-    const remainingQuestions = TOTAL_QUESTIONS - answeredCount;
-    if (marioState.eliteCoinsSpawned < TOTAL_QUESTIONS &&
-        remainingQuestions > activeSpecialCoins &&
-        Math.random() < SPECIAL_COIN_CHANCE) {
-      special = true;
-      marioState.eliteCoinsSpawned++;
-    }
-
     marioState.coins.push({
       x: W + 40,
       y: GROUND_Y - (55 + Math.random() * 70),
       got: false,
-      phase: Math.random() * Math.PI * 2,
-      special: special
+      phase: Math.random() * Math.PI * 2
     });
   }
 
@@ -977,7 +967,6 @@ function startMarioGame() {
       if (g.x < marioRight && g.x + g.w > marioLeft &&
           g.y - g.h < marioBottom && g.y > marioTop) {
         if (marioState.vy > 0 && marioBottom - marioState.vy <= g.y - g.h + 8) {
-          // INJAK GOOMBA dari atas
           g.x = -100;
           marioState.vy = -10;
           marioState.flashHit = 6;
@@ -985,7 +974,6 @@ function startMarioGame() {
           onGoombaStomped(g);
           return;
         } else {
-          // Kena goomba dari samping → mundur + berkedip (tidak kurangi nyawa, karena belum diminta)
           marioState.x = Math.max(50, marioState.x - 30);
           g.x = -100;
           marioState.flashHit = 12;
@@ -1024,10 +1012,10 @@ function startMarioGame() {
       ctx.stroke();
     }
 
+    // Semua koin tampil sama (warna emas)
     marioState.coins.forEach(c => {
       if (c.got) return;
-      if (c.special) drawSpecialCoin(ctx, c.x, c.y, c.phase);
-      else drawCoin(ctx, c.x, c.y, c.phase);
+      drawCoin(ctx, c.x, c.y, c.phase);
     });
 
     marioState.goombas.forEach(g => {
@@ -1083,44 +1071,6 @@ function startMarioGame() {
     ctx.textBaseline = "middle";
     ctx.fillText("$", 0, 1);
     ctx.restore();
-  }
-
-  function drawSpecialCoin(ctx, x, y, phase) {
-    const bob = Math.sin(phase) * 4;
-    const scaleX = Math.abs(Math.cos(phase * 1.5));
-    const pulse = 0.8 + Math.sin(phase * 3) * 0.2;
-    ctx.save();
-    ctx.translate(x, y + bob);
-    ctx.scale(0.55 + scaleX * 0.45, 1);
-
-    ctx.shadowColor = "#ff6b9d";
-    ctx.shadowBlur = 20 * pulse;
-
-    ctx.fillStyle = "#ff6b9d";
-    ctx.beginPath();
-    ctx.arc(0, 0, 13, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#ffb3d9";
-    ctx.beginPath();
-    ctx.arc(0, 0, 9, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#8a1a4e";
-    ctx.font = "bold 14px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("?", 0, 1);
-    ctx.restore();
-
-    if (pulse > 0.9) {
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
-      ctx.beginPath();
-      ctx.arc(x - 15, y + bob - 8, 2, 0, Math.PI * 2);
-      ctx.arc(x + 14, y + bob + 6, 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
   }
 
   function drawGoomba(ctx, x, y, w, h) {
@@ -1222,53 +1172,66 @@ function stopMarioGame() {
 }
 
 /* ============================================================
-   KOIN DIAMBIL
+   KOIN DIAMBIL → kadang pertanyaan
    ============================================================ */
 function onCoinCollected(coin) {
   coinsCollected++;
+  score += POINT_COIN;
+  scoreHud.textContent = score;
 
-  if (!coin.special) {
-    score += POINT_COIN;
-    scoreHud.textContent = score;
-    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 700);
-    return;
-  }
-
+  // Kalau sudah tidak ada sisa soal → tidak mungkin ada pertanyaan
   if (answeredCount >= TOTAL_QUESTIONS) {
-    score += POINT_COIN;
-    scoreHud.textContent = score;
-    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 700);
+    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 600);
     return;
   }
 
+  // Putuskan apakah muncul pertanyaan atau tidak
+  const force = shouldForceQuestion();
+  const munculPertanyaan = force || Math.random() < COIN_QUESTION_CHANCE;
+
+  if (!munculPertanyaan) {
+    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 600);
+    return;
+  }
+
+  // Muncul pertanyaan
   waitingAnswer = true;
   clearInterval(timerInterval);
   currentQuestionIdx = answeredCount;
   currentQuestionType = "coin";
-  showToast(`💗 Soal bonus!`, "special-msg", 800, () => {
+  showToast(`🪙 +${POINT_COIN} poin<br>Soal bonus!`, "special-msg", 800, () => {
     showQuestion(answeredCount, "coin");
   });
 }
 
 /* ============================================================
-   GOOMBA DIINJAK → PERTANYAAN KEJUTAN
+   GOOMBA DIINJAK → kadang pertanyaan
    ============================================================ */
 function onGoombaStomped(goomba) {
-  // Poin dulu
+  goombasStomped++;
   score += POINT_GOOMBA;
   scoreHud.textContent = score;
 
-  // Kalau masih ada soal → munculkan pertanyaan kejutan
   if (answeredCount >= TOTAL_QUESTIONS) {
-    showToast(`+${POINT_GOOMBA} 👾 (soal habis)`, "goomba-msg", 900);
+    showToast(`+${POINT_GOOMBA} 👾`, "goomba-msg", 600);
     return;
   }
 
+  // Putuskan apakah muncul pertanyaan atau tidak
+  const force = shouldForceQuestion();
+  const munculPertanyaan = force || Math.random() < GOOMBA_QUESTION_CHANCE;
+
+  if (!munculPertanyaan) {
+    showToast(`+${POINT_GOOMBA} 👾`, "goomba-msg", 600);
+    return;
+  }
+
+  // Muncul pertanyaan kejutan
   waitingAnswer = true;
   clearInterval(timerInterval);
   currentQuestionIdx = answeredCount;
   currentQuestionType = "goomba";
-  showToast(`👾 Injak Goomba! +${POINT_GOOMBA} poin<br>Soal kejutan!`, "goomba-msg", 900, () => {
+  showToast(`👾 +${POINT_GOOMBA} poin<br>Soal kejutan!`, "goomba-msg", 800, () => {
     showQuestion(answeredCount, "goomba");
   });
 }
@@ -1297,7 +1260,7 @@ function showQuestion(idx, type) {
     box.classList.remove("goomba-q");
     coinEl.classList.remove("goomba-coin");
     coinEl.textContent = "?";
-    $("qLabel").textContent = `💗 Soal ${idx + 1} dari ${TOTAL_QUESTIONS}`;
+    $("qLabel").textContent = `🪙 Soal ${idx + 1} dari ${TOTAL_QUESTIONS}`;
   }
 
   questionText.textContent = q.q;
@@ -1376,7 +1339,7 @@ function closeQuestion() {
   currentQuestionType = "coin";
   renderQProgress();
 
-  $("gameHint").innerHTML = `Ambil koin <b>🪙 emas</b> untuk poin, koin <span class="special-hint">💗 pink</span> atau <span class="goomba-hint">👾 injak Goomba</span> memunculkan pertanyaan!`;
+  $("gameHint").innerHTML = `Ambil <b>🪙 koin</b> atau injak <span class="goomba-hint">👾 Goomba</span> untuk poin — kadang memunculkan pertanyaan kejutan!`;
 
   if (answeredCount >= TOTAL_QUESTIONS) {
     finishQuiz();
@@ -1453,6 +1416,7 @@ function kirimKeSheet(isPelanggaran, nilaiAkhir) {
     detail: detailJawaban,
     pelanggaran: pelanggaran,
     koin_dikumpulkan: coinsCollected,
+    goomba_diinjak: goombasStomped,
     soal_dijawab: answeredCount,
     total_soal: TOTAL_QUESTIONS,
     waktu_tersisa: totalTimeLeft
