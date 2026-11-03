@@ -3,47 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍄 Kuis Pengolahan Data - Mario Edition</title>
+<title>🚀 Kuis Pengolahan Data - Space Shooter</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
   html, body { width: 100%; height: 100%; overflow: hidden; }
   body {
-    background: linear-gradient(180deg, #5c94fc 0%, #5c94fc 60%, #8b5a2b 60%, #6b4423 100%);
+    background: radial-gradient(ellipse at top, #1a1a3e 0%, #0a0a1e 60%, #050510 100%);
     display: flex; align-items: center; justify-content: center;
     padding: 16px; color: #fff;
     user-select: none; -webkit-user-select: none;
     position: relative;
   }
 
-  .cloud {
-    position: fixed; background: #fff; border-radius: 50px;
-    opacity: .85; pointer-events: none; z-index: 0;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.08);
-  }
-  .cloud::before, .cloud::after {
-    content: ''; position: absolute; background: #fff; border-radius: 50%;
-  }
-  .cloud::before { width: 60%; height: 160%; top: -60%; left: 15%; }
-  .cloud::after { width: 40%; height: 120%; top: -40%; right: 12%; }
-  .cloud.c1 { width: 90px; height: 32px; top: 8%; left: 6%; animation: drift 22s linear infinite; }
-  .cloud.c2 { width: 120px; height: 40px; top: 18%; right: 8%; animation: drift 30s linear infinite reverse; }
-  .cloud.c3 { width: 70px; height: 26px; top: 4%; left: 55%; animation: drift 26s linear infinite; }
-  @keyframes drift { from { transform: translateX(0); } to { transform: translateX(40px); } }
-
-  .ground { position: fixed; bottom: 0; left: 0; right: 0; height: 40px;
-    background: repeating-linear-gradient(90deg, #6b4423 0 32px, #7a4f2a 32px 64px);
-    border-top: 6px solid #4a8f2b; z-index: 0; }
+  /* Bintang dekorasi */
+  .star { position: fixed; background: #fff; border-radius: 50%;
+    pointer-events: none; z-index: 0; animation: twinkle 3s infinite ease-in-out; }
+  .star.s1 { width: 2px; height: 2px; top: 10%; left: 15%; }
+  .star.s2 { width: 3px; height: 3px; top: 25%; left: 75%; animation-delay: .5s; }
+  .star.s3 { width: 2px; height: 2px; top: 60%; left: 30%; animation-delay: 1s; }
+  .star.s4 { width: 2px; height: 2px; top: 80%; left: 85%; animation-delay: 1.5s; }
+  .star.s5 { width: 3px; height: 3px; top: 45%; left: 50%; animation-delay: 2s; }
+  @keyframes twinkle { 0%, 100% { opacity: .3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
 
   .card {
     width: 100%; max-width: 720px; max-height: 96vh; overflow-y: auto;
-    background: rgba(20, 25, 50, 0.92);
-    border: 4px solid #ffd200;
+    background: rgba(10, 15, 35, 0.92);
+    border: 3px solid #00e5ff;
     border-radius: 22px; padding: 24px 22px;
-    box-shadow: 0 12px 0 rgba(0,0,0,0.35), 0 20px 60px rgba(0,0,0,0.6),
-                inset 0 0 0 3px rgba(255,255,255,0.06);
+    box-shadow: 0 12px 0 rgba(0,120,140,0.35), 0 20px 60px rgba(0,0,0,0.8),
+                0 0 40px rgba(0,229,255,0.15),
+                inset 0 0 0 3px rgba(0,229,255,0.06);
     position: relative; z-index: 2;
   }
-  h1 { font-size: 1.5rem; text-align: center; margin-bottom: 6px; }
+  h1 { font-size: 1.5rem; text-align: center; margin-bottom: 6px;
+    background: linear-gradient(90deg, #00e5ff, #ff00c8);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 30px rgba(0,229,255,0.3); }
   .sub { text-align: center; opacity: .7; font-size: .88rem; margin-bottom: 20px; }
 
   .form-group { margin-bottom: 14px; }
@@ -53,86 +48,94 @@
   }
   .form-group input {
     width: 100%; padding: 13px 16px; border-radius: 14px;
-    border: 2px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(0,229,255,0.25); background: rgba(0,229,255,0.05);
     color: #fff; font-size: 1rem; outline: none; transition: border-color .2s;
   }
-  .form-group input:focus { border-color: #ffd200; }
-  .form-group input::placeholder { color: rgba(255,255,255,0.4); }
+  .form-group input:focus { border-color: #00e5ff; box-shadow: 0 0 12px rgba(0,229,255,0.4); }
+  .form-group input::placeholder { color: rgba(255,255,255,0.35); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
 
   .hud { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
   .hud-box {
     flex: 1; text-align: center; padding: 8px 4px;
-    background: rgba(255,255,255,0.08); border-radius: 12px;
-    border: 2px solid rgba(255,210,0,0.4);
+    background: rgba(0,229,255,0.06); border-radius: 12px;
+    border: 2px solid rgba(0,229,255,0.3);
   }
   .hud-box .label { font-size: .65rem; opacity: .7; text-transform: uppercase; letter-spacing: .5px; }
-  .hud-box .value { font-size: 1.15rem; font-weight: 700; margin-top: 2px; color: #ffd200; }
+  .hud-box .value { font-size: 1.15rem; font-weight: 700; margin-top: 2px; color: #00e5ff; }
   #warnHud.danger .value { color: #ff4757; animation: pulse .5s alternate infinite; }
   @keyframes pulse { from { transform: scale(1);} to { transform: scale(1.12);} }
 
-  /* Progress soal */
   .q-progress {
-    display: flex; align-items: center; justify-content: center; gap: 5px;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
     margin-bottom: 12px; flex-wrap: wrap;
   }
   .q-dot {
-    width: 24px; height: 24px; border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: .7rem; font-weight: 800;
-    background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+    font-size: .65rem; font-weight: 800;
+    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.4);
     transition: all .3s;
   }
   .q-dot.done {
-    background: radial-gradient(circle at 30% 30%, #b6ffb6, #2ed573 60%, #0d7a3a);
-    border-color: #0d7a3a; color: #fff;
+    background: radial-gradient(circle at 30% 30%, #7cffea, #00e5ff 60%, #007a8a);
+    border-color: #00e5ff; color: #001a1e;
+    box-shadow: 0 0 8px rgba(0,229,255,0.6);
   }
   .q-dot.current {
-    background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
-    border-color: #ffd200; color: #3a2400;
-    box-shadow: 0 0 12px rgba(255,210,0,0.7);
-    transform: scale(1.1);
+    background: radial-gradient(circle at 30% 30%, #ffb3e6, #ff00c8 60%, #8a006a);
+    border-color: #ff00c8; color: #fff;
+    box-shadow: 0 0 12px rgba(255,0,200,0.7);
+    transform: scale(1.15);
   }
 
   #gameScreen { position: relative; }
-  #marioArena {
+  #spaceArena {
     display: block; width: 100%; max-width: 100%; height: auto;
-    background: linear-gradient(180deg, #5c94fc 0%, #5c94fc 70%, #8b5a2b 70%, #6b4423 100%);
-    border: 4px solid #ffd200;
-    border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.35);
+    background: #000;
+    border: 3px solid #00e5ff;
+    border-radius: 14px; box-shadow: 0 0 30px rgba(0,229,255,0.4);
     touch-action: none;
   }
   .game-hint {
     text-align: center; font-size: .82rem; opacity: .85; margin-top: 10px;
-    padding: 8px 12px; background: rgba(255,210,0,0.12);
-    border-radius: 10px; border: 1px solid rgba(255,210,0,0.3);
+    padding: 8px 12px; background: rgba(0,229,255,0.08);
+    border-radius: 10px; border: 1px solid rgba(0,229,255,0.25);
   }
-  .game-hint b { color: #ffd200; }
-  .game-hint .special-hint { color: #ff6b9d; font-weight: 700; }
-  .mario-ctrl {
-    display: flex; justify-content: center; margin-top: 12px;
+  .game-hint b { color: #00e5ff; }
+  .game-hint .special-hint { color: #ff00c8; font-weight: 700; }
+  .game-ctrl {
+    display: flex; justify-content: center; gap: 10px; margin-top: 12px;
   }
-  .mario-ctrl button {
-    background: linear-gradient(180deg, #ffe97a 0%, #ffb800 60%, #b8860b 100%);
-    border: 3px solid #8a5a00; border-radius: 16px;
-    padding: 16px 40px; font-size: 1.1rem; font-weight: 800; color: #3a2400;
+  .game-ctrl button {
+    background: linear-gradient(180deg, #00f5ff 0%, #00a5c8 60%, #006a8a 100%);
+    border: 3px solid #003a4a; border-radius: 14px;
+    padding: 14px 20px; font-size: 1rem; font-weight: 800; color: #001a1e;
     cursor: pointer; user-select: none;
-    box-shadow: 0 6px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.5);
+    box-shadow: 0 5px 0 #002530, inset 0 3px 0 rgba(255,255,255,0.4);
     transition: transform .1s, box-shadow .1s;
     touch-action: manipulation;
   }
-  .mario-ctrl button:active {
+  .game-ctrl button:active {
     transform: translateY(3px);
-    box-shadow: 0 3px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
+    box-shadow: 0 2px 0 #002530, inset 0 3px 0 rgba(255,255,255,0.3);
+  }
+  .game-ctrl button.fire {
+    background: linear-gradient(180deg, #ff4d94 0%, #ff00c8 60%, #8a006a 100%);
+    color: #fff; border-color: #4a003a;
+    box-shadow: 0 5px 0 #4a003a, inset 0 3px 0 rgba(255,255,255,0.3);
+    flex: 1;
+  }
+  .game-ctrl button.fire:active {
+    box-shadow: 0 2px 0 #4a003a, inset 0 3px 0 rgba(255,255,255,0.3);
   }
 
-  /* QUESTION OVERLAY */
   #questionOverlay {
     display: none;
     position: absolute; inset: 0;
-    background: rgba(10, 12, 28, 0.94);
+    background: rgba(5, 10, 25, 0.96);
     border-radius: 14px;
     padding: 16px 14px;
     overflow-y: auto;
@@ -145,88 +148,73 @@
 
   .question-box {
     position: relative;
-    background: #b8331e;
-    background-image:
-      linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 35%),
-      linear-gradient(0deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 30%);
-    border: 4px solid #8a1f0f;
+    background: linear-gradient(160deg, #0a2540 0%, #0d1440 100%);
+    border: 3px solid #ff00c8;
     border-radius: 14px;
-    padding: 20px 16px 16px;
+    padding: 22px 16px 16px;
     margin-bottom: 14px;
-    box-shadow:
-      0 5px 0 #6b180a,
-      inset 0 3px 0 rgba(255,255,255,0.2),
-      inset 0 -3px 0 rgba(0,0,0,0.25);
+    box-shadow: 0 0 30px rgba(255,0,200,0.4), inset 0 0 20px rgba(0,229,255,0.08);
     flex-shrink: 0;
   }
-  .question-box::before, .question-box::after {
-    content: '✦'; position: absolute; color: #ffd200; font-size: 1rem;
-    top: 5px; text-shadow: 0 0 6px #ffd200;
-  }
-  .question-box::before { left: 8px; }
-  .question-box::after { right: 8px; }
   .q-coin {
-    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
-    width: 38px; height: 38px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffb3d9, #ff6b9d 60%, #c4307a);
-    border: 3px solid #8a1a4e;
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffb3e6, #ff00c8 60%, #8a006a);
+    border: 3px solid #ff80d5;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.4rem; font-weight: 800; color: #fff;
-    box-shadow: 0 3px 0 #8a1a4e, 0 0 14px rgba(255,107,157,0.8);
+    box-shadow: 0 0 24px rgba(255,0,200,0.9);
     animation: coinBounce 1.4s ease-in-out infinite;
     z-index: 3;
   }
   @keyframes coinBounce {
     0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-    50% { transform: translateX(-50%) translateY(-5px) rotate(6deg); }
+    50% { transform: translateX(-50%) translateY(-6px) rotate(10deg); }
   }
-  .q-label { font-size: .65rem; letter-spacing: 2px; opacity: .85; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; text-shadow: 1px 1px 0 rgba(0,0,0,0.4); }
-  .question { font-size: 1rem; line-height: 1.5; font-weight: 700; text-shadow: 1px 1px 0 rgba(0,0,0,0.35); }
+  .q-label { font-size: .65rem; letter-spacing: 2px; opacity: .85; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; color: #ff80d5; }
+  .question { font-size: 1rem; line-height: 1.5; font-weight: 700; }
 
   .options { display: flex; flex-direction: column; gap: 9px; }
   .option {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 14px; border-radius: 12px; cursor: pointer;
-    background: linear-gradient(180deg, #f0d88a 0%, #e0b94f 55%, #c99a2e 100%);
-    border: 3px solid #8a5a00;
-    color: #3a2400;
-    font-weight: 700;
+    background: linear-gradient(180deg, rgba(0,229,255,0.15) 0%, rgba(0,150,180,0.1) 100%);
+    border: 2px solid rgba(0,229,255,0.4);
+    color: #e0f8ff; font-weight: 600;
     font-size: .9rem; text-align: left; width: 100%;
-    box-shadow:
-      0 4px 0 #6b4400,
-      inset 0 3px 0 rgba(255,255,255,0.5),
-      inset 0 -3px 0 rgba(0,0,0,0.15);
-    transition: transform .12s, box-shadow .12s, background .2s;
+    box-shadow: 0 3px 0 rgba(0,100,120,0.5);
+    transition: transform .12s, box-shadow .12s, background .2s, border-color .2s;
     position: relative;
   }
   .option:hover:not(:disabled) {
     transform: translateY(-2px);
-    background: linear-gradient(180deg, #ffe97a 0%, #f0c95f 55%, #d4a534 100%);
+    background: linear-gradient(180deg, rgba(0,229,255,0.3) 0%, rgba(0,150,180,0.2) 100%);
+    border-color: #00e5ff;
+    box-shadow: 0 5px 0 rgba(0,100,120,0.6), 0 0 20px rgba(0,229,255,0.3);
   }
   .option:active:not(:disabled) {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 rgba(0,100,120,0.5);
   }
   .option .badge {
     width: 30px; height: 30px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%; font-weight: 800; font-size: .88rem;
-    background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
-    color: #3a2400;
-    border: 2px solid #8a5a00;
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.5);
+    background: radial-gradient(circle at 30% 30%, #7cffea, #00e5ff 60%, #007a8a);
+    color: #001a1e;
+    border: 2px solid #00e5ff;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.4);
   }
   .option.correct {
     background: linear-gradient(180deg, #7bf0a3 0%, #2ed573 55%, #1fae5a 100%);
-    border-color: #0d7a3a;
-    box-shadow: 0 4px 0 #0a5a2a, inset 0 3px 0 rgba(255,255,255,0.45);
+    border-color: #0d7a3a; color: #06301a;
+    box-shadow: 0 3px 0 #0a5a2a, 0 0 20px rgba(46,213,115,0.5);
   }
   .option.correct .badge { background: radial-gradient(circle at 30% 30%, #b6ffb6, #2ed573 60%, #0d7a3a); border-color: #0d7a3a; color: #fff; }
   .option.wrong {
     background: linear-gradient(180deg, #ff8a8a 0%, #ff4757 55%, #c81e2d 100%);
-    border-color: #8a0f1c;
-    box-shadow: 0 4px 0 #6b0b16, inset 0 3px 0 rgba(255,255,255,0.3);
-    color: #fff;
+    border-color: #8a0f1c; color: #fff;
+    box-shadow: 0 3px 0 #6b0b16, 0 0 20px rgba(255,71,87,0.5);
   }
   .option.wrong .badge { background: radial-gradient(circle at 30% 30%, #ffc0c0, #ff4757 60%, #8a0f1c); border-color: #8a0f1c; color: #fff; }
   .option:disabled { cursor: default; }
@@ -235,39 +223,39 @@
     display: block; width: 100%; margin-top: 16px;
     padding: 15px; border: none; border-radius: 14px;
     font-size: 1rem; font-weight: 800; cursor: pointer;
-    background: linear-gradient(180deg, #4bd964 0%, #2ea043 55%, #1f7a2e 100%);
-    color: #fff; text-shadow: 1px 1px 0 rgba(0,0,0,0.35);
-    box-shadow: 0 6px 0 #155a20, inset 0 3px 0 rgba(255,255,255,0.35);
+    background: linear-gradient(180deg, #00f5ff 0%, #00a5c8 55%, #006a8a 100%);
+    color: #001a1e;
+    box-shadow: 0 6px 0 #002530, inset 0 3px 0 rgba(255,255,255,0.35);
     transition: transform .15s, box-shadow .15s;
     letter-spacing: .5px;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #155a20, inset 0 3px 0 rgba(255,255,255,0.35); }
-  .btn:active { transform: translateY(2px); box-shadow: 0 3px 0 #155a20, inset 0 3px 0 rgba(255,255,255,0.35); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #002530, inset 0 3px 0 rgba(255,255,255,0.35); }
+  .btn:active { transform: translateY(2px); box-shadow: 0 3px 0 #002530, inset 0 3px 0 rgba(255,255,255,0.35); }
   .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-  .btn.bonus { background: linear-gradient(180deg, #ffd200 0%, #f7971e 55%, #c46a00 100%); color: #3a2400; box-shadow: 0 6px 0 #7a4400, inset 0 3px 0 rgba(255,255,255,0.5); }
+  .btn.bonus { background: linear-gradient(180deg, #ff4d94 0%, #ff00c8 55%, #8a006a 100%); color: #fff; box-shadow: 0 6px 0 #4a003a, inset 0 3px 0 rgba(255,255,255,0.3); }
 
   .screen { display: none; }
   .screen.active { display: block; animation: fadeIn .4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: none;} }
 
-  .score-big { text-align: center; font-size: 3.2rem; font-weight: 800;
-    background: linear-gradient(90deg, #ffd200, #ff6b9d);
+  .score-big { text-align: center; font-size: 3.4rem; font-weight: 800;
+    background: linear-gradient(90deg, #00e5ff, #ff00c8);
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    margin: 8px 0; text-shadow: 0 0 30px rgba(255,210,0,0.4); }
+    margin: 8px 0; text-shadow: 0 0 30px rgba(0,229,255,0.4); }
   .result-msg { text-align: center; font-size: 1rem; opacity: .85; margin-bottom: 14px; }
   .identity-box {
-    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,210,0,0.35);
+    background: rgba(0,229,255,0.05); border: 2px solid rgba(0,229,255,0.3);
     border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; font-size: .9rem;
   }
   .identity-box div { display: flex; justify-content: space-between; padding: 4px 0; }
   .identity-box span:first-child { opacity: .65; }
-  .identity-box span:last-child { font-weight: 600; color: #ffd200; }
+  .identity-box span:last-child { font-weight: 600; color: #00e5ff; }
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
   .stat-item {
-    background: rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; text-align: center;
-    border: 2px solid rgba(255,210,0,0.3);
+    background: rgba(0,229,255,0.06); border-radius: 14px; padding: 14px; text-align: center;
+    border: 2px solid rgba(0,229,255,0.25);
   }
-  .stat-item .num { font-size: 1.5rem; font-weight: 700; color: #ffd200; }
+  .stat-item .num { font-size: 1.5rem; font-weight: 700; color: #00e5ff; }
   .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
 
   .wheel-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
@@ -277,16 +265,16 @@
     width: 0; height: 0;
     border-left: 14px solid transparent;
     border-right: 14px solid transparent;
-    border-top: 24px solid #ffd200;
-    z-index: 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    border-top: 24px solid #00e5ff;
+    z-index: 3; filter: drop-shadow(0 0 8px rgba(0,229,255,0.8));
   }
   #wheelCanvas {
     border-radius: 50%;
-    box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 6px rgba(0,229,255,0.15), 0 10px 30px rgba(0,0,0,0.6), 0 0 40px rgba(0,229,255,0.3);
     transition: transform 4s cubic-bezier(.15,.85,.25,1);
     width: 200px; height: 200px;
   }
-  .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #ffd200; }
+  .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #00e5ff; }
 
   #tab-warning-overlay {
     display: none; position: fixed; inset: 0;
@@ -308,35 +296,38 @@
 
   #fsInfo {
     position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 99px;
+    background: rgba(0,0,0,0.7); padding: 6px 14px; border-radius: 99px;
     font-size: .75rem; opacity: .8; z-index: 100;
     display: none; align-items: center; gap: 6px;
+    border: 1px solid rgba(0,229,255,0.4);
   }
   #fsInfo.show { display: flex; }
-  #fsInfo .dot { width: 8px; height: 8px; border-radius: 50%; background: #2ed573; animation: pulse 1s infinite alternate; }
+  #fsInfo .dot { width: 8px; height: 8px; border-radius: 50%; background: #00e5ff; animation: pulse 1s infinite alternate; }
 
-  /* Feedback banner */
   #feedbackBanner {
     display: none;
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     padding: 20px 40px; border-radius: 16px;
     font-size: 1.4rem; font-weight: 800; text-align: center;
     z-index: 20; animation: popIn .3s;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    pointer-events: none;
   }
   #feedbackBanner.show { display: block; }
   #feedbackBanner.correct { background: linear-gradient(180deg, #7bf0a3, #2ed573); color: #06301a; }
   #feedbackBanner.wrong { background: linear-gradient(180deg, #ff8a8a, #ff4757); color: #fff; }
-  #feedbackBanner.coin-msg { background: linear-gradient(180deg, #ffe97a, #ffb800); color: #3a2400; font-size: 1.2rem; }
-  #feedbackBanner.special-msg { background: linear-gradient(180deg, #ffb3d9, #ff6b9d); color: #fff; font-size: 1.1rem; }
+  #feedbackBanner.shot-msg { background: linear-gradient(180deg, #7cffea, #00e5ff); color: #001a1e; font-size: 1.1rem; }
+  #feedbackBanner.special-msg { background: linear-gradient(180deg, #ffb3e6, #ff00c8); color: #fff; font-size: 1.1rem; }
+  #feedbackBanner.hit-msg { background: linear-gradient(180deg, #ff8a8a, #ff4757); color: #fff; font-size: 1.1rem; }
 </style>
 </head>
 <body>
 
-<div class="cloud c1"></div>
-<div class="cloud c2"></div>
-<div class="cloud c3"></div>
-<div class="ground"></div>
+<div class="star s1"></div>
+<div class="star s2"></div>
+<div class="star s3"></div>
+<div class="star s4"></div>
+<div class="star s5"></div>
 
 <div id="fsInfo"><span class="dot"></span> Mode Ujian Aktif</div>
 
@@ -344,8 +335,8 @@
 
   <!-- START -->
   <div id="startScreen" class="screen active">
-    <h1>🍄 Kuis Pengolahan Data</h1>
-    <p class="sub">Satuan Ukuran Data & Rumus Excel — Mario Edition</p>
+    <h1>🚀 Kuis Pengolahan Data</h1>
+    <p class="sub">Satuan Ukuran Data & Rumus Excel — Space Shooter</p>
     <div class="form-group">
       <label for="inputNama">Nama Lengkap</label>
       <input type="text" id="inputNama" placeholder="Contoh: Ahmad Rizki Pratama" maxlength="50" autocomplete="off">
@@ -360,38 +351,38 @@
         <input type="text" id="inputKelas" placeholder="Contoh: VII A" maxlength="20" autocomplete="off">
       </div>
     </div>
-    <button class="btn" id="startBtn">🚀 Mulai Bermain (Full Screen)</button>
-    <div style="margin-top:16px; padding:12px 14px; background:rgba(255,210,0,0.1); border-left:3px solid #ffd200; border-radius:8px; font-size:.8rem; line-height:1.55;">
-      <strong style="color:#ffd200;">🎮 CARA BERMAIN:</strong><br>
-      Gerakkan Mario dengan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk melompat dan mengambil koin.<br><br>
-      🪙 <b>Koin emas biasa</b> = +10 poin, tanpa pertanyaan.<br>
-      💗 <b>Koin pink berkedip</b> = memunculkan <b>pertanyaan</b>!<br><br>
-      Ada <b>10 pertanyaan</b> yang tersebar di antara koin-koin. Jawab dengan tepat untuk skor maksimal! Kumpulkan koin sebanyak mungkin dalam <b>2 menit</b>.
+    <button class="btn" id="startBtn">🚀 Mulai Misi (Full Screen)</button>
+    <div style="margin-top:16px; padding:12px 14px; background:rgba(0,229,255,0.08); border-left:3px solid #00e5ff; border-radius:8px; font-size:.8rem; line-height:1.55;">
+      <strong style="color:#00e5ff;">🎮 CARA BERMAIN:</strong><br>
+      Kamu mengendalikan <b>pesawat luar angkasa</b>. Tembak musuh untuk dapat poin!<br><br>
+      👾 <b>Musuh biasa (merah)</b> = +5 poin, tanpa pertanyaan.<br>
+      💗 <b>Musuh pink (elit)</b> = memunculkan <b>pertanyaan</b>!<br><br>
+      Ada <b>25 pertanyaan</b> total. Jawab dengan tepat untuk skor maksimal! Nilai akhir 1–100.
     </div>
     <div style="margin-top:10px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
       <strong style="color:#ff4757;">⚠️ PERINGATAN:</strong><br>
-      Saat mulai, layar masuk mode <strong>full screen</strong>. Jika kamu pindah tab / keluar full screen / buka DevTools, kamu dapat <strong>peringatan</strong>. Pelanggaran ke-<strong>3</strong> akan <strong>langsung mengakhiri kuis</strong>.
+      Saat mulai, layar masuk mode <strong>full screen</strong>. Jika pindah tab / keluar full screen / buka DevTools, dapat <strong>peringatan</strong>. Pelanggaran ke-<strong>3</strong> langsung mengakhiri kuis.
     </div>
   </div>
 
   <!-- GAME + KUIS -->
   <div id="gameScreen" class="screen">
     <div class="hud">
-      <div class="hud-box"><div class="label">Soal</div><div class="value" id="qHud">0/10</div></div>
+      <div class="hud-box"><div class="label">Soal</div><div class="value" id="qHud">0/25</div></div>
       <div class="hud-box"><div class="label">Skor</div><div class="value" id="scoreHud">0</div></div>
-      <div class="hud-box"><div class="label">Waktu</div><div class="value" id="timeHud">2:00</div></div>
+      <div class="hud-box"><div class="label">Nyawa</div><div class="value" id="livesHud">❤️❤️❤️</div></div>
       <div class="hud-box" id="warnHud"><div class="label">Pelanggaran</div><div class="value" id="warnCount">0/3</div></div>
     </div>
 
     <div class="q-progress" id="qProgress"></div>
 
     <div style="position: relative;">
-      <canvas id="marioArena" width="640" height="300"></canvas>
+      <canvas id="spaceArena" width="640" height="360"></canvas>
 
       <div id="questionOverlay">
         <div class="question-box">
           <div class="q-coin">?</div>
-          <div class="q-label" id="qLabel">💗 Pertanyaan Bonus 1</div>
+          <div class="q-label" id="qLabel">💗 Soal Bonus 1</div>
           <div class="question" id="questionText"></div>
         </div>
         <div class="options" id="optionsBox"></div>
@@ -401,16 +392,18 @@
     </div>
 
     <div class="game-hint" id="gameHint">
-      Ambil koin <b>🪙 emas</b> untuk poin, tapi waspada koin <span class="special-hint">💗 pink berkedip</span> — itu memunculkan pertanyaan!
+      Tembak musuh <b>👾 merah</b> untuk poin. Musuh <span class="special-hint">💗 pink</span> memunculkan pertanyaan!
     </div>
-    <div class="mario-ctrl">
-      <button id="jumpBtn">🦘 LOMPAT!</button>
+    <div class="game-ctrl">
+      <button id="leftBtn">◀</button>
+      <button id="fireBtn" class="fire">🔥 TEMBAK!</button>
+      <button id="rightBtn">▶</button>
     </div>
   </div>
 
   <!-- HASIL -->
   <div id="resultScreen" class="screen">
-    <h1>🏁 Selesai!</h1>
+    <h1>🏁 Misi Selesai!</h1>
     <div class="score-big" id="finalScore">0</div>
     <p class="result-msg" id="resultMsg"></p>
     <div class="identity-box">
@@ -422,6 +415,10 @@
     <div class="stats-grid">
       <div class="stat-item"><div class="num" id="statBenar">0</div><div class="lbl">Benar</div></div>
       <div class="stat-item"><div class="num" id="statSalah">0</div><div class="lbl">Salah</div></div>
+    </div>
+    <div class="stats-grid" style="margin-top:10px;">
+      <div class="stat-item"><div class="num" id="statRawScore">0</div><div class="lbl">Skor Mentah</div></div>
+      <div class="stat-item"><div class="num" id="statNilai">0</div><div class="lbl">Nilai (1-100)</div></div>
     </div>
 
     <div class="wheel-wrap">
@@ -453,16 +450,15 @@
 /* ============================================================
    KONFIGURASI
    ============================================================ */
-const POINT_COIN = 10;                 // poin koin biasa
+const POINT_ENEMY = 5;                 // poin musuh biasa
 const POINT_QUESTION = 100;            // poin dasar jawaban benar
 const POINT_SPEED_BONUS = 5;           // bonus per detik sisa
 const TIME_PER_Q = 20;                 // detik untuk menjawab
-const TOTAL_QUESTIONS = 10;            // jumlah pertanyaan yang muncul (acak dari bank)
-const GAME_DURATION = 120;             // durasi game 2 menit
+const TOTAL_QUESTIONS = 25;            // jumlah soal (nilai 1-100)
+const TOTAL_ENEMIES_ELITE = 25;        // musuh elit = jumlah soal
 const LETTERS = ["A","B","C","D"];
 const MAKS_PELANGGARAN = 3;
-const SPECIAL_COIN_CHANCE = 0.35;      // 35% koin yang di-spawn adalah koin spesial
-const MAX_COINS_ON_SCREEN = 3;         // batas koin di layar biar tetap seru
+const MAX_LIVES = 3;
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
@@ -491,7 +487,6 @@ function catatPelanggaran(pesan) {
   updateWarnHud();
   warnCountEl.innerText = pelanggaran;
   gamePaused = true;
-  clearInterval(gameTimerInterval);
   clearInterval(timerInterval);
 
   if (pelanggaran >= MAKS_PELANGGARAN) {
@@ -514,12 +509,7 @@ function kembaliKeKuis() {
     document.documentElement.requestFullscreen().catch(() => {});
   }
   gamePaused = false;
-  if (kuisAktif && !waitingAnswer) {
-    startGameTimer();
-  }
-  if (kuisAktif && waitingAnswer) {
-    startQuestionTimer();
-  }
+  if (kuisAktif && waitingAnswer) startQuestionTimer();
 }
 
 document.addEventListener("visibilitychange", function () {
@@ -640,26 +630,26 @@ const QUESTIONS = [
    STATE
    ============================================================ */
 let siswa = { nama: "", absen: "", kelas: "" };
-let score = 0;
+let score = 0;                    // skor mentah (poin dari game + soal)
 let correctCount = 0;
 let answeredCount = 0;
-let quizQuestions = [];       // soal yang akan muncul (10 acak dari bank)
+let quizQuestions = [];           // 25 soal acak
 let detailJawaban = [];
 let currentQuestionIdx = -1;
-let coinsCollected = 0;
+let enemiesKilled = 0;
 
 // Timer
-let timerInterval = null;      // timer jawab soal
+let timerInterval = null;
 let timeLeft = 0;
-let gameTimerInterval = null;  // timer durasi game
-let gameTimeLeft = 0;
 
 // Game
 let gameRunning = false;
 let gamePaused = false;
 let waitingAnswer = false;
-let marioState = null;
-let marioRAF = null;
+let gameState = null;
+let gameRAF = null;
+let lives = MAX_LIVES;
+let eliteEnemiesSpawned = 0;      // berapa musuh elit sudah muncul
 
 // Wheel
 let wheelSpun = false;
@@ -672,7 +662,7 @@ const $ = id => document.getElementById(id);
 const startScreen = $("startScreen"), gameScreen = $("gameScreen"), resultScreen = $("resultScreen");
 const questionOverlay = $("questionOverlay");
 const questionText = $("questionText"), optionsBox = $("optionsBox");
-const qHud = $("qHud"), scoreHud = $("scoreHud"), timeHud = $("timeHud");
+const qHud = $("qHud"), scoreHud = $("scoreHud"), livesHud = $("livesHud");
 const qProgress = $("qProgress");
 const feedbackBanner = $("feedbackBanner");
 
@@ -718,10 +708,17 @@ function renderQProgress() {
   qHud.textContent = `${answeredCount}/${TOTAL_QUESTIONS}`;
 }
 
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
+function renderLives() {
+  livesHud.textContent = "❤️".repeat(Math.max(0, lives)) + "🖤".repeat(Math.max(0, MAX_LIVES - lives));
+}
+
+/* ============================================================
+   NILAI AKHIR (1-100)
+   ============================================================ */
+// Nilai = (jawaban benar / 25) * 100, dibulatkan, minimal 1
+function hitungNilai() {
+  const nilai = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+  return Math.max(1, Math.min(100, nilai));
 }
 
 /* ============================================================
@@ -744,7 +741,9 @@ async function startQuiz() {
 
   siswa = { nama, absen, kelas };
   score = 0; correctCount = 0; answeredCount = 0;
-  coinsCollected = 0;
+  enemiesKilled = 0;
+  lives = MAX_LIVES;
+  eliteEnemiesSpawned = 0;
   detailJawaban = [];
   pelanggaran = 0;
   sudahKirim = false;
@@ -752,16 +751,14 @@ async function startQuiz() {
   wheelRotation = 0;
   currentQuestionIdx = -1;
   waitingAnswer = false;
-  gameTimeLeft = GAME_DURATION;
 
   updateWarnHud();
   warnHudEl.classList.remove("danger");
 
-  // Ambil 10 soal acak dari bank
-  quizQuestions = buildShuffledQuestions(QUESTIONS).slice(0, TOTAL_QUESTIONS);
+  quizQuestions = buildShuffledQuestions(QUESTIONS);
 
   scoreHud.textContent = "0";
-  timeHud.textContent = formatTime(gameTimeLeft);
+  renderLives();
   renderQProgress();
 
   $("spinBtn").disabled = false;
@@ -771,464 +768,477 @@ async function startQuiz() {
   fsInfoEl.classList.add("show");
   showScreen(gameScreen);
 
-  startMarioGame();
-  startGameTimer();
-}
-
-function startGameTimer() {
-  clearInterval(gameTimerInterval);
-  gameTimerInterval = setInterval(() => {
-    if (!kuisAktif || gamePaused || waitingAnswer) return;
-    gameTimeLeft--;
-    timeHud.textContent = formatTime(gameTimeLeft);
-    if (gameTimeLeft <= 10) timeHud.style.color = "#ff4757";
-    if (gameTimeLeft <= 0) {
-      clearInterval(gameTimerInterval);
-      // Waktu habis → akhiri game
-      if (answeredCount < TOTAL_QUESTIONS) {
-        finishQuiz(false, true);
-      }
-    }
-  }, 1000);
+  startSpaceGame();
 }
 
 /* ============================================================
-   MARIO GAME
+   SPACE SHOOTER GAME
    ============================================================ */
-function startMarioGame() {
+function startSpaceGame() {
   gameRunning = true;
   gamePaused = false;
   waitingAnswer = false;
 
-  const canvas = $("marioArena");
+  const canvas = $("spaceArena");
   const ctx = canvas.getContext("2d");
   const W = canvas.width, H = canvas.height;
-  const GROUND_Y = H - 55;
 
-  marioState = {
-    x: 90, y: GROUND_Y, w: 30, h: 36,
-    vy: 0, jumping: false,
-    groundY: GROUND_Y,
-    gravity: 0.9,
-    jumpPower: -14.5,
-    speed: 3.2,
+  gameState = {
+    player: { x: W / 2 - 18, y: H - 45, w: 36, h: 30, vx: 0, speed: 5, cooldown: 0 },
+    bullets: [],
+    enemies: [],
+    stars: [],
+    particles: [],
     distance: 0,
-    coins: [],
-    goombas: [],
     spawnCooldown: 30,
-    flashHit: 0
+    flashHit: 0,
+    leftPressed: false,
+    rightPressed: false,
+    firePressed: false
   };
 
-  // Spawn koin awal campuran
-  spawnInitialCoins();
+  // Bintang latar
+  for (let i = 0; i < 50; i++) {
+    gameState.stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      speed: 0.5 + Math.random() * 1.5,
+      size: Math.random() * 1.8 + 0.3
+    });
+  }
 
-  function spawnInitialCoins() {
-    for (let i = 0; i < 3; i++) {
-      const special = (i === 1); // koin tengah selalu special biar cepat dapat pertanyaan
-      marioState.coins.push({
-        x: 320 + i * 130,
-        y: GROUND_Y - (55 + Math.random() * 60),
-        got: false,
-        phase: Math.random() * Math.PI * 2,
-        special: special
+  // Spawn musuh elit pertama cepat (soal pertama muncul segera)
+  setTimeout(() => {
+    if (gameRunning && eliteEnemiesSpawned < TOTAL_QUESTIONS) {
+      spawnEnemy(true);
+      eliteEnemiesSpawned++;
+    }
+  }, 800);
+
+  // ============ INPUT ============
+  function keyDown(e) {
+    if (!gameRunning || gamePaused || waitingAnswer) return;
+    if (warnOverlayEl.classList.contains('show')) return;
+    const k = e.key.toLowerCase();
+    if (k === "arrowleft" || k === "a") { e.preventDefault(); gameState.leftPressed = true; }
+    else if (k === "arrowright" || k === "d") { e.preventDefault(); gameState.rightPressed = true; }
+    else if (e.code === "Space" || k === "w" || k === "arrowup") { e.preventDefault(); gameState.firePressed = true; }
+  }
+  function keyUp(e) {
+    if (!gameRunning) return;
+    const k = e.key.toLowerCase();
+    if (k === "arrowleft" || k === "a") gameState.leftPressed = false;
+    else if (k === "arrowright" || k === "d") gameState.rightPressed = false;
+    else if (e.code === "Space" || k === "w" || k === "arrowup") gameState.firePressed = false;
+  }
+  window.addEventListener("keydown", keyDown);
+  window.addEventListener("keyup", keyUp);
+  gameState._keyDown = keyDown;
+  gameState._keyUp = keyUp;
+
+  // Tombol on-screen
+  const leftBtn = $("leftBtn"), rightBtn = $("rightBtn"), fireBtn = $("fireBtn");
+  const pressLeft = (e) => { e.preventDefault(); if (!gamePaused && !waitingAnswer) gameState.leftPressed = true; };
+  const releaseLeft = (e) => { e.preventDefault(); gameState.leftPressed = false; };
+  const pressRight = (e) => { e.preventDefault(); if (!gamePaused && !waitingAnswer) gameState.rightPressed = true; };
+  const releaseRight = (e) => { e.preventDefault(); gameState.rightPressed = false; };
+  const pressFire = (e) => { e.preventDefault(); if (!gamePaused && !waitingAnswer) gameState.firePressed = true; };
+  const releaseFire = (e) => { e.preventDefault(); gameState.firePressed = false; };
+
+  leftBtn.addEventListener("pointerdown", pressLeft);
+  leftBtn.addEventListener("pointerup", releaseLeft);
+  leftBtn.addEventListener("pointerleave", releaseLeft);
+  rightBtn.addEventListener("pointerdown", pressRight);
+  rightBtn.addEventListener("pointerup", releaseRight);
+  rightBtn.addEventListener("pointerleave", releaseRight);
+  fireBtn.addEventListener("pointerdown", pressFire);
+  fireBtn.addEventListener("pointerup", releaseFire);
+  fireBtn.addEventListener("pointerleave", releaseFire);
+
+  gameState._leftBtn = leftBtn; gameState._pressLeft = pressLeft; gameState._releaseLeft = releaseLeft;
+  gameState._rightBtn = rightBtn; gameState._pressRight = pressRight; gameState._releaseRight = releaseRight;
+  gameState._fireBtn = fireBtn; gameState._pressFire = pressFire; gameState._releaseFire = releaseFire;
+
+  // ============ SPAWN ============
+  function spawnEnemy(isElite) {
+    const size = isElite ? 34 : 28;
+    const x = 40 + Math.random() * (W - 80 - size);
+    const speed = isElite ? 1.1 + Math.random() * 0.4 : 1.2 + Math.random() * 0.8;
+    gameState.enemies.push({
+      x: x, y: -size - 10, w: size, h: size,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: speed,
+      elite: !!isElite,
+      hit: false,
+      wobble: Math.random() * Math.PI * 2
+    });
+  }
+
+  function spawnParticles(x, y, color, count) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 1 + Math.random() * 3;
+      gameState.particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 30 + Math.random() * 15,
+        maxLife: 45,
+        color: color,
+        size: 2 + Math.random() * 3
       });
     }
   }
 
-  function jump() {
-    if (!gameRunning || gamePaused || waitingAnswer) return;
-    if (!marioState.jumping) {
-      marioState.vy = marioState.jumpPower;
-      marioState.jumping = true;
-    }
-  }
-
-  const jumpBtn = $("jumpBtn");
-  const jumpHandler = (e) => { e.preventDefault(); jump(); };
-  jumpBtn.addEventListener("pointerdown", jumpHandler);
-  marioState._jumpBtn = jumpBtn;
-  marioState._jumpHandler = jumpHandler;
-
-  function keyHandler(e) {
-    if (!gameRunning || gamePaused || waitingAnswer) return;
-    if (warnOverlayEl.classList.contains('show')) return;
-    if (e.code === "Space" || e.key === "ArrowUp" || e.key.toLowerCase() === "w") {
-      e.preventDefault();
-      jump();
-    }
-  }
-  window.addEventListener("keydown", keyHandler);
-  marioState._keyHandler = keyHandler;
-
-  function spawnCoin() {
-    if (marioState.coins.length >= MAX_COINS_ON_SCREEN) return;
-    // Tentukan apakah koin ini special
-    let special = false;
-    // Pastikan tetap ada cukup koin special untuk memenuhi TOTAL_QUESTIONS
-    const remainingQuestions = TOTAL_QUESTIONS - answeredCount;
-    const activeSpecialCoins = marioState.coins.filter(c => c.special && !c.got).length;
-    const remainingCoinsToBeMade = (GAME_DURATION - gameTimeLeft) * 0.3; // perkiraan
-
-    if (remainingQuestions > activeSpecialCoins && Math.random() < SPECIAL_COIN_CHANCE) {
-      special = true;
-    }
-
-    marioState.coins.push({
-      x: W + 40,
-      y: GROUND_Y - (55 + Math.random() * 70),
-      got: false,
-      phase: Math.random() * Math.PI * 2,
-      special: special
-    });
-  }
-
-  function spawnGoomba() {
-    marioState.goombas.push({ x: W + 40, y: GROUND_Y + 4, w: 26, h: 24 });
-  }
-
+  // ============ LOOP ============
   function loop() {
     if (!gameRunning) return;
     if (!gamePaused && !warnOverlayEl.classList.contains('show') && !waitingAnswer) {
       update();
     }
     draw();
-    marioRAF = requestAnimationFrame(loop);
+    gameRAF = requestAnimationFrame(loop);
   }
 
   function update() {
-    const worldSpeed = marioState.speed;
-    marioState.distance += worldSpeed;
+    const p = gameState.player;
 
-    // Fisika
-    marioState.vy += marioState.gravity;
-    marioState.y += marioState.vy;
-    if (marioState.y >= marioState.groundY) {
-      marioState.y = marioState.groundY;
-      marioState.vy = 0;
-      marioState.jumping = false;
+    // Gerak pemain
+    if (gameState.leftPressed) p.x -= p.speed;
+    if (gameState.rightPressed) p.x += p.speed;
+    p.x = Math.max(8, Math.min(W - p.w - 8, p.x));
+
+    // Cooldown tembak
+    if (p.cooldown > 0) p.cooldown--;
+    if (gameState.firePressed && p.cooldown <= 0) {
+      gameState.bullets.push({
+        x: p.x + p.w / 2 - 2,
+        y: p.y - 6,
+        w: 4, h: 14,
+        vy: -9
+      });
+      p.cooldown = 10;
     }
-    if (marioState.flashHit > 0) marioState.flashHit--;
 
-    // Update koin
-    marioState.coins.forEach(c => {
-      if (c.got) return;
-      c.x -= worldSpeed;
-      c.phase += 0.12;
+    // Peluru
+    gameState.bullets.forEach(b => b.y += b.vy);
+    gameState.bullets = gameState.bullets.filter(b => b.y > -20);
+
+    // Musuh
+    gameState.enemies.forEach(e => {
+      e.y += e.vy;
+      e.x += Math.sin(e.wobble) * 0.5;
+      e.wobble += 0.04;
+      e.x = Math.max(4, Math.min(W - e.w - 4, e.x));
     });
-    marioState.coins = marioState.coins.filter(c => c.x > -40 && !c.got);
 
-    // Goomba
-    marioState.goombas.forEach(g => g.x -= worldSpeed);
-    marioState.goombas = marioState.goombas.filter(g => g.x > -40);
-
-    // Spawn
-    marioState.spawnCooldown--;
-    if (marioState.spawnCooldown <= 0) {
-      spawnCoin();
-      if (Math.random() < 0.3) spawnGoomba();
-      marioState.spawnCooldown = 50 + Math.floor(Math.random() * 40);
-    }
-
-    // Tabrakan koin
-    const marioLeft = marioState.x;
-    const marioRight = marioState.x + marioState.w;
-    const marioTop = marioState.y - marioState.h;
-    const marioBottom = marioState.y;
-
-    for (let i = 0; i < marioState.coins.length; i++) {
-      const c = marioState.coins[i];
-      if (c.got) continue;
-      const r = 11;
-      if (marioRight > c.x - r && marioLeft < c.x + r &&
-          marioBottom > c.y - r && marioTop < c.y + r) {
-        c.got = true;
-        onCoinCollected(c);
-        return;
-      }
-    }
-
-    // Tabrakan goomba
-    marioState.goombas.forEach(g => {
-      if (g.x < marioRight && g.x + g.w > marioLeft &&
-          g.y - g.h < marioBottom && g.y > marioTop) {
-        if (marioState.vy > 0 && marioBottom - marioState.vy <= g.y - g.h + 8) {
-          g.x = -100;
-          marioState.vy = -10;
-          marioState.flashHit = 6;
-        } else {
-          marioState.x = Math.max(50, marioState.x - 30);
-          g.x = -100;
-          marioState.flashHit = 12;
+    // Tabrakan peluru vs musuh
+    for (let i = gameState.bullets.length - 1; i >= 0; i--) {
+      const b = gameState.bullets[i];
+      for (let j = gameState.enemies.length - 1; j >= 0; j--) {
+        const e = gameState.enemies[j];
+        if (b.x < e.x + e.w && b.x + b.w > e.x &&
+            b.y < e.y + e.h && b.y + b.h > e.y) {
+          // HIT!
+          gameState.bullets.splice(i, 1);
+          onEnemyHit(e, j);
+          break;
         }
       }
+    }
+
+    // Musuh lolos dari bawah → kurangi nyawa
+    for (let i = gameState.enemies.length - 1; i >= 0; i--) {
+      const e = gameState.enemies[i];
+      if (e.y > H) {
+        gameState.enemies.splice(i, 1);
+        lives--;
+        renderLives();
+        gameState.flashHit = 15;
+        if (lives <= 0) {
+          // Game over karena nyawa habis
+          finishQuiz(false, "lives");
+          return;
+        }
+      }
+    }
+
+    // Particle
+    gameState.particles.forEach(p2 => {
+      p2.x += p2.vx;
+      p2.y += p2.vy;
+      p2.vx *= 0.96;
+      p2.vy *= 0.96;
+      p2.life--;
     });
-    marioState.goombas = marioState.goombas.filter(g => g.x > -40);
+    gameState.particles = gameState.particles.filter(p2 => p2.life > 0);
+
+    // Spawn musuh berkala
+    gameState.spawnCooldown--;
+    if (gameState.spawnCooldown <= 0) {
+      if (eliteEnemiesSpawned < TOTAL_QUESTIONS && Math.random() < 0.35) {
+        spawnEnemy(true);
+        eliteEnemiesSpawned++;
+      } else {
+        spawnEnemy(false);
+      }
+      gameState.spawnCooldown = 45 + Math.floor(Math.random() * 40);
+    }
+
+    // Bintang bergerak
+    gameState.stars.forEach(s => {
+      s.y += s.speed;
+      if (s.y > H) {
+        s.y = 0;
+        s.x = Math.random() * W;
+      }
+    });
+
+    if (gameState.flashHit > 0) gameState.flashHit--;
+  }
+
+  function onEnemyHit(enemy, idx) {
+    gameState.enemies.splice(idx, 1);
+    enemiesKilled++;
+
+    if (enemy.elite) {
+      // Musuh elit → pertanyaan
+      spawnParticles(enemy.x + enemy.w / 2, enemy.y + enemy.h / 2, "#ff00c8", 20);
+      if (answeredCount < TOTAL_QUESTIONS) {
+        waitingAnswer = true;
+        clearInterval(timerInterval);
+        currentQuestionIdx = answeredCount;
+        showToast("💗 Soal bonus!", "special-msg", 900, () => {
+          showQuestion(answeredCount);
+        });
+      } else {
+        score += POINT_ENEMY;
+        scoreHud.textContent = score;
+      }
+    } else {
+      // Musuh biasa → poin
+      score += POINT_ENEMY;
+      scoreHud.textContent = score;
+      spawnParticles(enemy.x + enemy.w / 2, enemy.y + enemy.h / 2, "#ff8c00", 10);
+      showToast(`+${POINT_ENEMY}`, "shot-msg", 500);
+    }
   }
 
   function draw() {
-    ctx.clearRect(0, 0, W, H);
+    const p = gameState.player;
 
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-    skyGrad.addColorStop(0, "#5c94fc");
-    skyGrad.addColorStop(0.7, "#87ceeb");
-    ctx.fillStyle = skyGrad;
+    // Background gradient
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, "#000510");
+    bg.addColorStop(0.5, "#0a1030");
+    bg.addColorStop(1, "#050515");
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    drawCloud(ctx, (120 + marioState.distance * 0.3) % (W + 100) - 100, 45, 28);
-    drawCloud(ctx, (400 + marioState.distance * 0.2) % (W + 100) - 100, 70, 22);
-
-    drawHill(ctx, (230 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 130, 55);
-    drawHill(ctx, (500 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 95, 42);
-
-    ctx.fillStyle = "#6b4423";
-    ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
-    ctx.fillStyle = "#8b5a2b";
-    ctx.fillRect(0, GROUND_Y, W, 6);
-    ctx.strokeStyle = "rgba(0,0,0,0.2)";
-    ctx.lineWidth = 1;
-    const offsetX = (marioState.distance * 0.5) % 32;
-    for (let x = -32 + offsetX; x < W; x += 32) {
+    // Bintang
+    gameState.stars.forEach(s => {
+      ctx.fillStyle = `rgba(255,255,255,${0.4 + s.size * 0.3})`;
       ctx.beginPath();
-      ctx.moveTo(x, GROUND_Y + 8);
-      ctx.lineTo(x, H);
-      ctx.stroke();
-    }
-
-    // Koin (emas biasa & pink special)
-    marioState.coins.forEach(c => {
-      if (c.got) return;
-      if (c.special) drawSpecialCoin(ctx, c.x, c.y, c.phase);
-      else drawCoin(ctx, c.x, c.y, c.phase);
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+      ctx.fill();
     });
 
-    marioState.goombas.forEach(g => {
-      drawGoomba(ctx, g.x, g.y, g.w, g.h);
+    // Player glow
+    if (gameState.flashHit > 0 && Math.floor(gameState.flashHit / 3) % 2 === 0) {
+      // skip draw when flashing
+    } else {
+      drawPlayer(ctx, p);
+    }
+
+    // Bullets
+    gameState.bullets.forEach(b => {
+      ctx.shadowColor = "#00e5ff";
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = "#00f5ff";
+      ctx.fillRect(b.x, b.y, b.w, b.h);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(b.x + 1, b.y + 2, b.w - 2, b.h - 4);
+      ctx.shadowBlur = 0;
     });
 
-    const blink = marioState.flashHit > 0 && Math.floor(marioState.flashHit / 2) % 2 === 0;
-    if (!blink) {
-      drawMario(ctx, marioState.x, marioState.y - marioState.h, marioState.w, marioState.h, marioState.jumping);
-    }
+    // Enemies
+    gameState.enemies.forEach(e => {
+      if (e.elite) drawEliteEnemy(ctx, e);
+      else drawNormalEnemy(ctx, e);
+    });
+
+    // Particles
+    gameState.particles.forEach(p2 => {
+      const alpha = p2.life / p2.maxLife;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = p2.color;
+      ctx.beginPath();
+      ctx.arc(p2.x, p2.y, p2.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
   }
 
-  function drawCloud(ctx, x, y, size) {
-    ctx.fillStyle = "rgba(255,255,255,0.9)";
-    ctx.beginPath();
-    ctx.arc(x, y, size * 0.6, 0, Math.PI * 2);
-    ctx.arc(x + size * 0.5, y - size * 0.2, size * 0.7, 0, Math.PI * 2);
-    ctx.arc(x + size * 1.0, y, size * 0.55, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  function drawHill(ctx, x, groundY, w, h) {
-    ctx.fillStyle = "#4a8f2b";
-    ctx.beginPath();
-    ctx.ellipse(x, groundY, w, h, 0, Math.PI, 0);
-    ctx.fill();
-    ctx.fillStyle = "#3a7020";
-    ctx.beginPath();
-    ctx.ellipse(x - w * 0.3, groundY - 4, w * 0.4, h * 0.6, 0, Math.PI, 0);
-    ctx.fill();
-  }
-
-  function drawCoin(ctx, x, y, phase) {
-    const bob = Math.sin(phase) * 4;
-    const scaleX = Math.abs(Math.cos(phase * 1.5));
-    ctx.save();
-    ctx.translate(x, y + bob);
-    ctx.scale(0.55 + scaleX * 0.45, 1);
-    ctx.shadowColor = "#ffd200";
+  function drawPlayer(ctx, p) {
+    // Glow
+    ctx.shadowColor = "#00e5ff";
     ctx.shadowBlur = 14;
-    ctx.fillStyle = "#ffd200";
+
+    // Badan pesawat (segitiga)
+    ctx.fillStyle = "#00e5ff";
     ctx.beginPath();
-    ctx.arc(0, 0, 11, 0, Math.PI * 2);
+    ctx.moveTo(p.x + p.w / 2, p.y);              // ujung atas
+    ctx.lineTo(p.x + p.w, p.y + p.h);            // kanan bawah
+    ctx.lineTo(p.x + p.w * 0.7, p.y + p.h);      // kanan dalam
+    ctx.lineTo(p.x + p.w / 2, p.y + p.h * 0.75); // tengah
+    ctx.lineTo(p.x + p.w * 0.3, p.y + p.h);      // kiri dalam
+    ctx.lineTo(p.x, p.y + p.h);                  // kiri bawah
+    ctx.closePath();
     ctx.fill();
+
     ctx.shadowBlur = 0;
-    ctx.fillStyle = "#ffec8b";
+
+    // Cockpit
+    ctx.fillStyle = "#7cffea";
     ctx.beginPath();
-    ctx.arc(0, 0, 7, 0, Math.PI * 2);
+    ctx.arc(p.x + p.w / 2, p.y + p.h * 0.5, 5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#8a5a00";
-    ctx.font = "bold 12px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("$", 0, 1);
-    ctx.restore();
+
+    // Aksen putih
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.moveTo(p.x + p.w / 2, p.y + 2);
+    ctx.lineTo(p.x + p.w / 2 - 3, p.y + p.h * 0.4);
+    ctx.lineTo(p.x + p.w / 2 + 3, p.y + p.h * 0.4);
+    ctx.closePath();
+    ctx.fill();
+
+    // Api roket
+    const flameLen = 6 + Math.random() * 6;
+    const flameGrad = ctx.createLinearGradient(0, p.y + p.h, 0, p.y + p.h + flameLen);
+    flameGrad.addColorStop(0, "#ff00c8");
+    flameGrad.addColorStop(1, "rgba(255,0,200,0)");
+    ctx.fillStyle = flameGrad;
+    ctx.beginPath();
+    ctx.moveTo(p.x + p.w * 0.4, p.y + p.h);
+    ctx.lineTo(p.x + p.w * 0.6, p.y + p.h);
+    ctx.lineTo(p.x + p.w / 2, p.y + p.h + flameLen);
+    ctx.closePath();
+    ctx.fill();
   }
 
-  function drawSpecialCoin(ctx, x, y, phase) {
-    const bob = Math.sin(phase) * 4;
-    const scaleX = Math.abs(Math.cos(phase * 1.5));
-    const pulse = 0.8 + Math.sin(phase * 3) * 0.2; // efek berkedip
-    ctx.save();
-    ctx.translate(x, y + bob);
-    ctx.scale(0.55 + scaleX * 0.45, 1);
+  function drawNormalEnemy(ctx, e) {
+    const cx = e.x + e.w / 2;
+    const cy = e.y + e.h / 2;
+    const r = e.w / 2;
 
-    // Glow luar berkedip
-    ctx.shadowColor = "#ff6b9d";
+    // Glow
+    ctx.shadowColor = "#ff4757";
+    ctx.shadowBlur = 12;
+
+    // Badan utama (musuh merah)
+    ctx.fillStyle = "#ff4757";
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Inner
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#c81e2d";
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(cx - r * 0.3, cy - r * 0.15, 3.5, 0, Math.PI * 2);
+    ctx.arc(cx + r * 0.3, cy - r * 0.15, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(cx - r * 0.3, cy - r * 0.15, 1.8, 0, Math.PI * 2);
+    ctx.arc(cx + r * 0.3, cy - r * 0.15, 1.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Mulut
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy + r * 0.3, r * 0.3, 0, Math.PI);
+    ctx.stroke();
+  }
+
+  function drawEliteEnemy(ctx, e) {
+    const cx = e.x + e.w / 2;
+    const cy = e.y + e.h / 2;
+    const r = e.w / 2;
+    const pulse = 1 + Math.sin(Date.now() * 0.01) * 0.08;
+
+    // Glow berkedip
+    ctx.shadowColor = "#ff00c8";
     ctx.shadowBlur = 20 * pulse;
 
-    // Lingkaran luar pink
-    ctx.fillStyle = "#ff6b9d";
+    // Badan luar pink
+    ctx.fillStyle = "#ff00c8";
     ctx.beginPath();
-    ctx.arc(0, 0, 13, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r * pulse, 0, Math.PI * 2);
     ctx.fill();
 
-    // Lingkaran dalam lebih terang
+    // Inner lebih terang
     ctx.shadowBlur = 0;
-    ctx.fillStyle = "#ffb3d9";
+    ctx.fillStyle = "#ff80d5";
     ctx.beginPath();
-    ctx.arc(0, 0, 9, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2);
     ctx.fill();
 
-    // Simbol ?
-    ctx.fillStyle = "#8a1a4e";
-    ctx.font = "bold 14px sans-serif";
+    // Tanda tanya
+    ctx.fillStyle = "#4a003a";
+    ctx.font = "bold 20px 'Segoe UI', sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("?", 0, 1);
-    ctx.restore();
+    ctx.fillText("?", cx, cy + 1);
 
-    // Sparkle kecil di sekitar (efek bintang)
-    if (pulse > 0.9) {
+    // Sparkle
+    if (Math.random() > 0.6) {
       ctx.fillStyle = "rgba(255,255,255,0.9)";
       ctx.beginPath();
-      ctx.arc(x - 15, y + bob - 8, 2, 0, Math.PI * 2);
-      ctx.arc(x + 14, y + bob + 6, 1.5, 0, Math.PI * 2);
+      ctx.arc(cx - r * 0.9, cy - r * 0.7, 1.5, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
-  function drawGoomba(ctx, x, y, w, h) {
-    ctx.fillStyle = "#8b4513";
-    ctx.beginPath();
-    ctx.arc(x + w / 2, y - h * 0.6, w / 2, Math.PI, 0);
-    ctx.fill();
-    ctx.fillStyle = "#a0522d";
-    ctx.beginPath();
-    ctx.ellipse(x + w / 2, y - h * 0.2, w / 2, h * 0.4, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(x + w * 0.32, y - h * 0.65, 5, 0, Math.PI * 2);
-    ctx.arc(x + w * 0.68, y - h * 0.65, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.arc(x + w * 0.34, y - h * 0.65, 2.2, 0, Math.PI * 2);
-    ctx.arc(x + w * 0.70, y - h * 0.65, 2.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(x + w * 0.22, y - h * 0.8);
-    ctx.lineTo(x + w * 0.42, y - h * 0.73);
-    ctx.moveTo(x + w * 0.78, y - h * 0.8);
-    ctx.lineTo(x + w * 0.58, y - h * 0.73);
-    ctx.stroke();
-    ctx.fillStyle = "#3a1f0a";
-    ctx.beginPath();
-    ctx.ellipse(x + w * 0.3, y + 2, 6, 4, 0, 0, Math.PI * 2);
-    ctx.ellipse(x + w * 0.7, y + 2, 6, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  function drawMario(ctx, x, y, w, h, jumping) {
-    ctx.fillStyle = "#e52521";
-    ctx.beginPath();
-    ctx.ellipse(x + w / 2, y + h * 0.18, w * 0.6, h * 0.25, 0, Math.PI, 0);
-    ctx.fill();
-    ctx.fillRect(x + w * 0.2, y + h * 0.18, w * 0.6, h * 0.12);
-    ctx.fillStyle = "#fcd7a0";
-    ctx.beginPath();
-    ctx.arc(x + w / 2, y + h * 0.42, w * 0.42, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.arc(x + w * 0.42, y + h * 0.4, 2, 0, Math.PI * 2);
-    ctx.arc(x + w * 0.6, y + h * 0.4, 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#3a1f0a";
-    ctx.beginPath();
-    ctx.ellipse(x + w * 0.5, y + h * 0.52, w * 0.22, h * 0.05, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#2a5cff";
-    ctx.fillRect(x + w * 0.22, y + h * 0.6, w * 0.56, h * 0.28);
-    ctx.fillStyle = "#e52521";
-    ctx.fillRect(x + w * 0.08, y + h * 0.6, w * 0.18, h * 0.18);
-    ctx.fillRect(x + w * 0.74, y + h * 0.6, w * 0.18, h * 0.18);
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(x + w * 0.12, y + h * 0.80, 3.5, 0, Math.PI * 2);
-    ctx.arc(x + w * 0.88, y + h * 0.80, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#ffd200";
-    ctx.beginPath();
-    ctx.arc(x + w * 0.4, y + h * 0.7, 2, 0, Math.PI * 2);
-    ctx.arc(x + w * 0.6, y + h * 0.7, 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#5a2e0c";
-    ctx.fillRect(x + w * 0.2, y + h * 0.88, w * 0.24, h * 0.14);
-    ctx.fillRect(x + w * 0.56, y + h * 0.88, w * 0.24, h * 0.14);
-    if (jumping) {
-      ctx.strokeStyle = "rgba(255,255,255,0.5)";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(x + w * 0.2, y + h);
-      ctx.lineTo(x + w * 0.2, y + h + 10);
-      ctx.moveTo(x + w * 0.8, y + h);
-      ctx.lineTo(x + w * 0.8, y + h + 10);
-      ctx.stroke();
-    }
-  }
-
-  marioRAF = requestAnimationFrame(loop);
+  gameRAF = requestAnimationFrame(loop);
 }
 
-function stopMarioGame() {
+function stopSpaceGame() {
   gameRunning = false;
-  if (marioRAF) cancelAnimationFrame(marioRAF);
-  if (marioState) {
-    if (marioState._keyHandler) window.removeEventListener("keydown", marioState._keyHandler);
-    if (marioState._jumpBtn && marioState._jumpHandler) {
-      marioState._jumpBtn.removeEventListener("pointerdown", marioState._jumpHandler);
+  if (gameRAF) cancelAnimationFrame(gameRAF);
+  if (gameState) {
+    if (gameState._keyDown) window.removeEventListener("keydown", gameState._keyDown);
+    if (gameState._keyUp) window.removeEventListener("keyup", gameState._keyUp);
+    if (gameState._leftBtn) {
+      gameState._leftBtn.removeEventListener("pointerdown", gameState._pressLeft);
+      gameState._leftBtn.removeEventListener("pointerup", gameState._releaseLeft);
+      gameState._leftBtn.removeEventListener("pointerleave", gameState._releaseLeft);
+    }
+    if (gameState._rightBtn) {
+      gameState._rightBtn.removeEventListener("pointerdown", gameState._pressRight);
+      gameState._rightBtn.removeEventListener("pointerup", gameState._releaseRight);
+      gameState._rightBtn.removeEventListener("pointerleave", gameState._releaseRight);
+    }
+    if (gameState._fireBtn) {
+      gameState._fireBtn.removeEventListener("pointerdown", gameState._pressFire);
+      gameState._fireBtn.removeEventListener("pointerup", gameState._releaseFire);
+      gameState._fireBtn.removeEventListener("pointerleave", gameState._releaseFire);
     }
   }
-  marioState = null;
+  gameState = null;
 }
 
 /* ============================================================
-   KOIN DIAMBIL
+   TOAST & PERTANYAAN
    ============================================================ */
-function onCoinCollected(coin) {
-  coinsCollected++;
-
-  if (!coin.special) {
-    // Koin biasa → langsung poin, tidak ada pertanyaan
-    score += POINT_COIN;
-    scoreHud.textContent = score;
-    // Toast kecil
-    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 700);
-    return;
-  }
-
-  // Koin spesial → pertanyaan
-  if (answeredCount >= TOTAL_QUESTIONS) {
-    // Semua soal sudah dijawab, koin special dianggap koin biasa
-    score += POINT_COIN;
-    scoreHud.textContent = score;
-    showToast(`+${POINT_COIN} 🪙`, "coin-msg", 700);
-    return;
-  }
-
-  waitingAnswer = true;
-  clearInterval(gameTimerInterval);
-  currentQuestionIdx = answeredCount;
-  showToast(`💗 Soal bonus!`, "special-msg", 800, () => {
-    showQuestion(answeredCount);
-  });
-}
-
 function showToast(text, cls, duration = 800, callback) {
   feedbackBanner.className = `show ${cls}`;
   feedbackBanner.innerHTML = text;
@@ -1241,7 +1251,7 @@ function showToast(text, cls, duration = 800, callback) {
 
 function showQuestion(idx) {
   const q = quizQuestions[idx];
-  $("qLabel").textContent = `💗 Pertanyaan Bonus ${idx + 1} dari ${TOTAL_QUESTIONS}`;
+  $("qLabel").textContent = `💗 Soal ${idx + 1} dari ${TOTAL_QUESTIONS}`;
   questionText.textContent = q.q;
 
   optionsBox.innerHTML = "";
@@ -1316,38 +1326,36 @@ function closeQuestion() {
   currentQuestionIdx = -1;
   renderQProgress();
 
-  $("gameHint").innerHTML = `Ambil koin <b>🪙 emas</b> untuk poin, tapi waspada koin <span class="special-hint">💗 pink berkedip</span> — itu memunculkan pertanyaan!`;
+  $("gameHint").innerHTML = `Tembak musuh <b>👾 merah</b> untuk poin. Musuh <span class="special-hint">💗 pink</span> memunculkan pertanyaan!`;
 
   if (answeredCount >= TOTAL_QUESTIONS) {
-    // Semua soal selesai → langsung akhiri
     finishQuiz();
-    return;
   }
-
-  // Lanjut game timer
-  startGameTimer();
 }
 
 /* ============================================================
    FINISH
    ============================================================ */
-function finishQuiz(isPelanggaran = false, isTimeOut = false) {
+function finishQuiz(isPelanggaran = false, reason = null) {
   kuisAktif = false;
   waitingAnswer = false;
   clearInterval(timerInterval);
-  clearInterval(gameTimerInterval);
   questionOverlay.classList.remove("show");
-  stopMarioGame();
+  stopSpaceGame();
 
   if (document.fullscreenElement) {
     document.exitFullscreen().catch(() => {});
   }
   fsInfoEl.classList.remove("show");
 
+  const nilaiAkhir = hitungNilai();
+
   showScreen(resultScreen);
-  $("finalScore").textContent = score;
+  $("finalScore").textContent = nilaiAkhir;
   $("statBenar").textContent = correctCount;
   $("statSalah").textContent = TOTAL_QUESTIONS - correctCount;
+  $("statRawScore").textContent = score;
+  $("statNilai").textContent = nilaiAkhir;
 
   $("resNama").textContent = siswa.nama;
   $("resAbsen").textContent = siswa.absen;
@@ -1358,15 +1366,15 @@ function finishQuiz(isPelanggaran = false, isTimeOut = false) {
   let msg = "";
   if (isPelanggaran) {
     msg = `⛔ Kuis dihentikan karena pelanggaran ke-${pelanggaran}. Nilai tetap dikirim ke guru.`;
-  } else if (isTimeOut) {
-    msg = `⏰ Waktu habis! Kamu berhasil menjawab ${answeredCount}/${TOTAL_QUESTIONS} soal dan mengumpulkan ${coinsCollected} koin.`;
+  } else if (reason === "lives") {
+    msg = `💥 Nyawa habis! Kamu menjawab ${answeredCount}/${TOTAL_QUESTIONS} soal. Nilai: ${nilaiAkhir}.`;
   } else {
     if (pct === 100) msg = "🔥 Sempurna! Kamu master pengolahan data!";
     else if (pct >= 80) msg = "🌟 Hebat! Pemahamanmu sangat baik.";
     else if (pct >= 60) msg = "👍 Bagus! Sedikit lagi jadi ahli.";
     else if (pct >= 40) msg = "💪 Lumayan. Ayo belajar lagi!";
     else msg = "📚 Jangan menyerah, coba lagi ya!";
-    msg = `${pct}% benar dari ${answeredCount} soal — ${msg}`;
+    msg = `${correctCount}/${TOTAL_QUESTIONS} benar (${pct}%) — ${msg}`;
   }
   $("resultMsg").textContent = msg;
 
@@ -1375,10 +1383,10 @@ function finishQuiz(isPelanggaran = false, isTimeOut = false) {
   else wheelWrap.style.display = "flex";
 
   sudahKirim = false;
-  kirimKeSheet(isPelanggaran);
+  kirimKeSheet(isPelanggaran, nilaiAkhir);
 }
 
-function kirimKeSheet(isPelanggaran) {
+function kirimKeSheet(isPelanggaran, nilaiAkhir) {
   const statusEl = $("sheetStatus");
   if (!SHEET_URL || SHEET_URL.includes("XXXXX")) {
     if (statusEl) statusEl.textContent = "⚠️ URL spreadsheet belum diatur oleh guru.";
@@ -1389,10 +1397,11 @@ function kirimKeSheet(isPelanggaran) {
     nama: siswa.nama,
     absen: siswa.absen,
     kelas: siswa.kelas,
-    nilai: score,
+    nilai: nilaiAkhir,
+    skor_mentah: score,
     detail: detailJawaban,
     pelanggaran: pelanggaran,
-    koin_dikumpulkan: coinsCollected,
+    musuh_dikalahkan: enemiesKilled,
     soal_dijawab: answeredCount,
     total_soal: TOTAL_QUESTIONS
   };
@@ -1428,14 +1437,14 @@ function kirimKeSheet(isPelanggaran) {
    SPIN WHEEL
    ============================================================ */
 const WHEEL_SEGMENTS = [
-  { label: "+50",  value: 50,  color: "#6a5cff" },
-  { label: "+100", value: 100, color: "#b06ab3" },
-  { label: "+25",  value: 25,  color: "#ff6b9d" },
-  { label: "+200", value: 200, color: "#f7971e" },
-  { label: "+75",  value: 75,  color: "#2ed573" },
-  { label: "+150", value: 150, color: "#00c6ff" },
-  { label: "+0",   value: 0,   color: "#888" },
-  { label: "+125", value: 125, color: "#ff4757" }
+  { label: "+5",  value: 5,  color: "#6a5cff" },
+  { label: "+10", value: 10, color: "#b06ab3" },
+  { label: "+2",  value: 2,  color: "#ff6b9d" },
+  { label: "+15", value: 15, color: "#f7971e" },
+  { label: "+7",  value: 7,  color: "#2ed573" },
+  { label: "+12", value: 12, color: "#00c6ff" },
+  { label: "+0",  value: 0,  color: "#888" },
+  { label: "+8",  value: 8,  color: "#ff4757" }
 ];
 
 function drawWheel() {
@@ -1488,12 +1497,13 @@ function spinWheel() {
   $("wheelCanvas").style.transform = `rotate(${wheelRotation}deg)`;
 
   setTimeout(() => {
+    // Roda memberi poin ke skor mentah, tapi nilai akhir (1-100) hanya dari jawaban benar
     score += seg.value;
-    $("finalScore").textContent = score;
+    $("statRawScore").textContent = score;
     $("wheelResult").textContent = seg.value > 0
-      ? `🎉 Dapat +${seg.value} poin!`
+      ? `🎉 Dapat +${seg.value} poin bonus (skor mentah)!`
       : `😅 Zonk! Dapat 0 poin.`;
-    kirimKeSheet(false);
+    kirimKeSheet(false, hitungNilai());
   }, 4200);
 }
 
@@ -1510,7 +1520,6 @@ $("playAgainBtn").onclick = () => {
   $("inputKelas").value = "";
   $("wheelCanvas").style.transform = "rotate(0deg)";
   $("wheelResult").textContent = "";
-  timeHud.style.color = "#ffd200";
   wheelRotation = 0;
   wheelSpun = false;
   $("spinBtn").disabled = false;
