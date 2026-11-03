@@ -37,24 +37,24 @@
     border-top: 6px solid #4a8f2b; z-index: 0; }
 
   .card {
-    width: 100%; max-width: 680px; max-height: 96vh; overflow-y: auto;
+    width: 100%; max-width: 720px; max-height: 96vh; overflow-y: auto;
     background: rgba(20, 25, 50, 0.92);
     border: 4px solid #ffd200;
-    border-radius: 22px; padding: 28px 26px;
+    border-radius: 22px; padding: 24px 22px;
     box-shadow: 0 12px 0 rgba(0,0,0,0.35), 0 20px 60px rgba(0,0,0,0.6),
                 inset 0 0 0 3px rgba(255,255,255,0.06);
     position: relative; z-index: 2;
   }
-  h1 { font-size: 1.6rem; text-align: center; margin-bottom: 6px; }
-  .sub { text-align: center; opacity: .7; font-size: .9rem; margin-bottom: 24px; }
+  h1 { font-size: 1.5rem; text-align: center; margin-bottom: 6px; }
+  .sub { text-align: center; opacity: .7; font-size: .88rem; margin-bottom: 20px; }
 
-  .form-group { margin-bottom: 16px; }
+  .form-group { margin-bottom: 14px; }
   .form-group label {
-    display: block; font-size: .8rem; text-transform: uppercase;
+    display: block; font-size: .78rem; text-transform: uppercase;
     letter-spacing: 1px; opacity: .7; margin-bottom: 6px; font-weight: 600;
   }
   .form-group input {
-    width: 100%; padding: 14px 16px; border-radius: 14px;
+    width: 100%; padding: 13px 16px; border-radius: 14px;
     border: 2px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08);
     color: #fff; font-size: 1rem; outline: none; transition: border-color .2s;
   }
@@ -63,31 +63,88 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
 
-  .hud { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+  .hud { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
   .hud-box {
-    flex: 1; text-align: center; padding: 10px 6px;
-    background: rgba(255,255,255,0.08); border-radius: 14px;
+    flex: 1; text-align: center; padding: 8px 4px;
+    background: rgba(255,255,255,0.08); border-radius: 12px;
     border: 2px solid rgba(255,210,0,0.4);
   }
-  .hud-box .label { font-size: .7rem; opacity: .7; text-transform: uppercase; letter-spacing: 1px; }
-  .hud-box .value { font-size: 1.3rem; font-weight: 700; margin-top: 2px; color: #ffd200; }
-  #timer.warning { color: #ff6b6b; animation: pulse .5s infinite alternate; }
-  #warnHud .value { color: #ffd200; }
+  .hud-box .label { font-size: .65rem; opacity: .7; text-transform: uppercase; letter-spacing: .5px; }
+  .hud-box .value { font-size: 1.15rem; font-weight: 700; margin-top: 2px; color: #ffd200; }
   #warnHud.danger .value { color: #ff4757; animation: pulse .5s alternate infinite; }
   @keyframes pulse { from { transform: scale(1);} to { transform: scale(1.12);} }
 
-  .progress-track {
-    height: 10px; background: rgba(255,255,255,0.1);
-    border-radius: 99px; overflow: hidden; margin-bottom: 22px;
-    border: 2px solid rgba(0,0,0,0.3);
+  /* Progress koin */
+  .coin-progress {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    margin-bottom: 14px; flex-wrap: wrap;
   }
-  .progress-fill {
-    height: 100%; width: 0%; border-radius: 99px;
-    background: linear-gradient(90deg, #ffd200, #ff8c00);
-    transition: width .4s ease;
+  .coin-dot {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 800;
+    background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.4);
+    transition: all .3s;
+  }
+  .coin-dot.active {
+    background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
+    border-color: #ffd200; color: #3a2400;
+    box-shadow: 0 0 12px rgba(255,210,0,0.7);
+    transform: scale(1.1);
+  }
+  .coin-dot.done {
+    background: radial-gradient(circle at 30% 30%, #b6ffb6, #2ed573 60%, #0d7a3a);
+    border-color: #0d7a3a; color: #fff;
   }
 
-  /* 🍄 MARIO-STYLE QUESTION BOX */
+  /* 🍄 GAME SCREEN */
+  #gameScreen { position: relative; }
+  #marioArena {
+    display: block; width: 100%; max-width: 100%; height: auto;
+    background: linear-gradient(180deg, #5c94fc 0%, #5c94fc 70%, #8b5a2b 70%, #6b4423 100%);
+    border: 4px solid #ffd200;
+    border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.35);
+    touch-action: none;
+  }
+  .game-hint {
+    text-align: center; font-size: .82rem; opacity: .85; margin-top: 10px;
+    padding: 8px 12px; background: rgba(255,210,0,0.12);
+    border-radius: 10px; border: 1px solid rgba(255,210,0,0.3);
+  }
+  .game-hint b { color: #ffd200; }
+  .mario-ctrl {
+    display: flex; justify-content: center; margin-top: 12px;
+  }
+  .mario-ctrl button {
+    background: linear-gradient(180deg, #ffe97a 0%, #ffb800 60%, #b8860b 100%);
+    border: 3px solid #8a5a00; border-radius: 16px;
+    padding: 16px 40px; font-size: 1.1rem; font-weight: 800; color: #3a2400;
+    cursor: pointer; user-select: none;
+    box-shadow: 0 6px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.5);
+    transition: transform .1s, box-shadow .1s;
+    touch-action: manipulation;
+  }
+  .mario-ctrl button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
+  }
+
+  /* 🍄 QUESTION OVERLAY di atas game */
+  #questionOverlay {
+    display: none;
+    position: absolute; inset: 0;
+    background: rgba(10, 12, 28, 0.94);
+    border-radius: 14px;
+    padding: 16px 14px;
+    overflow-y: auto;
+    z-index: 10;
+    flex-direction: column;
+    animation: popIn 0.3s;
+  }
+  #questionOverlay.show { display: flex; }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+
   .question-box {
     position: relative;
     background: #b8331e;
@@ -95,68 +152,57 @@
       linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 35%),
       linear-gradient(0deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 30%);
     border: 4px solid #8a1f0f;
-    border-radius: 16px;
-    padding: 22px 20px 20px;
-    margin-bottom: 22px;
+    border-radius: 14px;
+    padding: 20px 16px 16px;
+    margin-bottom: 14px;
     box-shadow:
-      0 6px 0 #6b180a,
-      0 10px 20px rgba(0,0,0,0.45),
+      0 5px 0 #6b180a,
       inset 0 3px 0 rgba(255,255,255,0.2),
       inset 0 -3px 0 rgba(0,0,0,0.25);
-    animation: qFloat 2.4s ease-in-out infinite;
-  }
-  @keyframes qFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    flex-shrink: 0;
   }
   .question-box::before, .question-box::after {
-    content: '✦'; position: absolute; color: #ffd200; font-size: 1.1rem;
-    top: 6px; text-shadow: 0 0 6px #ffd200;
+    content: '✦'; position: absolute; color: #ffd200; font-size: 1rem;
+    top: 5px; text-shadow: 0 0 6px #ffd200;
   }
   .question-box::before { left: 8px; }
   .question-box::after { right: 8px; }
   .q-coin {
-    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-    width: 44px; height: 44px; border-radius: 50%;
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+    width: 38px; height: 38px; border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
     border: 3px solid #8a5a00;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem; font-weight: 800; color: #8a5a00;
-    box-shadow: 0 4px 0 #8a5a00, 0 0 18px rgba(255,210,0,0.7);
+    font-size: 1.4rem; font-weight: 800; color: #8a5a00;
+    box-shadow: 0 3px 0 #8a5a00, 0 0 14px rgba(255,210,0,0.7);
     animation: coinBounce 1.4s ease-in-out infinite;
     z-index: 3;
   }
   @keyframes coinBounce {
     0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-    50% { transform: translateX(-50%) translateY(-6px) rotate(6deg); }
+    50% { transform: translateX(-50%) translateY(-5px) rotate(6deg); }
   }
-  .q-label { font-size: .68rem; letter-spacing: 2px; opacity: .8; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; text-shadow: 1px 1px 0 rgba(0,0,0,0.4); }
-  .question { font-size: 1.08rem; line-height: 1.55; font-weight: 700; text-shadow: 1px 1px 0 rgba(0,0,0,0.35); }
+  .q-label { font-size: .65rem; letter-spacing: 2px; opacity: .85; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; text-shadow: 1px 1px 0 rgba(0,0,0,0.4); }
+  .question { font-size: 1rem; line-height: 1.5; font-weight: 700; text-shadow: 1px 1px 0 rgba(0,0,0,0.35); }
 
-  /* 🪙 OPTIONS AS COINS / BRICKS */
-  .options { display: flex; flex-direction: column; gap: 12px; }
+  .options { display: flex; flex-direction: column; gap: 9px; }
   .option {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 16px; border-radius: 14px; cursor: pointer;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 12px; cursor: pointer;
     background: linear-gradient(180deg, #f0d88a 0%, #e0b94f 55%, #c99a2e 100%);
     border: 3px solid #8a5a00;
     color: #3a2400;
     font-weight: 700;
-    font-size: .97rem; text-align: left; width: 100%;
+    font-size: .9rem; text-align: left; width: 100%;
     box-shadow:
-      0 5px 0 #6b4400,
+      0 4px 0 #6b4400,
       inset 0 3px 0 rgba(255,255,255,0.5),
       inset 0 -3px 0 rgba(0,0,0,0.15);
     transition: transform .12s, box-shadow .12s, background .2s;
     position: relative;
   }
-  .option::after {
-    content: ''; position: absolute; inset: 4px; border-radius: 10px;
-    border: 2px dashed rgba(255,255,255,0.35); pointer-events: none;
-  }
   .option:hover:not(:disabled) {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 8px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.55), inset 0 -3px 0 rgba(0,0,0,0.15);
+    transform: translateY(-2px);
     background: linear-gradient(180deg, #ffe97a 0%, #f0c95f 55%, #d4a534 100%);
   }
   .option:active:not(:disabled) {
@@ -164,9 +210,9 @@
     box-shadow: 0 2px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
   }
   .option .badge {
-    width: 34px; height: 34px; flex-shrink: 0;
+    width: 30px; height: 30px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 50%; font-weight: 800; font-size: .95rem;
+    border-radius: 50%; font-weight: 800; font-size: .88rem;
     background: radial-gradient(circle at 30% 30%, #ffe97a, #ffb800 60%, #b8860b);
     color: #3a2400;
     border: 2px solid #8a5a00;
@@ -175,22 +221,22 @@
   .option.correct {
     background: linear-gradient(180deg, #7bf0a3 0%, #2ed573 55%, #1fae5a 100%);
     border-color: #0d7a3a;
-    box-shadow: 0 5px 0 #0a5a2a, inset 0 3px 0 rgba(255,255,255,0.45);
+    box-shadow: 0 4px 0 #0a5a2a, inset 0 3px 0 rgba(255,255,255,0.45);
   }
   .option.correct .badge { background: radial-gradient(circle at 30% 30%, #b6ffb6, #2ed573 60%, #0d7a3a); border-color: #0d7a3a; color: #fff; }
   .option.wrong {
     background: linear-gradient(180deg, #ff8a8a 0%, #ff4757 55%, #c81e2d 100%);
     border-color: #8a0f1c;
-    box-shadow: 0 5px 0 #6b0b16, inset 0 3px 0 rgba(255,255,255,0.3);
+    box-shadow: 0 4px 0 #6b0b16, inset 0 3px 0 rgba(255,255,255,0.3);
     color: #fff;
   }
   .option.wrong .badge { background: radial-gradient(circle at 30% 30%, #ffc0c0, #ff4757 60%, #8a0f1c); border-color: #8a0f1c; color: #fff; }
   .option:disabled { cursor: default; }
 
   .btn {
-    display: block; width: 100%; margin-top: 22px;
-    padding: 16px; border: none; border-radius: 14px;
-    font-size: 1.02rem; font-weight: 800; cursor: pointer;
+    display: block; width: 100%; margin-top: 16px;
+    padding: 15px; border: none; border-radius: 14px;
+    font-size: 1rem; font-weight: 800; cursor: pointer;
     background: linear-gradient(180deg, #4bd964 0%, #2ea043 55%, #1f7a2e 100%);
     color: #fff; text-shadow: 1px 1px 0 rgba(0,0,0,0.35);
     box-shadow: 0 6px 0 #155a20, inset 0 3px 0 rgba(255,255,255,0.35);
@@ -206,11 +252,11 @@
   .screen.active { display: block; animation: fadeIn .4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: none;} }
 
-  .score-big { text-align: center; font-size: 3.4rem; font-weight: 800;
+  .score-big { text-align: center; font-size: 3.2rem; font-weight: 800;
     background: linear-gradient(90deg, #ffd200, #ff6b9d);
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    margin: 10px 0; text-shadow: 0 0 30px rgba(255,210,0,0.4); }
-  .result-msg { text-align: center; font-size: 1.05rem; opacity: .85; margin-bottom: 14px; }
+    margin: 8px 0; text-shadow: 0 0 30px rgba(255,210,0,0.4); }
+  .result-msg { text-align: center; font-size: 1rem; opacity: .85; margin-bottom: 14px; }
   .identity-box {
     background: rgba(255,255,255,0.06); border: 2px solid rgba(255,210,0,0.35);
     border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; font-size: .9rem;
@@ -226,44 +272,9 @@
   .stat-item .num { font-size: 1.5rem; font-weight: 700; color: #ffd200; }
   .stat-item .lbl { font-size: .72rem; opacity: .65; text-transform: uppercase; letter-spacing: .5px; }
 
-  /* MINI GAME MARIO */
-  #bonusScreen .bonus-title {
-    text-align: center; font-size: 1.4rem; font-weight: 800;
-    background: linear-gradient(90deg, #f7971e, #ffd200);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    margin-bottom: 6px;
-  }
-  #bonusScreen .bonus-sub { text-align: center; opacity: .8; font-size: .9rem; margin-bottom: 14px; }
-  #marioArena {
-    display: block; margin: 0 auto;
-    background: linear-gradient(180deg, #5c94fc 0%, #5c94fc 70%, #8b5a2b 70%, #6b4423 100%);
-    border: 4px solid #ffd200;
-    border-radius: 14px; box-shadow: 0 0 24px rgba(255,210,0,0.35);
-    touch-action: none; max-width: 100%; height: auto;
-  }
-  .bonus-info { display: flex; justify-content: space-between; margin-top: 14px; font-size: .9rem; }
-  .bonus-info span { opacity: .85; }
-  .bonus-info strong { color: #ffd200; }
-  .mario-ctrl {
-    display: flex; justify-content: center; gap: 12px; margin-top: 14px;
-  }
-  .mario-ctrl button {
-    background: linear-gradient(180deg, #ffe97a 0%, #ffb800 60%, #b8860b 100%);
-    border: 3px solid #8a5a00; border-radius: 14px;
-    padding: 14px 26px; font-size: 1rem; font-weight: 800; color: #3a2400;
-    cursor: pointer; user-select: none;
-    box-shadow: 0 5px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.5);
-    transition: transform .1s, box-shadow .1s;
-  }
-  .mario-ctrl button:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 #6b4400, inset 0 3px 0 rgba(255,255,255,0.4);
-  }
-  @media (max-width: 600px) { .mario-ctrl { display: flex; } }
-
   /* SPIN WHEEL */
   .wheel-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
-  .wheel-container { position: relative; width: 220px; height: 220px; margin-bottom: 14px; }
+  .wheel-container { position: relative; width: 200px; height: 200px; margin-bottom: 14px; }
   .wheel-pointer {
     position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
     width: 0; height: 0;
@@ -276,6 +287,7 @@
     border-radius: 50%;
     box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 10px 30px rgba(0,0,0,0.5);
     transition: transform 4s cubic-bezier(.15,.85,.25,1);
+    width: 200px; height: 200px;
   }
   .wheel-result { text-align: center; font-weight: 700; font-size: 1.05rem; min-height: 24px; color: #ffd200; }
 
@@ -289,7 +301,6 @@
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     animation: popIn 0.3s;
   }
-  @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   #tab-warning-overlay h2 { font-size: 2rem; margin-bottom: 16px; }
   #tab-warning-overlay p { font-size: 1rem; margin: 6px 0; }
   #tab-warning-overlay .warn-count { font-size: 3rem; font-weight: 700; margin: 16px 0; }
@@ -307,11 +318,23 @@
   }
   #fsInfo.show { display: flex; }
   #fsInfo .dot { width: 8px; height: 8px; border-radius: 50%; background: #2ed573; animation: pulse 1s infinite alternate; }
+
+  /* Feedback banner */
+  #feedbackBanner {
+    display: none;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    padding: 20px 40px; border-radius: 16px;
+    font-size: 1.4rem; font-weight: 800; text-align: center;
+    z-index: 20; animation: popIn .3s;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  #feedbackBanner.show { display: block; }
+  #feedbackBanner.correct { background: linear-gradient(180deg, #7bf0a3, #2ed573); color: #06301a; }
+  #feedbackBanner.wrong { background: linear-gradient(180deg, #ff8a8a, #ff4757); color: #fff; }
 </style>
 </head>
 <body>
 
-<!-- Dekorasi awan & tanah -->
 <div class="cloud c1"></div>
 <div class="cloud c2"></div>
 <div class="cloud c3"></div>
@@ -340,40 +363,46 @@
       </div>
     </div>
     <button class="btn" id="startBtn">🚀 Mulai Bermain (Full Screen)</button>
-    <div style="margin-top:16px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
+    <div style="margin-top:16px; padding:12px 14px; background:rgba(255,210,0,0.1); border-left:3px solid #ffd200; border-radius:8px; font-size:.78rem; line-height:1.5;">
+      <strong style="color:#ffd200;">🎮 CARA BERMAIN:</strong><br>
+      Gerakkan Mario dengan tombol <b>LOMPAT</b> (atau SPASI / ⬆️ / W). Setiap kali Mario <b>mengambil koin 🪙</b>, akan muncul <b>pertanyaan</b> yang harus kamu jawab. Ada <b>25 pertanyaan</b> total. Jawab dengan tepat untuk skor maksimal!
+    </div>
+    <div style="margin-top:10px; padding:12px 14px; background:rgba(255,71,87,0.1); border-left:3px solid #ff4757; border-radius:8px; font-size:.78rem; line-height:1.5;">
       <strong style="color:#ff4757;">⚠️ PERINGATAN:</strong><br>
-      Saat mulai, layar masuk mode <strong>full screen</strong>. Jika kamu pindah tab / keluar full screen / buka DevTools, kamu dapat <strong>peringatan</strong> dan otomatis dikembalikan ke full screen. Pelanggaran ke-<strong>3</strong> akan <strong>langsung mengakhiri kuis</strong> dan menampilkan nilai.
+      Saat mulai, layar masuk mode <strong>full screen</strong>. Jika kamu pindah tab / keluar full screen / buka DevTools, kamu dapat <strong>peringatan</strong>. Pelanggaran ke-<strong>3</strong> akan <strong>langsung mengakhiri kuis</strong>.
     </div>
   </div>
 
-  <!-- KUIS -->
-  <div id="quizScreen" class="screen">
+  <!-- GAME + KUIS -->
+  <div id="gameScreen" class="screen">
     <div class="hud">
-      <div class="hud-box"><div class="label">Soal</div><div class="value" id="qCounter">1/25</div></div>
+      <div class="hud-box"><div class="label">Koin</div><div class="value" id="coinHud">0/25</div></div>
       <div class="hud-box"><div class="label">Skor</div><div class="value" id="scoreHud">0</div></div>
-      <div class="hud-box"><div class="label">Waktu</div><div class="value" id="timer">15</div></div>
       <div class="hud-box" id="warnHud"><div class="label">Pelanggaran</div><div class="value" id="warnCount">0/3</div></div>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 
-    <div class="question-box">
-      <div class="q-coin">?</div>
-      <div class="q-label">❓ Pertanyaan</div>
-      <div class="question" id="questionText"></div>
+    <!-- Progress koin -->
+    <div class="coin-progress" id="coinProgress"></div>
+
+    <div style="position: relative;">
+      <canvas id="marioArena" width="640" height="300"></canvas>
+
+      <!-- Overlay pertanyaan -->
+      <div id="questionOverlay">
+        <div class="question-box">
+          <div class="q-coin">?</div>
+          <div class="q-label" id="qLabel">❓ Pertanyaan 1</div>
+          <div class="question" id="questionText"></div>
+        </div>
+        <div class="options" id="optionsBox"></div>
+      </div>
+
+      <!-- Feedback banner -->
+      <div id="feedbackBanner"></div>
     </div>
 
-    <div class="options" id="optionsBox"></div>
-  </div>
-
-  <!-- MINI GAME MARIO -->
-  <div id="bonusScreen" class="screen">
-    <div class="bonus-title">🍄 MARIO BONUS!</div>
-    <div class="bonus-sub">Tekan <b>SPASI</b> / tombol LOMPAT untuk menghindari Goomba 🐹 dan ambil koin 🪙!</div>
-    <canvas id="marioArena" width="600" height="300"></canvas>
-    <div class="bonus-info">
-      <span>⏱ Sisa: <strong id="bonusTimer">15</strong>s</span>
-      <span>🪙 Koin: <strong id="bonusCoins">0</strong></span>
-      <span>💎 Bonus: <strong id="bonusScore">0</strong> poin</span>
+    <div class="game-hint" id="gameHint">
+      Tekan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk melompat & mengambil koin 🪙
     </div>
     <div class="mario-ctrl">
       <button id="jumpBtn">🦘 LOMPAT!</button>
@@ -400,7 +429,7 @@
       <h3 style="font-size:.85rem; text-transform:uppercase; letter-spacing:1px; opacity:.65; margin:18px 0 10px;">🎡 Putar Roda Keberuntungan (sekali)</h3>
       <div class="wheel-container">
         <div class="wheel-pointer"></div>
-        <canvas id="wheelCanvas" width="220" height="220"></canvas>
+        <canvas id="wheelCanvas" width="200" height="200"></canvas>
       </div>
       <button class="btn bonus" id="spinBtn" style="margin-top:0;">🎁 Putar Roda</button>
       <div class="wheel-result" id="wheelResult"></div>
@@ -426,14 +455,12 @@
 /* ============================================================
    KONFIGURASI
    ============================================================ */
-const TIME_PER_Q = 15;
 const POINT_BASE = 100;
+const POINT_SPEED_BONUS = 5;
+const TIME_PER_Q = 20;
 const LETTERS = ["A","B","C","D"];
-const BONUS_EVERY = 5;
-const BONUS_DURATION = 15;
 const MAKS_PELANGGARAN = 3;
 
-/* ⚠️ GANTI DENGAN URL /exec KAMU ⚠️ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzZ9BxcZZ41pa4Cl8SUrKnIc3kYuyz3DIyIr66gseLychbuVmfDFe4RgdF76FKPDj_LBg/exec";
 
 /* ============================================================
@@ -461,8 +488,7 @@ function catatPelanggaran(pesan) {
   updateWarnHud();
   warnCountEl.innerText = pelanggaran;
 
-  clearInterval(timerInterval);
-  clearInterval(bonusTimerInterval);
+  pauseGame();
 
   if (pelanggaran >= MAKS_PELANGGARAN) {
     warnMsgEl.innerHTML = "<b>Batas pelanggaran tercapai!</b> Kuis akan otomatis diakhiri.";
@@ -483,27 +509,12 @@ function kembaliKeKuis() {
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {});
   }
-  if (kuisAktif) {
-    if (!answered && !bonusActive) startTimer();
-    if (bonusActive) {
-      bonusTimerInterval = setInterval(() => {
-        if (!bonusActive) return;
-        bonusTimeLeft--;
-        document.getElementById("bonusTimer").textContent = bonusTimeLeft;
-        if (bonusTimeLeft <= 0) endMarioGame(bonusOnDone);
-      }, 1000);
-    }
-  }
+  resumeGame();
 }
 
-/* ============================================================
-   EVENT ANTI-CURANG
-   ============================================================ */
 document.addEventListener("visibilitychange", function () {
   if (!kuisAktif) return;
-  if (document.hidden) {
-    catatPelanggaran("Kamu berpindah tab atau meminimalkan jendela.");
-  }
+  if (document.hidden) catatPelanggaran("Kamu berpindah tab atau meminimalkan jendela.");
 });
 
 window.addEventListener("blur", function () {
@@ -513,14 +524,10 @@ window.addEventListener("blur", function () {
 });
 
 document.addEventListener("fullscreenchange", function () {
-  if (kuisAktif && !document.fullscreenElement) {
-    catatPelanggaran("Jangan keluar dari mode fullscreen!");
-  }
+  if (kuisAktif && !document.fullscreenElement) catatPelanggaran("Jangan keluar dari mode fullscreen!");
 });
 document.addEventListener("webkitfullscreenchange", function () {
-  if (kuisAktif && !document.webkitFullscreenElement) {
-    catatPelanggaran("Jangan keluar dari mode fullscreen!");
-  }
+  if (kuisAktif && !document.webkitFullscreenElement) catatPelanggaran("Jangan keluar dari mode fullscreen!");
 });
 
 document.addEventListener('contextmenu', function (e) {
@@ -627,22 +634,26 @@ const QUESTIONS = [
    STATE
    ============================================================ */
 let siswa = { nama: "", absen: "", kelas: "" };
-let current = 0;
 let score = 0;
 let correctCount = 0;
-let timeLeft = 0;
-let timerInterval = null;
-let answered = false;
+let answeredCount = 0;
 let quizQuestions = [];
 let detailJawaban = [];
+let coinIndex = 0;          // koin ke berapa yang sudah diambil (= soal ke berapa)
+let currentQuestionIdx = -1;
 
-let bonusActive = false;
-let bonusTimeLeft = 0;
-let bonusScore = 0;
-let bonusCoins = 0;
-let bonusTimerInterval = null;
-let bonusOnDone = null;
+// Timer soal
+let timerInterval = null;
+let timeLeft = 0;
 
+// Game state
+let gameRunning = false;
+let gamePaused = false;
+let waitingAnswer = false;  // true saat pertanyaan muncul & game berhenti
+let marioState = null;
+let marioRAF = null;
+
+// Wheel
 let wheelSpun = false;
 let wheelRotation = 0;
 
@@ -650,14 +661,15 @@ let wheelRotation = 0;
    ELEMEN
    ============================================================ */
 const $ = id => document.getElementById(id);
-const startScreen = $("startScreen"), quizScreen = $("quizScreen"), resultScreen = $("resultScreen");
-const bonusScreen = $("bonusScreen");
+const startScreen = $("startScreen"), gameScreen = $("gameScreen"), resultScreen = $("resultScreen");
+const questionOverlay = $("questionOverlay");
 const questionText = $("questionText"), optionsBox = $("optionsBox");
-const qCounter = $("qCounter"), scoreHud = $("scoreHud"), timerEl = $("timer");
-const progressFill = $("progressFill");
+const coinHud = $("coinHud"), scoreHud = $("scoreHud");
+const coinProgress = $("coinProgress");
+const feedbackBanner = $("feedbackBanner");
 
 /* ============================================================
-   SHUFFLE
+   UTIL
    ============================================================ */
 function shuffleArray(arr) {
   const a = arr.slice();
@@ -680,14 +692,27 @@ function buildShuffledQuestions(baseQuestions) {
   });
 }
 
-/* ============================================================
-   ALUR KUIS
-   ============================================================ */
 function showScreen(el) {
-  [startScreen, quizScreen, resultScreen, bonusScreen].forEach(s => s.classList.remove("active"));
+  [startScreen, gameScreen, resultScreen].forEach(s => s.classList.remove("active"));
   el.classList.add("active");
 }
 
+function renderCoinProgress() {
+  coinProgress.innerHTML = "";
+  for (let i = 0; i < quizQuestions.length; i++) {
+    const d = document.createElement("div");
+    d.className = "coin-dot";
+    if (i < coinIndex) d.classList.add("done");
+    else if (i === coinIndex) d.classList.add("active");
+    d.textContent = i < coinIndex ? "✓" : (i + 1);
+    coinProgress.appendChild(d);
+  }
+  coinHud.textContent = `${coinIndex}/${quizQuestions.length}`;
+}
+
+/* ============================================================
+   START
+   ============================================================ */
 async function startQuiz() {
   const nama = $("inputNama").value.trim();
   const absen = $("inputAbsen").value.trim();
@@ -704,166 +729,83 @@ async function startQuiz() {
   } catch(e) { console.warn("Fullscreen gagal:", e); }
 
   siswa = { nama, absen, kelas };
-  current = 0; score = 0; correctCount = 0;
+  score = 0; correctCount = 0; answeredCount = 0;
+  coinIndex = 0;
   detailJawaban = [];
   pelanggaran = 0;
   sudahKirim = false;
+  wheelSpun = false;
+  wheelRotation = 0;
+  currentQuestionIdx = -1;
+  waitingAnswer = false;
+
   updateWarnHud();
   warnHudEl.classList.remove("danger");
 
   quizQuestions = buildShuffledQuestions(QUESTIONS);
-  wheelSpun = false;
-  wheelRotation = 0;
+
+  scoreHud.textContent = "0";
+  renderCoinProgress();
+
   $("spinBtn").disabled = false;
   $("wheelResult").textContent = "";
+
   kuisAktif = true;
-
   fsInfoEl.classList.add("show");
-  showScreen(quizScreen);
-  renderQuestion();
-}
+  showScreen(gameScreen);
 
-function renderQuestion() {
-  answered = false;
-  const item = quizQuestions[current];
-  qCounter.textContent = `${current + 1}/${quizQuestions.length}`;
-  progressFill.style.width = `${(current / quizQuestions.length) * 100}%`;
-  questionText.textContent = item.q;
-
-  const qLabel = document.querySelector(".q-label");
-  if (qLabel) qLabel.textContent = `❓ Pertanyaan ${current + 1}`;
-
-  optionsBox.innerHTML = "";
-  item.o.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "option";
-    btn.innerHTML = `<span class="badge">${LETTERS[i]}</span><span>${opt}</span>`;
-    btn.onclick = () => selectAnswer(i, btn);
-    optionsBox.appendChild(btn);
-  });
-
-  startTimer();
-}
-
-function startTimer() {
-  clearInterval(timerInterval);
-  timeLeft = TIME_PER_Q;
-  timerEl.textContent = timeLeft;
-  timerEl.classList.remove("warning");
-  timerInterval = setInterval(() => {
-    if (!kuisAktif) { clearInterval(timerInterval); return; }
-    if (warnOverlayEl.classList.contains('show')) return;
-    timeLeft--;
-    timerEl.textContent = timeLeft;
-    if (timeLeft <= 5) timerEl.classList.add("warning");
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      if (!answered) selectAnswer(-1, null);
-    }
-  }, 1000);
-}
-
-function selectAnswer(index, btn) {
-  if (answered || !kuisAktif) return;
-  answered = true;
-  clearInterval(timerInterval);
-
-  const correctIndex = quizQuestions[current].a;
-  const allBtns = optionsBox.querySelectorAll(".option");
-  allBtns.forEach((b, i) => {
-    b.disabled = true;
-    if (i === correctIndex) b.classList.add("correct");
-    else if (i === index) b.classList.add("wrong");
-  });
-
-  const status = (index === correctIndex) ? "BENAR" : "SALAH";
-  detailJawaban.push({ no: current + 1, status });
-
-  if (index === correctIndex) {
-    correctCount++;
-    const bonus = Math.max(0, timeLeft) * 5;
-    score += POINT_BASE + bonus;
-    scoreHud.textContent = score;
-    scoreHud.style.transform = "scale(1.3)";
-    scoreHud.style.color = "#2ed573";
-    setTimeout(() => { scoreHud.style.transform = "scale(1)"; scoreHud.style.color = "#ffd200"; }, 350);
-  }
-
-  setTimeout(nextQuestion, 1100);
-}
-
-function nextQuestion() {
-  if (!kuisAktif) return;
-  current++;
-
-  if (current > 0 && current % BONUS_EVERY === 0 && current < quizQuestions.length) {
-    showScreen(bonusScreen);
-    startMarioGame(() => {
-      showScreen(quizScreen);
-      renderQuestion();
-    });
-    return;
-  }
-
-  if (current < quizQuestions.length) {
-    renderQuestion();
-  } else {
-    finishQuiz();
-  }
+  startMarioGame();
 }
 
 /* ============================================================
-   MINI GAME: MARIO BONUS
+   MARIO GAME
    ============================================================ */
-let marioState = null;
-let marioRAF = null;
-
-function startMarioGame(onDone) {
-  bonusActive = true;
-  bonusOnDone = onDone;
-  bonusTimeLeft = BONUS_DURATION;
-  bonusScore = 0;
-  bonusCoins = 0;
-  $("bonusTimer").textContent = bonusTimeLeft;
-  $("bonusCoins").textContent = "0";
-  $("bonusScore").textContent = "0";
+function startMarioGame() {
+  gameRunning = true;
+  gamePaused = false;
+  waitingAnswer = false;
 
   const canvas = $("marioArena");
   const ctx = canvas.getContext("2d");
   const W = canvas.width, H = canvas.height;
-  const GROUND_Y = H - 50;
+  const GROUND_Y = H - 55;
 
   marioState = {
-    x: 80, y: GROUND_Y, w: 28, h: 34,
+    x: 90, y: GROUND_Y, w: 30, h: 36,
     vy: 0, jumping: false,
     groundY: GROUND_Y,
     gravity: 0.9,
-    jumpPower: -14,
-    speed: 4,
-    distance: 0,  // pixel yang sudah ditempuh
-    coins: [],    // koin di jalur
-    goombas: [],  // musuh
-    spawnCooldown: 0,
+    jumpPower: -14.5,
+    speed: 3.5,
+    distance: 0,
+    coins: [],
+    goombas: [],
+    spawnCooldown: 40,
     lastCoinSpawn: 0,
-    lastGoombaSpawn: 0,
-    hits: 0
+    flashHit: 0
   };
 
+  // Spawn koin pertama agak jauh biar ada waktu adaptasi
+  marioState.coins.push({ x: 380, y: GROUND_Y - 75, got: false, phase: 0 });
+
   function jump() {
-    if (!bonusActive) return;
+    if (!gameRunning || gamePaused || waitingAnswer) return;
     if (!marioState.jumping) {
       marioState.vy = marioState.jumpPower;
       marioState.jumping = true;
     }
   }
 
-  // Tombol & keyboard
+  // Listeners
   const jumpBtn = $("jumpBtn");
   const jumpHandler = (e) => { e.preventDefault(); jump(); };
   jumpBtn.addEventListener("pointerdown", jumpHandler);
+  marioState._jumpBtn = jumpBtn;
+  marioState._jumpHandler = jumpHandler;
 
   function keyHandler(e) {
-    if (!bonusActive || warnOverlayEl.classList.contains('show')) return;
+    if (!gameRunning || gamePaused || waitingAnswer) return;
+    if (warnOverlayEl.classList.contains('show')) return;
     if (e.code === "Space" || e.key === "ArrowUp" || e.key.toLowerCase() === "w") {
       e.preventDefault();
       jump();
@@ -871,38 +813,34 @@ function startMarioGame(onDone) {
   }
   window.addEventListener("keydown", keyHandler);
   marioState._keyHandler = keyHandler;
-  marioState._jumpBtnHandler = jumpHandler;
-
-  // Spawn awal
-  for (let i = 0; i < 3; i++) {
-    marioState.coins.push({ x: 300 + i * 140, y: GROUND_Y - 80, got: false, phase: Math.random() * Math.PI * 2 });
-  }
-  marioState.goombas.push({ x: 500, y: GROUND_Y + 4, w: 26, h: 24 });
 
   function spawnCoin() {
-    marioState.coins.push({ x: W + 40, y: GROUND_Y - (60 + Math.random() * 60), got: false, phase: Math.random() * Math.PI * 2 });
+    marioState.coins.push({
+      x: W + 40,
+      y: GROUND_Y - (55 + Math.random() * 70),
+      got: false,
+      phase: Math.random() * Math.PI * 2
+    });
   }
+
   function spawnGoomba() {
     marioState.goombas.push({ x: W + 40, y: GROUND_Y + 4, w: 26, h: 24 });
   }
 
-  function loop(ts) {
-    if (!bonusActive) return;
-    if (warnOverlayEl.classList.contains('show')) {
-      marioRAF = requestAnimationFrame(loop);
-      return;
+  function loop() {
+    if (!gameRunning) return;
+    if (!gamePaused && !warnOverlayEl.classList.contains('show') && !waitingAnswer) {
+      update();
     }
-    update();
     draw();
     marioRAF = requestAnimationFrame(loop);
   }
 
   function update() {
-    // Gerakkan dunia (Mario sebenarnya diam, dunia yang bergerak)
     const worldSpeed = marioState.speed;
     marioState.distance += worldSpeed;
 
-    // Fisika lompat
+    // Fisika
     marioState.vy += marioState.gravity;
     marioState.y += marioState.vy;
     if (marioState.y >= marioState.groundY) {
@@ -911,68 +849,60 @@ function startMarioGame(onDone) {
       marioState.jumping = false;
     }
 
+    if (marioState.flashHit > 0) marioState.flashHit--;
+
     // Update koin
     marioState.coins.forEach(c => {
       if (c.got) return;
       c.x -= worldSpeed;
-      c.phase += 0.1;
+      c.phase += 0.12;
     });
-    // Hapus koin di luar layar
     marioState.coins = marioState.coins.filter(c => c.x > -40 && !c.got);
 
     // Update goomba
-    marioState.goombas.forEach(g => {
-      g.x -= worldSpeed;
-    });
+    marioState.goombas.forEach(g => g.x -= worldSpeed);
     marioState.goombas = marioState.goombas.filter(g => g.x > -40);
 
     // Spawn
-    marioState.spawnCooldown -= 1;
+    marioState.spawnCooldown--;
     if (marioState.spawnCooldown <= 0) {
       spawnCoin();
-      if (Math.random() < 0.4) spawnGoomba();
-      marioState.spawnCooldown = 50 + Math.floor(Math.random() * 40);
+      if (Math.random() < 0.35) spawnGoomba();
+      marioState.spawnCooldown = 55 + Math.floor(Math.random() * 45);
     }
 
-    // Deteksi tabrakan dengan koin (kotak Mario vs lingkaran koin)
+    // Tabrakan koin
     const marioLeft = marioState.x;
     const marioRight = marioState.x + marioState.w;
     const marioTop = marioState.y - marioState.h;
     const marioBottom = marioState.y;
 
-    marioState.coins.forEach(c => {
-      if (c.got) return;
-      const cx = c.x, cy = c.y;
-      const r = 10;
-      // cek irisan AABB vs circle sederhana: gunakan kotak 20x20 di sekitar koin
-      if (marioRight > cx - r && marioLeft < cx + r &&
-          marioBottom > cy - r && marioTop < cy + r) {
+    for (let i = 0; i < marioState.coins.length; i++) {
+      const c = marioState.coins[i];
+      if (c.got) continue;
+      const r = 11;
+      if (marioRight > c.x - r && marioLeft < c.x + r &&
+          marioBottom > c.y - r && marioTop < c.y + r) {
         c.got = true;
-        bonusCoins++;
-        bonusScore += 10;
-        $("bonusCoins").textContent = bonusCoins;
-        $("bonusScore").textContent = bonusScore;
+        onCoinCollected();
+        return;
       }
-    });
+    }
 
-    // Deteksi tabrakan dengan goomba
+    // Tabrakan goomba
     marioState.goombas.forEach(g => {
       if (g.x < marioRight && g.x + g.w > marioLeft &&
           g.y - g.h < marioBottom && g.y > marioTop) {
-        // Cek apakah Mario menginjak goomba dari atas (vy > 0 dan turun)
-        if (marioState.vy > 0 && marioBottom - marioState.vy <= g.y - g.h + 6) {
-          // Injak goomba
-          g.x = -100; // hilangkan
-          bonusScore += 15;
-          $("bonusScore").textContent = bonusScore;
-          marioState.vy = -10; // memantul
-        } else {
-          // Kena goomba: kurangi skor
-          marioState.hits++;
-          bonusScore = Math.max(0, bonusScore - 20);
-          $("bonusScore").textContent = bonusScore;
+        if (marioState.vy > 0 && marioBottom - marioState.vy <= g.y - g.h + 8) {
+          // Injak
           g.x = -100;
-          // efek berkedip - reset posisi visual (Mario sudah di tanah)
+          marioState.vy = -10;
+          marioState.flashHit = 6;
+        } else {
+          // Kena samping: mundur sedikit
+          marioState.x = Math.max(50, marioState.x - 30);
+          g.x = -100;
+          marioState.flashHit = 12;
         }
       }
     });
@@ -989,20 +919,19 @@ function startMarioGame(onDone) {
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // Awan di dalam canvas
-    drawCloud(ctx, (100 + marioState.distance * 0.3) % (W + 100) - 100, 40, 30);
-    drawCloud(ctx, (350 + marioState.distance * 0.2) % (W + 100) - 100, 70, 25);
+    // Awan
+    drawCloud(ctx, (120 + marioState.distance * 0.3) % (W + 100) - 100, 45, 28);
+    drawCloud(ctx, (400 + marioState.distance * 0.2) % (W + 100) - 100, 70, 22);
 
     // Bukit
-    drawHill(ctx, (200 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 140, 60);
-    drawHill(ctx, (450 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 100, 45);
+    drawHill(ctx, (230 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 130, 55);
+    drawHill(ctx, (500 + marioState.distance * 0.15) % (W + 200) - 200, GROUND_Y, 95, 42);
 
     // Tanah
     ctx.fillStyle = "#6b4423";
     ctx.fillRect(0, GROUND_Y + 4, W, H - GROUND_Y - 4);
     ctx.fillStyle = "#8b5a2b";
     ctx.fillRect(0, GROUND_Y, W, 6);
-    // Bata tanah
     ctx.strokeStyle = "rgba(0,0,0,0.2)";
     ctx.lineWidth = 1;
     const offsetX = (marioState.distance * 0.5) % 32;
@@ -1024,8 +953,11 @@ function startMarioGame(onDone) {
       drawGoomba(ctx, g.x, g.y, g.w, g.h);
     });
 
-    // Mario
-    drawMario(ctx, marioState.x, marioState.y - marioState.h, marioState.w, marioState.h, marioState.jumping);
+    // Mario (berkedip merah saat kena)
+    const blink = marioState.flashHit > 0 && Math.floor(marioState.flashHit / 2) % 2 === 0;
+    if (!blink) {
+      drawMario(ctx, marioState.x, marioState.y - marioState.h, marioState.w, marioState.h, marioState.jumping);
+    }
   }
 
   function drawCloud(ctx, x, y, size) {
@@ -1053,20 +985,23 @@ function startMarioGame(onDone) {
     const scaleX = Math.abs(Math.cos(phase * 1.5));
     ctx.save();
     ctx.translate(x, y + bob);
-    ctx.scale(0.6 + scaleX * 0.4, 1);
-    // koin luar
+    ctx.scale(0.55 + scaleX * 0.45, 1);
+    // Glow
+    ctx.shadowColor = "#ffd200";
+    ctx.shadowBlur = 14;
     ctx.fillStyle = "#ffd200";
     ctx.beginPath();
-    ctx.arc(0, 0, 10, 0, Math.PI * 2);
+    ctx.arc(0, 0, 11, 0, Math.PI * 2);
     ctx.fill();
-    // koin dalam
+    ctx.shadowBlur = 0;
+    // Inner
     ctx.fillStyle = "#ffec8b";
     ctx.beginPath();
-    ctx.arc(0, 0, 6, 0, Math.PI * 2);
+    ctx.arc(0, 0, 7, 0, Math.PI * 2);
     ctx.fill();
-    // simbol
+    // Symbol
     ctx.fillStyle = "#8a5a00";
-    ctx.font = "bold 10px sans-serif";
+    ctx.font = "bold 12px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("$", 0, 1);
@@ -1074,29 +1009,26 @@ function startMarioGame(onDone) {
   }
 
   function drawGoomba(ctx, x, y, w, h) {
-    // kepala coklat
     ctx.fillStyle = "#8b4513";
     ctx.beginPath();
     ctx.arc(x + w / 2, y - h * 0.6, w / 2, Math.PI, 0);
     ctx.fill();
-    // badan bawah
     ctx.fillStyle = "#a0522d";
     ctx.beginPath();
     ctx.ellipse(x + w / 2, y - h * 0.2, w / 2, h * 0.4, 0, 0, Math.PI * 2);
     ctx.fill();
-    // mata
+    // Mata
     ctx.fillStyle = "#fff";
     ctx.beginPath();
     ctx.arc(x + w * 0.32, y - h * 0.65, 5, 0, Math.PI * 2);
     ctx.arc(x + w * 0.68, y - h * 0.65, 5, 0, Math.PI * 2);
     ctx.fill();
-    // pupil
     ctx.fillStyle = "#000";
     ctx.beginPath();
     ctx.arc(x + w * 0.34, y - h * 0.65, 2.2, 0, Math.PI * 2);
     ctx.arc(x + w * 0.70, y - h * 0.65, 2.2, 0, Math.PI * 2);
     ctx.fill();
-    // alis
+    // Alis
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -1105,7 +1037,7 @@ function startMarioGame(onDone) {
     ctx.moveTo(x + w * 0.78, y - h * 0.8);
     ctx.lineTo(x + w * 0.58, y - h * 0.73);
     ctx.stroke();
-    // kaki
+    // Kaki
     ctx.fillStyle = "#3a1f0a";
     ctx.beginPath();
     ctx.ellipse(x + w * 0.3, y + 2, 6, 4, 0, 0, Math.PI * 2);
@@ -1140,7 +1072,7 @@ function startMarioGame(onDone) {
     ctx.ellipse(x + w * 0.5, y + h * 0.52, w * 0.22, h * 0.05, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Badan overall biru
+    // Badan
     ctx.fillStyle = "#2a5cff";
     ctx.fillRect(x + w * 0.22, y + h * 0.6, w * 0.56, h * 0.28);
 
@@ -1148,7 +1080,6 @@ function startMarioGame(onDone) {
     ctx.fillStyle = "#e52521";
     ctx.fillRect(x + w * 0.08, y + h * 0.6, w * 0.18, h * 0.18);
     ctx.fillRect(x + w * 0.74, y + h * 0.6, w * 0.18, h * 0.18);
-    // Sarung tangan putih
     ctx.fillStyle = "#fff";
     ctx.beginPath();
     ctx.arc(x + w * 0.12, y + h * 0.80, 3.5, 0, Math.PI * 2);
@@ -1162,12 +1093,11 @@ function startMarioGame(onDone) {
     ctx.arc(x + w * 0.6, y + h * 0.7, 2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Kaki (sepatu coklat)
+    // Sepatu
     ctx.fillStyle = "#5a2e0c";
     ctx.fillRect(x + w * 0.2, y + h * 0.88, w * 0.24, h * 0.14);
     ctx.fillRect(x + w * 0.56, y + h * 0.88, w * 0.24, h * 0.14);
 
-    // Efek lompat - tambahkan garis gerak
     if (jumping) {
       ctx.strokeStyle = "rgba(255,255,255,0.5)";
       ctx.lineWidth = 2;
@@ -1181,69 +1111,140 @@ function startMarioGame(onDone) {
   }
 
   marioRAF = requestAnimationFrame(loop);
-
-  bonusTimerInterval = setInterval(() => {
-    if (!bonusActive) return;
-    if (warnOverlayEl.classList.contains('show')) return;
-    bonusTimeLeft--;
-    $("bonusTimer").textContent = bonusTimeLeft;
-    if (bonusTimeLeft <= 0) endMarioGame(onDone);
-  }, 1000);
 }
 
-function endMarioGame(onDone) {
-  bonusActive = false;
-  clearInterval(bonusTimerInterval);
+function pauseGame() {
+  gamePaused = true;
+}
+
+function resumeGame() {
+  gamePaused = false;
+}
+
+function stopMarioGame() {
+  gameRunning = false;
   if (marioRAF) cancelAnimationFrame(marioRAF);
-
-  if (marioState && marioState._keyHandler) {
-    window.removeEventListener("keydown", marioState._keyHandler);
+  if (marioState) {
+    if (marioState._keyHandler) window.removeEventListener("keydown", marioState._keyHandler);
+    if (marioState._jumpBtn && marioState._jumpHandler) {
+      marioState._jumpBtn.removeEventListener("pointerdown", marioState._jumpHandler);
+    }
   }
-  if (marioState && marioState._jumpBtnHandler) {
-    const jb = $("jumpBtn");
-    if (jb) jb.removeEventListener("pointerdown", marioState._jumpBtnHandler);
-  }
-
-  const finalBonus = Math.max(0, bonusScore);
-  score += finalBonus;
-  scoreHud.textContent = score;
-
-  const canvas = $("marioArena");
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "rgba(0,0,0,0.6)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ffd200";
-  ctx.font = "bold 32px 'Segoe UI', sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText(`🪙 ${bonusCoins} koin!`, canvas.width / 2, canvas.height / 2 - 20);
-  ctx.font = "bold 22px 'Segoe UI', sans-serif";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`+${finalBonus} poin bonus`, canvas.width / 2, canvas.height / 2 + 15);
-  ctx.font = "14px 'Segoe UI', sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.75)";
-  ctx.fillText("Melanjutkan kuis...", canvas.width / 2, canvas.height / 2 + 45);
-
-  setTimeout(() => {
-    if (!kuisAktif) return;
-    onDone();
-  }, 1800);
+  marioState = null;
 }
 
 /* ============================================================
-   SELESAI + KIRIM KE SHEETS
+   KOIN DIAMBIL → MUNCULKAN PERTANYAAN
+   ============================================================ */
+function onCoinCollected() {
+  if (coinIndex >= quizQuestions.length) return;
+  waitingAnswer = true;
+  currentQuestionIdx = coinIndex;
+  showQuestion(coinIndex);
+}
+
+function showQuestion(idx) {
+  const q = quizQuestions[idx];
+  $("qLabel").textContent = `❓ Pertanyaan ${idx + 1} dari ${quizQuestions.length}`;
+  questionText.textContent = q.q;
+
+  optionsBox.innerHTML = "";
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="badge">${LETTERS[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optionsBox.appendChild(btn);
+  });
+
+  questionOverlay.classList.add("show");
+
+  // Timer
+  clearInterval(timerInterval);
+  timeLeft = TIME_PER_Q;
+  $("gameHint").innerHTML = `⏱ Sisa waktu menjawab: <b>${timeLeft}</b> detik`;
+  timerInterval = setInterval(() => {
+    if (!kuisAktif) { clearInterval(timerInterval); return; }
+    if (warnOverlayEl.classList.contains('show')) return;
+    timeLeft--;
+    $("gameHint").innerHTML = `⏱ Sisa waktu menjawab: <b>${timeLeft}</b> detik`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      selectAnswer(-1, null);
+    }
+  }, 1000);
+}
+
+function selectAnswer(index, btn) {
+  if (currentQuestionIdx < 0) return;
+  clearInterval(timerInterval);
+  const q = quizQuestions[currentQuestionIdx];
+  const correctIdx = q.a;
+  const all = optionsBox.querySelectorAll(".option");
+  all.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correctIdx) b.classList.add("correct");
+    else if (i === index) b.classList.add("wrong");
+  });
+
+  const isCorrect = index === correctIdx;
+  if (isCorrect) {
+    correctCount++;
+    const bonus = Math.max(0, timeLeft) * POINT_SPEED_BONUS;
+    score += POINT_BASE + bonus;
+    scoreHud.textContent = score;
+    feedbackBanner.className = "show correct";
+    feedbackBanner.innerHTML = `✅ BENAR!<br><span style="font-size:.9rem">+${POINT_BASE + bonus} poin</span>`;
+  } else {
+    feedbackBanner.className = "show wrong";
+    feedbackBanner.innerHTML = `❌ SALAH!<br><span style="font-size:.9rem">Jawaban benar: <b>${LETTERS[correctIdx]}</b></span>`;
+  }
+  answeredCount++;
+  detailJawaban.push({
+    no: currentQuestionIdx + 1,
+    status: isCorrect ? "BENAR" : "SALAH"
+  });
+
+  // Dismiss setelah 1.4 detik
+  setTimeout(() => {
+    feedbackBanner.className = "";
+    feedbackBanner.innerHTML = "";
+    closeQuestion();
+  }, 1400);
+}
+
+function closeQuestion() {
+  questionOverlay.classList.remove("show");
+  waitingAnswer = false;
+  currentQuestionIdx = -1;
+  coinIndex++;
+  renderCoinProgress();
+
+  // Reset hint
+  $("gameHint").innerHTML = `Tekan <b>SPASI</b> / tombol <b>LOMPAT</b> untuk melompat & mengambil koin 🪙`;
+
+  if (coinIndex >= quizQuestions.length) {
+    // Semua soal sudah dijawab
+    finishQuiz();
+  }
+  // Game lanjut otomatis
+}
+
+/* ============================================================
+   FINISH
    ============================================================ */
 function finishQuiz(isPelanggaran = false) {
   kuisAktif = false;
+  waitingAnswer = false;
   clearInterval(timerInterval);
-  clearInterval(bonusTimerInterval);
-  if (marioRAF) cancelAnimationFrame(marioRAF);
+  questionOverlay.classList.remove("show");
+  stopMarioGame();
 
   if (document.fullscreenElement) {
     document.exitFullscreen().catch(() => {});
   }
   fsInfoEl.classList.remove("show");
 
-  progressFill.style.width = "100%";
   showScreen(resultScreen);
   $("finalScore").textContent = score;
   $("statBenar").textContent = correctCount;
@@ -1361,13 +1362,13 @@ function drawWheel() {
     ctx.rotate(start + anglePer / 2);
     ctx.textAlign = "right";
     ctx.fillStyle = "#fff";
-    ctx.font = "bold 14px 'Segoe UI', sans-serif";
-    ctx.fillText(seg.label, radius - 12, 5);
+    ctx.font = "bold 13px 'Segoe UI', sans-serif";
+    ctx.fillText(seg.label, radius - 10, 5);
     ctx.restore();
   });
 
   ctx.beginPath();
-  ctx.arc(center, center, 22, 0, Math.PI * 2);
+  ctx.arc(center, center, 20, 0, Math.PI * 2);
   ctx.fillStyle = "rgba(255,255,255,0.95)";
   ctx.fill();
 }
@@ -1391,7 +1392,6 @@ function spinWheel() {
     $("wheelResult").textContent = seg.value > 0
       ? `🎉 Dapat +${seg.value} poin!`
       : `😅 Zonk! Dapat 0 poin.`;
-
     kirimKeSheet(false);
   }, 4200);
 }
@@ -1418,9 +1418,6 @@ $("playAgainBtn").onclick = () => {
 };
 $("spinBtn").onclick = spinWheel;
 
-/* ============================================================
-   INISIALISASI
-   ============================================================ */
 drawWheel();
 </script>
 </body>
